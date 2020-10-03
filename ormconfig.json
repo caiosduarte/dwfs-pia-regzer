@@ -1,8 +1,8 @@
 {
     "name": "default",
     "type": "sqlite",
-    "database": "./database/analisador_de_cadastro.sq3",
-    "autoSchemaSync": true,    
+    "database": "./database/db.sqlite",
+    "autoSchemaSync": true,
     "entities": ["./src/models/*.ts"],
     "migrations": ["./src/database/migrations/*.ts"],
     "cli": { "migrationsDir": "./src/database/migrations" }
