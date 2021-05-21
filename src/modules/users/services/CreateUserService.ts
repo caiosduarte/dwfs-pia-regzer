@@ -1,7 +1,7 @@
-import AppError from "../errors/AppError";
 import { getRepository } from "typeorm";
 import { hash } from "bcryptjs";
 import User from "../models/User";
+import UserError from "../errors/UserError";
 
 interface Request {
     name: string;
@@ -24,7 +24,7 @@ class CreateUserService {
         });
 
         if (checkEmailExists) {
-            throw new AppError("This email is already used.", 403);
+            throw new UserError("This email is already used.", 403);
         }
 
         const checkCpf = await userRepository.findOne({
@@ -32,7 +32,7 @@ class CreateUserService {
         });
 
         if (checkCpf) {
-            throw new AppError("This CPF is already used.", 403);
+            throw new UserError("This CPF is already used.", 403);
         }
 
         const hashedPassword = await hash(password, 8);

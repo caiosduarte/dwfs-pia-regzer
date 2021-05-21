@@ -1,4 +1,3 @@
-import AppError from "../errors/AppError";
 import authConfig from "../config/auth";
 import { sign } from "jsonwebtoken";
 import { compare } from "bcryptjs";
@@ -22,13 +21,13 @@ class AuthenticateUserService {
         const user = await usersRepository.findOne({ where: { email } });
 
         if (!user) {
-            throw new AppError("User email/password not match.", 401);
+            throw new UserError("User email/password not match.", 401);
         }
 
         const passwordValid = await compare(password, user.password);
 
         if (!passwordValid) {
-            throw new AppError("User email/password not match.", 401);
+            throw new UserError("User email/password not match.", 401);
         }
 
         const { secret, expiresIn } = authConfig.jwt;
@@ -42,4 +41,4 @@ class AuthenticateUserService {
     }
 }
 
-export default AuthenticateUserService;
+export { UserError, AuthenticateUserService };

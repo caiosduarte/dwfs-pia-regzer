@@ -1,7 +1,7 @@
 {
-    "name": "server_analisador-de-cadastro",
+    "name": "server-registration-analyzer",
     "version": "1.0.0",
-    "main": "index.js",
+    "main": "server.js",
     "license": "MIT",
     "scripts": {
         "dev:server": "ts-node-dev --inspect --transpileOnly --ignore node_modules src/server.ts",
