@@ -17,6 +17,7 @@ class CreateUserService {
         email,
         password,
     }: Request): Promise<User> {
+        /*
         const userRepository = getRepository(User);
 
         const checkEmailExists = await userRepository.findOne({
@@ -45,6 +46,16 @@ class CreateUserService {
         });
 
         await userRepository.save(user);
+        */
+
+        const user = new User();
+
+        Object.assign(user, {
+            name,
+            cpf,
+            email,
+            password: await hash(password, 8),
+        });
 
         return user;
     }
