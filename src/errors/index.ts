@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import AppError from "../errors/AppError";
 import UserError from "../modules/users/errors/UserError";
 
-function catchAllErrors(err: Error, request: Request, response: Response) {
+function catchAllAsError(err: Error, request: Request, response: Response) {
     let statusCode = 500;
     let errorMessage = "Internal server error.";
 
@@ -36,6 +36,6 @@ function userError(
     return next(err);
 }
 
-const errors = [userError, catchAllErrors];
+const errors = [userError, catchAllAsError];
 
-export { errors, catchAllErrors };
+export { errors, catchAllAsError };
