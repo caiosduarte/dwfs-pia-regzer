@@ -1,5 +1,8 @@
 node_modules/
-yarn-error.log
-doc/
-.vscode
 .git
+.gitignore
+.vscode
+doc/
+yarn-error.log
+yarn.lock
+README.md
