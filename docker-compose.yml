@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+    #database:
+    # pega a imagem oficial do postgres no Docker Hub
+    #    image: postgres
+    #    container_name: database
+    # sempre reinicia o container
+    #    restart: always
+    #    ports:
+    #        - 5432:5432
+    #    volumes:
+    #        - pgdata:/data/postgres
+    #    environment:
+    #        - POSTGRES_USER=docker
+
+    #       - POSTGRES_PASSWORD=dwfs
+    #        - POSTGRES_DB=registration_analyzer
+    # cria o container na mesma rede que o host (máquina local)
+    #    network_mode: host # versão antiga do Docker Compose
+    app:
+        # usa o Dockerfile local para criar a imagem
+        build: .
+        container_name: registration_analyzer
+        ports:
+            - 3333:3333
+        volumes:
+            - .:/usr/app
+        network_mode: host # versão antiga do Docker Compose
+        #links:
+        #    - database
+        #depends_on:
+        #    - database
+volumes:
+    pgdata:
+        driver: local

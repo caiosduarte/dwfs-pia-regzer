@@ -1,12 +1,13 @@
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
     CreateDateColumn,
-    UpdateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
 } from "typeorm";
 
-@Entity("users")
+import { v4 as uuidV4 } from "uuid";
+
+@Entity()
 class User {
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -15,19 +16,31 @@ class User {
     name: string;
 
     @Column()
-    cpf: string;
+    document: string;
+
+    @Column()
+    cellphone: string;
 
     @Column()
     email: string;
 
     @Column()
-    password?: string;
+    password: string;
+
+    @Column()
+    is_admin?: boolean;
+
+    @Column()
+    is_confirmed?: boolean;
 
     @CreateDateColumn()
-    created_at: Date;
+    created_at?: Date;
 
-    @UpdateDateColumn()
-    updated_at: Date;
+    constructor() {
+        if (!this.id) {
+            this.id = uuidV4();
+        }
+    }
 }
 
 export default User;

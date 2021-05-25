@@ -1,61 +1,54 @@
-import { getRepository } from "typeorm";
-import { hash } from "bcryptjs";
+import { hash } from "bcrypt";
+import AppError from "../../../errors/AppError";
+import ICreateUserDTO from "../dTOs/ICreateUserDTO";
 import User from "../models/User";
-import UserError from "../errors/UserError";
+import UsersRepository from "../repositories/implementations/UsersRepository";
 
-interface Request {
+interface IUserResponse {
     name: string;
-    cpf: string;
+    document: string;
     email: string;
-    password: string;
+    cellphone: string;
+    is_admin: boolean;
+    is_confirmed: boolean;
+    created_at: Date;
 }
 
 class CreateUserService {
+    constructor(private repository: UsersRepository) {}
+
     public async execute({
         name,
-        cpf,
+        document,
+        cellphone,
         email,
         password,
-    }: Request): Promise<User> {
-        /*
-        const userRepository = getRepository(User);
+    }: ICreateUserDTO): Promise<User> {
+        this.repository;
 
-        const checkEmailExists = await userRepository.findOne({
-            where: { email },
-        });
+        const checkEmailExists = await this.repository.findByEmail(email);
 
         if (checkEmailExists) {
-            throw new UserError("This email is already used.", 403);
+            throw new AppError("This email is already used.", 403);
         }
 
-        const checkCpf = await userRepository.findOne({
-            where: { cpf },
-        });
+        const checkCpf = await this.repository.findByDocument(document);
 
         if (checkCpf) {
-            throw new UserError("This CPF is already used.", 403);
+            throw new AppError("This document is already used.", 403);
         }
 
         const hashedPassword = await hash(password, 8);
 
-        const user = userRepository.create({
+        const user = await this.repository.create({
             name,
-            cpf,
+            document,
+            cellphone,
             email,
             password: hashedPassword,
         });
 
-        await userRepository.save(user);
-        */
-
-        const user = new User();
-
-        Object.assign(user, {
-            name,
-            cpf,
-            email,
-            password: await hash(password, 8),
-        });
+        //delete user.password;
 
         return user;
     }

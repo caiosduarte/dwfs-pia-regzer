@@ -25,7 +25,7 @@ export default function ensureAuthenticated(
     try {
         const decodedToken = verify(token, authConfig.jwt.secret);
         const { sub } = decodedToken as TokenPayload;
-        // ??? como incluir informações de um token válido decodificado (exemplo usuario_id) na request sem typescript (ou sem sobreescrever [ou anexar] o tipo da biblioteca do Express), ou seja, qual a melhor prática para incluir uma informação na request com javascript puro
+
         request.user = {
             id: sub,
         };

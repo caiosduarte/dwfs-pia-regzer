@@ -3,7 +3,10 @@
     "type": "sqlite",
     "database": "./database/db.sqlite",
     "autoSchemaSync": true,
-    "entities": ["./src/models/*.ts"],
+    "entities": [
+        "./src/modules/**/models/*.ts",
+        "./src/modules/**/entities/*.ts"
+    ],
     "migrations": ["./src/database/migrations/*.ts"],
     "cli": { "migrationsDir": "./src/database/migrations" }
 }

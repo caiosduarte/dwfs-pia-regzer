@@ -7,9 +7,9 @@
         {
             "type": "node",
             "request": "attach",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3333",
-            "webRoot": "${workspaceFolder}"
+            "name": "Launch Program",
+            "skipFiles": ["<node_internals>/**"],
+            "outFiles": ["${workspaceFolder}/**/*.js"]
         }
     ]
 }
