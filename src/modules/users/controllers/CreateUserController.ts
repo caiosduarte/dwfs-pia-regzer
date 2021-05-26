@@ -16,8 +16,8 @@ export default class CreateUserController {
             password,
         });
 
-        //delete user.password;
-        // TODO ? ao criar como determinar o uri do recurso e retornar no cabeçalho da resposta no atributo "Location"
-        return response.status(201).json(user);
+        return response
+            .status(201)
+            .json({ id: user.id, name, email, document, cellphone });
     }
 }
