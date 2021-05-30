@@ -6,8 +6,6 @@ import IUsersRepository from "../IUsersRepository";
 export default class UsersRepository implements IUsersRepository {
     private repository: Repository<User>;
 
-    private users: Repository<User>;
-
     private static INSTANCE: UsersRepository;
 
     private constructor() {
@@ -38,5 +36,9 @@ export default class UsersRepository implements IUsersRepository {
 
     async findById(id: string): Promise<User | undefined> {
         return await this.repository.findOne(id);
+    }
+
+    async save(user: User): Promise<User> {
+        return await this.repository.save(user);
     }
 }

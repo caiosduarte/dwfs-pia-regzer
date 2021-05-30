@@ -1,11 +1,11 @@
 import { compare } from "bcrypt";
-import { sign } from "jsonwebtoken";
-import { getRepository } from "typeorm";
 import AppError from "../../../errors/AppError";
 import authConfig from "../config/auth";
-import UserError from "../errors/UserError";
-import User from "../models/User";
+import ICreateTokenDTO from "../dTOs/ICreateTokenDTO";
+import Token from "../models/Token";
 import IUsersRepository from "../repositories/IUsersRepository";
+import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
+import DateProvider from "../utils/implementations/DateProvider";
 
 interface IRequest {
     email: string;
@@ -17,15 +17,14 @@ interface IResponse {
         id: string;
     };
     token: string;
+    refreshToken: string;
 }
 
 class AuthenticateUserService {
-    constructor(private usersRepository: IUsersRepository) {}
+    constructor(private service: IUsersRepository) {}
 
     public async execute({ email, password }: IRequest): Promise<IResponse> {
-        const usersRepository = getRepository(User);
-
-        const user = await usersRepository.findOne({ where: { email } });
+        const user = await this.service.findByEmail(email);
 
         if (!user) {
             throw new AppError("Email/password don't match.", 401);
@@ -37,15 +36,42 @@ class AuthenticateUserService {
             throw new AppError("Email/password don't match.", 401);
         }
 
-        const { secret, expiresIn } = authConfig.jwt;
+        const {
+            tokenSecret,
+            tokenExpiresIn,
+            refreshTokenSecret,
+            refreshTokenExpiresIn,
+        } = authConfig.jwt;
 
-        const token = sign({}, secret, {
+        const tokenEncoded = createJsonWebTokenEncoded({
+            secret: tokenSecret,
             subject: user.id,
-            expiresIn,
+            expiresIn: tokenExpiresIn,
+            payload: email,
         });
 
+        const refreshTokenEncoded = createJsonWebTokenEncoded({
+            secret: refreshTokenSecret,
+            subject: user.id,
+            expiresIn: refreshTokenExpiresIn,
+            payload: email,
+        });
+
+        const refreshToken = new Token();
+
+        Object.assign(refreshToken, {
+            userId: user.id,
+            token: refreshTokenEncoded,
+            expiresAt: new DateProvider().addDays(10),
+        } as ICreateTokenDTO);
+
+        user.tokens.push(refreshToken);
+
+        await this.service.save(user);
+
         const tokenResponse: IResponse = {
-            token,
+            token: tokenEncoded,
+            refreshToken: refreshTokenEncoded,
             user: {
                 id: user.id,
             },
@@ -55,4 +81,4 @@ class AuthenticateUserService {
     }
 }
 
-export { UserError, AuthenticateUserService };
+export { AuthenticateUserService };

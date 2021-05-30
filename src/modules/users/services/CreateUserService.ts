@@ -9,9 +9,9 @@ interface IUserResponse {
     document: string;
     email: string;
     cellphone: string;
-    is_admin: boolean;
-    is_confirmed: boolean;
-    created_at: Date;
+    isAdmin: boolean;
+    isConfirmed: boolean;
+    createdAt: Date;
 }
 
 class CreateUserService {
@@ -47,8 +47,6 @@ class CreateUserService {
             email,
             password: hashedPassword,
         });
-
-        //delete user.password;
 
         return user;
     }

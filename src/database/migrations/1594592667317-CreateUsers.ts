@@ -10,8 +10,6 @@ export class CreateUsers1594592667317 implements MigrationInterface {
                         name: "id",
                         type: "uuid",
                         isPrimary: true,
-                        generationStrategy: "uuid",
-                        default: "uuid_generate_v4()",
                     },
                     {
                         name: "name",
@@ -40,13 +38,11 @@ export class CreateUsers1594592667317 implements MigrationInterface {
                         name: "is_admin",
                         type: "boolean",
                         default: false,
-                        isNullable: true,
                     },
                     {
                         name: "is_confirmed",
                         type: "boolean",
                         default: false,
-                        isNullable: true,
                     },
                     {
                         name: "created_at",

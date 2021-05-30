@@ -1,6 +1,8 @@
 export default {
     jwt: {
-        secret: "2f6145a0ab7203b01019af81bf5914b8",
-        expiresIn: "999d",
+        tokenSecret: "2f6145a0ab7203b01019af81bf5914b8",
+        tokenExpiresIn: "15m",
+        refreshTokenSecret: "bbc6eac3435c1777066931a0dcac00ac",
+        refreshTokenExpiresIn: "10d",
     },
 };

@@ -1,6 +1,5 @@
-import CreateUserService from "../services/CreateUserService";
-
 import { Request, Response } from "express";
+import CreateUserService from "../services/CreateUserService";
 
 export default class CreateUserController {
     constructor(private createUserService: CreateUserService) {}
@@ -16,8 +15,14 @@ export default class CreateUserController {
             password,
         });
 
-        return response
-            .status(201)
-            .json({ id: user.id, name, email, document, cellphone });
+        return response.status(201).json({
+            id: user.id,
+            name,
+            email,
+            document,
+            cellphone,
+            createdAt: user.createdAt,
+            tokens: user.tokens,
+        });
     }
 }

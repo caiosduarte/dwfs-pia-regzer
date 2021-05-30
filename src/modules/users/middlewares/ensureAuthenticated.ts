@@ -24,20 +24,25 @@ export default async function ensureAuthenticated(
     const [, token] = authorization.split(" ");
 
     try {
-        const decodedToken = verify(token, authConfig.jwt.secret);
-
-        const { sub: user_id } = decodedToken as TokenPayload;
+        const { sub: userId } = verify(
+            token,
+            authConfig.jwt.refreshTokenSecret
+        ) as TokenPayload;
 
         const usersRepository = UsersRepository.getInstance();
-        const user = await usersRepository.findById(user_id);
+
+        const user = await usersRepository.findById(userId);
 
         if (!user) {
             throw new AppError("User doesn't exists!", 401);
         }
 
+        if (!user.tokens.find((t) => t.token === token)) {
+            throw new AppError("Invalid JWT Token.", 401);
+        }
+
         request.user = {
-            id: user_id,
-            is_admin: user.is_admin,
+            id: userId,
         };
 
         return next();

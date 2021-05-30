@@ -2,14 +2,15 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    PrimaryGeneratedColumn,
+    OneToMany,
+    PrimaryColumn,
 } from "typeorm";
-
 import { v4 as uuidV4 } from "uuid";
+import Token from "./Token";
 
 @Entity()
 class User {
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryColumn()
     id: string;
 
     @Column()
@@ -27,14 +28,20 @@ class User {
     @Column()
     password: string;
 
-    @Column()
-    is_admin?: boolean;
+    @Column({ name: "is_admin", default: false })
+    isAdmin: boolean;
 
-    @Column()
-    is_confirmed?: boolean;
+    @Column({ name: "is_confirmed", default: false })
+    isConfirmed: boolean;
 
-    @CreateDateColumn()
-    created_at?: Date;
+    @CreateDateColumn({ name: "created_at" })
+    createdAt: Date;
+
+    @OneToMany((type) => Token, (token) => token.user, {
+        cascade: true,
+        eager: true,
+    })
+    tokens: Token[];
 
     constructor() {
         if (!this.id) {
