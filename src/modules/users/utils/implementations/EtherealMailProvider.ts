@@ -1,5 +1,7 @@
 import IMailProvider from "../IMailProvider";
 import nodemailer, { Transporter } from "nodemailer";
+import handlebars from "handlebars";
+import fs from "fs";
 
 export default class EtherealEmailProvider implements IMailProvider {
     private transporter: Transporter;
@@ -28,15 +30,20 @@ export default class EtherealEmailProvider implements IMailProvider {
     async sendMail(
         to: string,
         subject: string,
-        body: string,
-        bodyHtml?: string
+        variables: any,
+        path: string
     ): Promise<void> {
+        const templateFileContent = fs.readFileSync(path).toString("utf-8");
+
+        const templateParse = handlebars.compile(templateFileContent);
+
+        const templateHTML = templateParse(variables);
+
         const message = await this.transporter.sendMail({
             to,
             from: "Registration Analyzer <noreplay@registration_analyzer.com.br>",
             subject,
-            text: body,
-            html: bodyHtml || body,
+            html: templateHTML,
         });
 
         console.log("Message sent: %s", message.messageId);

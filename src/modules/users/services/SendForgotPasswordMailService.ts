@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { v4 as uuidV4 } from "uuid";
 import AppError from "../../../errors/AppError";
 import ICreateTokenDTO from "../dTOs/ICreateTokenDTO";
@@ -28,17 +29,32 @@ export default class SendForgotPasswordMailService {
             expiresAt: new DateProvider().addMinutes(180),
         } as ICreateTokenDTO);
 
-        // envia o email para o usuário
-        await this.mailProvider.sendMail(
-            email,
-            "Recuperação de senha",
-            `Olá ${user.name}! Segue o link para recuperação de senha: ${newToken.token}`
-        );
-
         // grava o token do email
 
         user.tokens.push(newToken);
 
         await this.repository.save(user);
+
+        // envia o email para o usuário
+
+        const variables = {
+            name: user.name,
+            link: `${process.env.FORGOT_MAIL_URL}${newToken.token}`,
+        };
+
+        const templatePath = resolve(
+            __dirname,
+            "..",
+            "views",
+            "emails",
+            "forgotPassword.hbs"
+        );
+
+        await this.mailProvider.sendMail(
+            email,
+            "Recuperação de senha",
+            variables,
+            templatePath
+        );
     }
 }

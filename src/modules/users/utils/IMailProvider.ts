@@ -2,7 +2,7 @@ export default interface IMailProvider {
     sendMail(
         to: string,
         subject: string,
-        body: string,
-        bodyHtml?: string
+        variables: any,
+        path: string
     ): Promise<void>;
 }
