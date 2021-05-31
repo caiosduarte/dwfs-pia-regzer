@@ -21,11 +21,14 @@ export default class RefreshTokenService {
     async execute(token: string): Promise<ITokenResponse> {
         const { refreshTokenSecret, refreshTokenExpiresIn } = auth.jwt;
 
-        //try {
-        const { sub: userId } = verify(
-            token,
-            refreshTokenSecret
-        ) as ITokenPayload;
+        try {
+            var { sub: userId } = verify(
+                token,
+                refreshTokenSecret
+            ) as ITokenPayload;
+        } catch {
+            throw new AppError("Invalid JWT Token.", 401);
+        }
 
         const oldToken = await this.repository.findByEncodedAndUserId(
             token,
@@ -43,7 +46,7 @@ export default class RefreshTokenService {
             subject: userId,
         });
 
-        // TODO: Fazer a implementação VanilaDateProvider com este método
+        // TODO: Fazer a implementação VanilaDateProvider com este método e outras funções em javascript puro
         const addDays = function addDays(days: number, date?: Date) {
             let result = date ? new Date(date) : new Date();
             result.setDate(result.getDate() + days);
@@ -64,8 +67,5 @@ export default class RefreshTokenService {
             userId,
             refreshToken,
         };
-        //} catch {
-        //    throw new AppError("Invalid JWT Token.", 401);
-        //}
     }
 }
