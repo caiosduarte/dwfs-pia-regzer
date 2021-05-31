@@ -25,7 +25,7 @@ class User {
     @Column()
     email: string;
 
-    @Column()
+    @Column({ select: false })
     password: string;
 
     @Column({ name: "is_admin", default: false })
@@ -39,9 +39,11 @@ class User {
 
     @OneToMany((type) => Token, (token) => token.user, {
         cascade: true,
-        eager: true,
+        //eager: true,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
     })
-    tokens: Token[];
+    tokens?: Token[];
 
     constructor() {
         if (!this.id) {

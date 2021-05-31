@@ -7,4 +7,5 @@ export default interface IUsersRepository {
     create(data: ICreateUserDTO): Promise<User | undefined>;
     findById(id: string): Promise<User | undefined>;
     save(user: User): Promise<User>;
+    findByToken(token: string): Promise<User | undefined>;
 }

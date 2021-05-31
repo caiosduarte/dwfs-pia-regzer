@@ -17,8 +17,8 @@ export default class Token {
     @Column({ name: "user_id" })
     userId: string;
 
-    @ManyToOne((type) => User, (user) => user.tokens)
     @JoinColumn({ name: "user_id", referencedColumnName: "id" })
+    @ManyToOne((type) => User, { cascade: ["update"] })
     user: User;
 
     @Column()

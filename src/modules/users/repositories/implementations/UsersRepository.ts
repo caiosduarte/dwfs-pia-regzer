@@ -20,11 +20,17 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async findByDocument(document: string): Promise<User | undefined> {
-        return await this.repository.findOne({ document });
+        return await this.repository.findOne({
+            where: { document },
+            relations: ["tokens"],
+        });
     }
 
     async findByEmail(email: string): Promise<User | undefined> {
-        const user = await this.repository.findOne({ email });
+        const user = await this.repository.findOne({
+            where: { email },
+            relations: ["tokens"],
+        });
         return user;
     }
 
@@ -35,10 +41,18 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async findById(id: string): Promise<User | undefined> {
-        return await this.repository.findOne(id);
+        return await this.repository.findOne(id, { relations: ["tokens"] });
     }
 
     async save(user: User): Promise<User> {
         return await this.repository.save(user);
+    }
+
+    async findByToken(token: string): Promise<User | undefined> {
+        return await this.repository
+            .createQueryBuilder("user")
+            .innerJoinAndSelect("user.tokens", "token")
+            .where("token.token = :token", { token })
+            .getOne();
     }
 }
