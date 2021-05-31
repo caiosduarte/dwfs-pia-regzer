@@ -9,7 +9,7 @@ export class AddColumnUpdateAtToUser1622480490505
             new TableColumn({
                 name: "updated_at",
                 type: "timestamp",
-                isNullable: true,
+                default: "CURRENT_TIMESTAMP",
             })
         );
     }
