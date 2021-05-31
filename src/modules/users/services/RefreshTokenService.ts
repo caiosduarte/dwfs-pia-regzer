@@ -47,8 +47,8 @@ export default class RefreshTokenService {
         });
 
         // TODO: Fazer a implementação VanilaDateProvider com este método e outras funções em javascript puro
-        const addDays = function addDays(days: number, date?: Date) {
-            let result = date ? new Date(date) : new Date();
+        const addDays = function addDays(days: number, date = new Date()) {
+            const result = new Date(date);
             result.setDate(result.getDate() + days);
             return result;
         };
