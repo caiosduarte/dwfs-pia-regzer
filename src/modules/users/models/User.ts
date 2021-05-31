@@ -4,6 +4,7 @@ import {
     Entity,
     OneToMany,
     PrimaryColumn,
+    UpdateDateColumn,
 } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 import Token from "./Token";
@@ -44,6 +45,9 @@ class User {
         onUpdate: "CASCADE",
     })
     tokens?: Token[];
+
+    @UpdateDateColumn({ name: "updated_at" })
+    updatedAt: Date;
 
     constructor() {
         if (!this.id) {
