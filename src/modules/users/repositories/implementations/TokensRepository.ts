@@ -47,4 +47,14 @@ export default class TokensRepository implements ITokensRepository {
     async save(token: Token): Promise<Token> {
         return await this.repository.save(token);
     }
+
+    async findByEncodedAndUserId(
+        encoded: string,
+        userId: string
+    ): Promise<Token | undefined> {
+        return await this.repository.findOne({
+            where: { token: encoded, userId },
+            relations: ["user"],
+        });
+    }
 }

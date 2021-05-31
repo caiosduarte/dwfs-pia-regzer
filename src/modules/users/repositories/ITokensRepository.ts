@@ -6,5 +6,9 @@ export default interface ITokensRepository {
     findById(id: string): Promise<Token | undefined>;
     deleteById(id: string): Promise<any>;
     findByEncoded(encoded: string): Promise<Token | undefined>;
+    findByEncodedAndUserId(
+        encoded: string,
+        userId: string
+    ): Promise<Token | undefined>;
     save(token: Token): Promise<Token>;
 }

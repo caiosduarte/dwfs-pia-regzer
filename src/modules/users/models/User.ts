@@ -26,7 +26,7 @@ class User {
     @Column()
     email: string;
 
-    @Column({ select: false })
+    @Column()
     password: string;
 
     @Column({ name: "is_admin", default: false })

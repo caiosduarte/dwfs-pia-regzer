@@ -29,7 +29,7 @@ function authenticateUserController() {
 }
 
 function refreshTokenController() {
-    const repository = UsersRepository.getInstance();
+    const repository = TokensRepository.getInstance();
     const service = new RefreshTokenService(repository);
     const refreshTokenController = new RefreshTokenController(service);
 

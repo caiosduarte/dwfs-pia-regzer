@@ -20,10 +20,7 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async findByDocument(document: string): Promise<User | undefined> {
-        return await this.repository.findOne({
-            where: { document },
-            relations: ["tokens"],
-        });
+        return await this.repository.findOne({ document });
     }
 
     async findByEmail(email: string): Promise<User | undefined> {
