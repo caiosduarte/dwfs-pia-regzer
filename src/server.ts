@@ -1,13 +1,18 @@
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import "reflect-metadata";
-import "./database";
+import createConnection from "./database";
 import AppError from "./errors/AppError";
 import routes from "./routes";
 
 const app = express();
+
 app.use(express.json());
+
+createConnection();
+
 app.use(routes);
+
 // TODO: Aplicar inversão de dependência para errors vindos dos módulos
 app.use(
     (err: Error, request: Request, response: Response, next: NextFunction) => {
