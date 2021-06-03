@@ -47,7 +47,6 @@ class AuthenticateUserService {
             secret: tokenSecret,
             subject: user.id,
             expiresIn: tokenExpiresIn,
-            payload: email,
         });
 
         const refreshTokenEncoded = createJsonWebTokenEncoded({
@@ -65,7 +64,7 @@ class AuthenticateUserService {
             expiresAt: new DateProvider().addDays(10),
         } as ICreateTokenDTO);
 
-        user.tokens.push(refreshToken);
+        user.tokens?.push(refreshToken);
 
         await this.service.save(user);
 

@@ -14,10 +14,9 @@ export default async function ensureAdmin(
     }
 
     const usersRepository = UsersRepository.getInstance();
-
     const user = await usersRepository.findById(id);
 
-    if (!user || !user.isAdmin) {
+    if (!user?.isAdmin) {
         throw new AppError("User is not ADMIN!", 401);
     }
 

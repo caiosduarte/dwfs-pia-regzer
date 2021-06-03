@@ -4,7 +4,7 @@ import AppError from "../../../errors/AppError";
 import authConfig from "../config/auth";
 import UsersRepository from "../repositories/implementations/UsersRepository";
 
-interface TokenPayload {
+interface IPayload {
     iat: number;
     exp: number;
     sub: string;
@@ -26,20 +26,8 @@ export default async function ensureAuthenticated(
     try {
         const { sub: userId } = verify(
             token,
-            authConfig.jwt.refreshTokenSecret
-        ) as TokenPayload;
-
-        const usersRepository = UsersRepository.getInstance();
-
-        const user = await usersRepository.findById(userId);
-
-        if (!user) {
-            throw new AppError("User doesn't exists!", 401);
-        }
-
-        if (!user.tokens.find((t) => t.token === token)) {
-            throw new AppError("Invalid JWT Token.", 401);
-        }
+            authConfig.jwt.tokenSecret
+        ) as IPayload;
 
         request.user = {
             id: userId,
