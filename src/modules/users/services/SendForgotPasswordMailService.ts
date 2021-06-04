@@ -31,7 +31,7 @@ export default class SendForgotPasswordMailService {
 
         // grava o token do email
 
-        user.tokens.push(newToken);
+        user.tokens?.push(newToken);
 
         await this.repository.save(user);
 
