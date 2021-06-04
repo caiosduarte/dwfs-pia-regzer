@@ -21,11 +21,11 @@ Github: https://github.com/renattomartins
 
 Template: 
 
-Biblioteca de testes automatizados para chamadas: superteste. 
+Biblioteca de testes automatizados para chamadas: supertest. 
 
 Swagger como adicional.
 
-- 3º Leva: 40 ptos
+- 3º Leva: 40 ptos. Aplicação funcional
 
 24/06
 
