@@ -42,7 +42,7 @@ export class CreateUsers1594592667317 implements MigrationInterface {
                     {
                         name: "is_confirmed",
                         type: "boolean",
-                        default: false,
+                        default: true,
                     },
                     {
                         name: "created_at",
