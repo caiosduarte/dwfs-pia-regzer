@@ -1,8 +1,6 @@
 import { sign, verify } from "jsonwebtoken";
 import AppError from "../../../errors/AppError";
 import auth from "../config/auth";
-import ICreateTokenDTO from "../dTOs/ICreateTokenDTO";
-import Token from "../models/Token";
 import ITokensRepository from "../repositories/ITokensRepository";
 import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
 

@@ -1,11 +1,12 @@
-import ICreateUserDTO from "../dTOs/ICreateUserDTO";
-import User from "../models/User";
+import ICreateUserDTO from "../dtos/ICreateUserDTO";
+import IUser from "../models/IUser";
 
 export default interface IUsersRepository {
-    findByDocument(document: string): Promise<User | undefined>;
-    findByEmail(email: string): Promise<User | undefined>;
-    create(data: ICreateUserDTO): Promise<User | undefined>;
-    findById(id: string): Promise<User | undefined>;
-    save(user: User): Promise<User>;
-    findByToken(token: string): Promise<User | undefined>;
+    readonly INSTANCE: IUsersRepository;
+    findByDocument(document: string): Promise<IUser | undefined>;
+    findByEmail(email: string): Promise<IUser | undefined>;
+    create(data: ICreateUserDTO): Promise<IUser | undefined>;
+    findById(id: string): Promise<IUser | undefined>;
+    save(user: IUser): Promise<IUser>;
+    findByToken(token: string): Promise<IUser | undefined>;
 }

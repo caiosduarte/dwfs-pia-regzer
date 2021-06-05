@@ -1,21 +1,20 @@
 import { hash } from "bcrypt";
 import AppError from "../../../errors/AppError";
-import ICreateUserDTO from "../dTOs/ICreateUserDTO";
-import User from "../models/User";
-import UsersRepository from "../repositories/implementations/UsersRepository";
+import ICreateUserDTO from "../dtos/ICreateUserDTO";
+import IUsersRepository from "../repositories/IUsersRepository";
 
 interface IUserResponse {
     name: string;
     document: string;
     email: string;
     cellphone: string;
-    isAdmin: boolean;
-    isConfirmed: boolean;
-    createdAt: Date;
+    isAdmin?: boolean;
+    isConfirmed?: boolean;
+    createdAt?: Date;
 }
 
 class CreateUserService {
-    constructor(private repository: UsersRepository) {}
+    constructor(private repository: IUsersRepository) {}
 
     public async execute({
         name,
@@ -23,7 +22,7 @@ class CreateUserService {
         cellphone,
         email,
         password,
-    }: ICreateUserDTO): Promise<User> {
+    }: ICreateUserDTO): Promise<IUserResponse> {
         this.repository;
 
         const checkEmailExists = await this.repository.findByEmail(email);
@@ -48,7 +47,17 @@ class CreateUserService {
             password: hashedPassword,
         });
 
-        return user;
+        const userResponse: IUserResponse = {
+            name,
+            document,
+            cellphone,
+            email,
+            isAdmin: user?.isAdmin,
+            isConfirmed: user?.isConfirmed,
+            createdAt: user?.createdAt,
+        };
+
+        return userResponse;
     }
 }
 

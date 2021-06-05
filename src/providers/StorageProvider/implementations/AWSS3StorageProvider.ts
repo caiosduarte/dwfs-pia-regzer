@@ -1,14 +1,22 @@
-import IStorageProvider from "../IStorageProvider";
 import { S3 } from "aws-sdk";
-import upload from "../../../config/upload";
 import fs from "fs";
-import { resolve } from "path";
 import mime from "mime";
+import { resolve } from "path";
+import upload from "../../../config/upload";
+import IStorageProvider from "../IStorageProvider";
 
 export default class AWSS3StorageProvider implements IStorageProvider {
     private client: S3;
     constructor() {
         this.client = new S3({ region: process.env.AWS_BUCKET_REGION });
+    }
+    private static INSTANCE: AWSS3StorageProvider;
+
+    static getInstance(): AWSS3StorageProvider {
+        if (!AWSS3StorageProvider.INSTANCE) {
+            AWSS3StorageProvider.INSTANCE = new AWSS3StorageProvider();
+        }
+        return AWSS3StorageProvider.INSTANCE;
     }
 
     async save(folder: string, file: string): Promise<string> {

@@ -1,14 +1,17 @@
 import { getRepository, Repository } from "typeorm";
-import ICreateTokenDTO from "../../dTOs/ICreateTokenDTO";
-import Token from "../../models/Token";
-import ITokensRepository from "../ITokensRepository";
+import Token from "../entities/Token";
+import ICreateTokenDTO from "../modules/users/dtos/ICreateTokenDTO";
+import ITokensRepository from "../modules/users/repositories/ITokensRepository";
 
 export default class TokensRepository implements ITokensRepository {
-    private repository: Repository<Token>;
+    readonly INSTANCE: ITokensRepository;
     private static INSTANCE: TokensRepository;
+
+    private repository: Repository<Token>;
 
     private constructor() {
         this.repository = getRepository(Token);
+        this.INSTANCE = this;
     }
 
     static getInstance(): TokensRepository {

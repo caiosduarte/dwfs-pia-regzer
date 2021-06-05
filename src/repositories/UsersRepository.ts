@@ -1,15 +1,17 @@
 import { getRepository, Repository } from "typeorm";
-import ICreateUserDTO from "../../dTOs/ICreateUserDTO";
-import User from "../../models/User";
-import IUsersRepository from "../IUsersRepository";
+import ICreateUserDTO from "../modules/users/dtos/ICreateUserDTO";
+import User from "../entities/User";
+import IUsersRepository from "../modules/users/repositories/IUsersRepository";
 
 export default class UsersRepository implements IUsersRepository {
-    private repository: Repository<User>;
-
+    readonly INSTANCE: IUsersRepository;
     private static INSTANCE: UsersRepository;
+
+    private repository: Repository<User>;
 
     private constructor() {
         this.repository = getRepository(User);
+        this.INSTANCE = this;
     }
 
     static getInstance(): UsersRepository {

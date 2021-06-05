@@ -1,11 +1,11 @@
 import { compare } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import authConfig from "../config/auth";
-import ICreateTokenDTO from "../dTOs/ICreateTokenDTO";
+import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
 import Token from "../models/Token";
+import IDateProvider from "../providers/IDateProvider";
 import IUsersRepository from "../repositories/IUsersRepository";
 import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
-import DateProvider from "../utils/implementations/DateProvider";
 
 interface IRequest {
     email: string;
@@ -21,7 +21,10 @@ interface IResponse {
 }
 
 class AuthenticateUserService {
-    constructor(private service: IUsersRepository) {}
+    constructor(
+        private service: IUsersRepository,
+        private dateProvider: IDateProvider
+    ) {}
 
     public async execute({ email, password }: IRequest): Promise<IResponse> {
         const user = await this.service.findByEmail(email);
@@ -61,7 +64,7 @@ class AuthenticateUserService {
         Object.assign(refreshToken, {
             userId: user.id,
             token: refreshTokenEncoded,
-            expiresAt: new DateProvider().addDays(10),
+            expiresAt: this.dateProvider.addDays(10),
         } as ICreateTokenDTO);
 
         user.tokens?.push(refreshToken);
@@ -80,4 +83,4 @@ class AuthenticateUserService {
     }
 }
 
-export { AuthenticateUserService };
+export default AuthenticateUserService;

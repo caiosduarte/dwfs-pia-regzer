@@ -1,61 +1,61 @@
-import TokensRepository from "../repositories/implementations/TokensRepository";
-import UsersRepository from "../repositories/implementations/UsersRepository";
-import { AuthenticateUserService } from "../services/AuthenticateUserService";
+import IDateProvider from "../providers/IDateProvider";
+import IMailProvider from "../providers/IMailProvider";
+import ITokensRepository from "../repositories/ITokensRepository";
+import IUsersRepository from "../repositories/IUsersRepository";
+import AuthenticateUserService from "../services/AuthenticateUserService";
 import CreateUserService from "../services/CreateUserService";
 import RefreshTokenService from "../services/RefreshTokenService";
 import ResetPasswordService from "../services/ResetPasswordService";
 import SendForgotPasswordMailService from "../services/SendForgotPasswordMailService";
-import EtherealEmailProvider from "../utils/implementations/EtherealMailProvider";
 import AuthenticateUserController from "./AuthenticateUserController";
 import CreateUserController from "./CreateUserController";
 import RefreshTokenController from "./RefreshTokenController";
 import ResetPasswordController from "./ResetPasswordController";
 import SendForgotPasswordMailController from "./SendForgotPasswordMailController";
 
-function createUserController() {
-    const repository = UsersRepository.getInstance();
+const createUserController = (
+    repository: IUsersRepository
+): CreateUserController => {
     const service = new CreateUserService(repository);
-    const createUserController = new CreateUserController(service);
+    return new CreateUserController(service);
+};
 
-    return createUserController;
+function authenticateUserController(
+    repository: IUsersRepository,
+    dateProvider: IDateProvider
+): AuthenticateUserController {
+    const service = new AuthenticateUserService(repository, dateProvider);
+    return new AuthenticateUserController(service);
 }
 
-function authenticateUserController() {
-    const repository = UsersRepository.getInstance();
-    const service = new AuthenticateUserService(repository);
-    const authenticateUserController = new AuthenticateUserController(service);
-
-    return authenticateUserController;
-}
-
-function refreshTokenController() {
-    const repository = TokensRepository.getInstance();
+function refreshTokenController(
+    repository: ITokensRepository
+): RefreshTokenController {
     const service = new RefreshTokenService(repository);
-    const refreshTokenController = new RefreshTokenController(service);
-
-    return refreshTokenController;
+    return new RefreshTokenController(service);
 }
 
-const etherealMailProvider = new EtherealEmailProvider();
-
-function sendForgotPasswordMailController() {
-    const repository = UsersRepository.getInstance();
+const sendForgotPasswordMailController = (
+    usersRepository: IUsersRepository,
+    tokensRepository: ITokensRepository,
+    mailProvider: IMailProvider,
+    dateProvider: IDateProvider
+) => {
     const service = new SendForgotPasswordMailService(
-        repository,
-        etherealMailProvider
+        usersRepository,
+        tokensRepository,
+        mailProvider,
+        dateProvider
     );
-    const sendForgotPasswordMailController =
-        new SendForgotPasswordMailController(service);
 
-    return sendForgotPasswordMailController;
-}
+    return new SendForgotPasswordMailController(service);
+};
 
-function resetPasswordController() {
-    const repository = TokensRepository.getInstance();
+function resetPasswordController(
+    repository: ITokensRepository
+): ResetPasswordController {
     const service = new ResetPasswordService(repository);
-    const resetPasswordController = new ResetPasswordController(service);
-
-    return resetPasswordController;
+    return new ResetPasswordController(service);
 }
 
 export {

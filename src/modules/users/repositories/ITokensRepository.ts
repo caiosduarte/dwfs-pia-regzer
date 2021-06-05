@@ -1,14 +1,15 @@
-import ICreateTokenDTO from "../dTOs/ICreateTokenDTO";
-import Token from "../models/Token";
+import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
+import IToken from "../models/IToken";
 
 export default interface ITokensRepository {
-    create(data: ICreateTokenDTO): Promise<Token>;
-    findById(id: string): Promise<Token | undefined>;
+    readonly INSTANCE: ITokensRepository;
+    create(data: ICreateTokenDTO): Promise<IToken>;
+    findById(id: string): Promise<IToken | undefined>;
     deleteById(id: string): Promise<any>;
-    findByEncoded(encoded: string): Promise<Token | undefined>;
+    findByEncoded(encoded: string): Promise<IToken | undefined>;
     findByEncodedAndUserId(
         encoded: string,
         userId: string
-    ): Promise<Token | undefined>;
-    save(token: Token): Promise<Token>;
+    ): Promise<IToken | undefined>;
+    save(token: IToken): Promise<IToken>;
 }

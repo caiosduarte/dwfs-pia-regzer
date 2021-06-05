@@ -1,8 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import AppError from "../../../errors/AppError";
-import UsersRepository from "../repositories/implementations/UsersRepository";
+import AppError from "../errors/AppError";
+import UsersRepository from "../repositories/UsersRepository";
 
-export default async function ensureAdmin(
+interface IPayload {
+    iat: number;
+    exp: number;
+    sub: string;
+}
+
+export default async function ensureConfirmed(
     request: Request,
     response: Response,
     next: NextFunction
@@ -16,8 +22,8 @@ export default async function ensureAdmin(
     const usersRepository = UsersRepository.getInstance();
     const user = await usersRepository.findById(id);
 
-    if (!user?.isAdmin) {
-        throw new AppError("User is not ADMIN!", 401);
+    if (!user?.isConfirmed) {
+        throw new AppError("User is not confirmed!", 401);
     }
 
     return next();

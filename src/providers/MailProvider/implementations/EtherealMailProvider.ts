@@ -1,9 +1,18 @@
-import IMailProvider from "../IMailProvider";
-import nodemailer, { Transporter } from "nodemailer";
-import handlebars from "handlebars";
 import fs from "fs";
+import handlebars from "handlebars";
+import nodemailer, { Transporter } from "nodemailer";
+import IMailProvider from "../../../modules/users/providers/IMailProvider";
 
-export default class EtherealEmailProvider implements IMailProvider {
+export default class EtherealMailProvider implements IMailProvider {
+    private static INSTANCE: EtherealMailProvider;
+
+    static getInstance(): EtherealMailProvider {
+        if (!EtherealMailProvider.INSTANCE) {
+            EtherealMailProvider.INSTANCE = new EtherealMailProvider();
+        }
+        return EtherealMailProvider.INSTANCE;
+    }
+
     private transporter: Transporter;
 
     constructor() {
@@ -41,7 +50,7 @@ export default class EtherealEmailProvider implements IMailProvider {
 
         const message = await this.transporter.sendMail({
             to,
-            from: "Registration Analyzer <noreplay@registration_analyzer.com.br>",
+            from: "Regzer <noreplay@regzer.com.br>",
             subject,
             html: templateHTML,
         });

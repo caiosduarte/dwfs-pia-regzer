@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import IUsersRepository from "../repositories/IUsersRepository";
 import CreateUserService from "../services/CreateUserService";
 
 export default class CreateUserController {
@@ -15,14 +16,6 @@ export default class CreateUserController {
             password,
         });
 
-        return response.status(201).json({
-            id: user.id,
-            name,
-            email,
-            document,
-            cellphone,
-            createdAt: user.createdAt,
-            tokens: user.tokens,
-        });
+        return response.status(201).json(user);
     }
 }
