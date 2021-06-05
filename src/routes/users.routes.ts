@@ -9,7 +9,6 @@ usersRouter.post("/", (request, response) => {
     createUserController(repository).handle(request, response);
 });
 
-/*
 usersRouter.get("/", ensureAuthenticated, async (request, response) => {
     const { id } = request.user;
 
@@ -31,5 +30,5 @@ usersRouter.get("/email", async (request, response) => {
 
     return response.json(user);
 });
-*/
+
 export default usersRouter;
