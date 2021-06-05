@@ -2,12 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import AppError from "../errors/AppError";
 import UsersRepository from "../repositories/UsersRepository";
 
-interface IPayload {
-    iat: number;
-    exp: number;
-    sub: string;
-}
-
 export default async function ensureConfirmed(
     request: Request,
     response: Response,

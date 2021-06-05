@@ -7,6 +7,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
+import IToken from "../modules/users/models/IToken";
 import IUser from "../modules/users/models/IUser";
 import Token from "./Token";
 
@@ -45,7 +46,7 @@ class User implements IUser {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })
-    tokens?: Token[];
+    tokens?: IToken[];
 
     @UpdateDateColumn({ name: "updated_at" })
     updatedAt: Date;

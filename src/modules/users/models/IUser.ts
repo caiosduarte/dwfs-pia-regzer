@@ -1,7 +1,7 @@
 import IToken from "./IToken";
 
 interface IUser {
-    id: string;
+    id?: string;
 
     name: string;
 
@@ -19,9 +19,9 @@ interface IUser {
 
     createdAt: Date;
 
-    tokens?: IToken[];
-
     updatedAt: Date;
+
+    tokens?: IToken[];
 }
 
 export default IUser;

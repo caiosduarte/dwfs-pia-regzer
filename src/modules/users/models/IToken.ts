@@ -1,7 +1,7 @@
 import IUser from "./IUser";
 
 export default interface IToken {
-    id: string;
+    id?: string;
 
     userId: string;
 

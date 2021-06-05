@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 import IToken from "../modules/users/models/IToken";
+import IUser from "../modules/users/models/IUser";
 import User from "./User";
 
 @Entity("user_token")
@@ -20,7 +21,7 @@ export default class Token implements IToken {
 
     @JoinColumn({ name: "user_id", referencedColumnName: "id" })
     @ManyToOne((type) => User, { cascade: ["update"] })
-    user: User;
+    user: IUser;
 
     @Column()
     token: string;
