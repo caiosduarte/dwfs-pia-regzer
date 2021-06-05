@@ -1,4 +1,6 @@
 import { Router } from "express";
+import AppError from "../errors/AppError";
+import ensureAuthenticated from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
 import UsersRepository from "../repositories/UsersRepository";
 
