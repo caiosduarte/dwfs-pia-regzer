@@ -4,7 +4,7 @@
         "name": "Caio Duarte",
         "email": "caiosduarte@gmail.com"
     },
-    "description": "Registration Analyzer (regzer)",
+    "description": "Regzer (Registration Analyzer)",
     "version": "1.0.0",
     "main": "server.js",
     "license": "MIT",

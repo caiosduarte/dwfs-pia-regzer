@@ -21,7 +21,7 @@ services:
     app:
         # usa o Dockerfile local para criar a imagem
         build: .
-        container_name: registration_analyzer
+        container_name: regzer
         ports:
             - 3333:3333
         volumes:
