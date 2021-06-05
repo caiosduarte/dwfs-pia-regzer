@@ -22,9 +22,14 @@ const createUserController = (
 
 function authenticateUserController(
     repository: IUsersRepository,
+    tokensRepository: ITokensRepository,
     dateProvider: IDateProvider
 ): AuthenticateUserController {
-    const service = new AuthenticateUserService(repository, dateProvider);
+    const service = new AuthenticateUserService(
+        repository,
+        tokensRepository,
+        dateProvider
+    );
     return new AuthenticateUserController(service);
 }
 

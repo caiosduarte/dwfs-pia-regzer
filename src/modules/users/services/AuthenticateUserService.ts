@@ -2,8 +2,8 @@ import { compare } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import authConfig from "../config/auth";
 import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
-import Token from "../models/Token";
 import IDateProvider from "../providers/IDateProvider";
+import ITokensRepository from "../repositories/ITokensRepository";
 import IUsersRepository from "../repositories/IUsersRepository";
 import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
 
@@ -22,12 +22,13 @@ interface IResponse {
 
 class AuthenticateUserService {
     constructor(
-        private service: IUsersRepository,
+        private usersRepository: IUsersRepository,
+        private tokensRepository: ITokensRepository,
         private dateProvider: IDateProvider
     ) {}
 
     public async execute({ email, password }: IRequest): Promise<IResponse> {
-        const user = await this.service.findByEmail(email);
+        const user = await this.usersRepository.findByEmail(email);
 
         if (!user) {
             throw new AppError("Email/password don't match.", 401);
@@ -59,27 +60,19 @@ class AuthenticateUserService {
             payload: email,
         });
 
-        const refreshToken = new Token();
-
-        Object.assign(refreshToken, {
+        const refreshToken = this.tokensRepository.create({
             userId: user.id,
             token: refreshTokenEncoded,
             expiresAt: this.dateProvider.addDays(10),
         } as ICreateTokenDTO);
 
-        user.tokens?.push(refreshToken);
-
-        await this.service.save(user);
-
-        const tokenResponse: IResponse = {
+        return {
             token: tokenEncoded,
             refreshToken: refreshTokenEncoded,
             user: {
                 id: user.id,
             },
-        };
-
-        return tokenResponse;
+        } as IResponse;
     }
 }
 
