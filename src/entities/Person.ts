@@ -1,4 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from "typeorm";
+import { v4 as uuidV4 } from "uuid";
 import IAddress from "../modules/people/models/IAddress";
 import IContact from "../modules/people/models/IContact";
 import IDocument from "../modules/people/models/IDocument";
@@ -24,4 +32,16 @@ export default class Person implements IPerson {
 
     @Column({ name: "is_valid", default: false })
     isValid: boolean;
+
+    @UpdateDateColumn({ name: "updated_at" })
+    updatedAt?: Date;
+
+    @CreateDateColumn({ name: "created_at" })
+    createdAt?: Date;
+
+    constructor() {
+        if (!this.id) {
+            this.id = uuidV4();
+        }
+    }
 }

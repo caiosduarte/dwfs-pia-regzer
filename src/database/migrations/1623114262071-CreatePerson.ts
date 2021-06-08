@@ -11,10 +11,10 @@ export class CreatePeople1623114262071 implements MigrationInterface {
                         type: "uuid",
                         isPrimary: true,
                     },
-                    {
+                    /*                     {
                         name: "user_id",
                         type: "uuid",
-                    },
+                    }, */
                     {
                         name: "name",
                         type: "uuid",
@@ -24,8 +24,18 @@ export class CreatePeople1623114262071 implements MigrationInterface {
                         type: "boolean",
                         default: "false",
                     },
+                    {
+                        name: "updated_at",
+                        type: "timestamp",
+                        default: "CURRENT_TIME",
+                    },
+                    {
+                        name: "created_at",
+                        type: "timestamp",
+                        default: "CURRENT_TIME",
+                    },
                 ],
-                foreignKeys: [
+                /*                 foreignKeys: [
                     {
                         name: "fk_user_id_person",
                         referencedTableName: "user",
@@ -33,6 +43,7 @@ export class CreatePeople1623114262071 implements MigrationInterface {
                         columnNames: ["user_id"],
                     },
                 ],
+ */
             })
         );
     }

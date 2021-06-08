@@ -35,6 +35,11 @@ async function create() {
         ]
     );
 
+    await connection.query(
+        "INSERT INTO person (id, name, is_valid) " + "VALUES (?, ?, ?);",
+        ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209", "Caio Duarte", false]
+    );
+
     await connection.close();
 }
 
