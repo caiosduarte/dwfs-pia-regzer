@@ -10,12 +10,14 @@ import UsersRepository from "../repositories/UsersRepository";
 const authenticateRoutes = Router();
 
 authenticateRoutes.post("/sessions", async (request, response) => {
-    const repository = UsersRepository.getInstance();
+    const usersRepo = UsersRepository.getInstance();
+    const tokensRepo = TokensRepository.getInstance();
     const dateProvider = DayjsProvider.getInstance();
-    return authenticateUserController(repository, dateProvider).handle(
-        request,
-        response
-    );
+    return authenticateUserController(
+        usersRepo,
+        tokensRepo,
+        dateProvider
+    ).handle(request, response);
 });
 
 authenticateRoutes.post("/refresh-token", (request, response) => {
