@@ -27,12 +27,12 @@ export class CreatePeople1623114262071 implements MigrationInterface {
                     {
                         name: "updated_at",
                         type: "timestamp",
-                        default: "CURRENT_TIME",
+                        default: "CURRENT_TIMESTAMP",
                     },
                     {
                         name: "created_at",
                         type: "timestamp",
-                        default: "CURRENT_TIME",
+                        default: "CURRENT_TIMESTAMP",
                     },
                 ],
                 /*                 foreignKeys: [
