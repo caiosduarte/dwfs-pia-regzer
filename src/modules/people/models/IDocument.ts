@@ -1,9 +1,11 @@
-import IDocumentFile from "./IDocumentFIle";
 import IPerson from "./IPerson";
 
 export default interface IDocument {
+    id?: string;
     person: IPerson;
     name: string;
-    value: string;
-    documentFiles?: IDocumentFile[];
+    value?: string;
+    filename: string;
+    mimetype: string;
+    createdAt: Date;
 }
