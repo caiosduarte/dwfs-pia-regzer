@@ -2,6 +2,8 @@ import { Router } from "express";
 import multer from "multer";
 import ensureAuthenticated from "../middlewares/ensureAuthenticated";
 import ensureConfirmed from "../middlewares/ensureConfirmed";
+import CreateDocumentController from "../modules/people/controllers/CreateDocumentController";
+import CreateDocumentService from "../modules/people/services/CreateDocumentService";
 import DocumentsRepository from "../repositories/DocumentsRepository";
 import PeopleRepository from "../repositories/PeopleRepository";
 
@@ -11,11 +13,6 @@ const upload = multer({ dest: "./tmp/documents" });
 
 peopleRoutes.use(ensureAuthenticated);
 peopleRoutes.use(ensureConfirmed);
-
-interface IFile {
-    filename: string;
-    mimetype: string;
-}
 
 peopleRoutes.post("/", async (request, response) => {
     const { name } = request.body;
@@ -42,31 +39,13 @@ peopleRoutes.get("/:id", async (request, response) => {
 peopleRoutes.post(
     "/:id/document",
     upload.array("files"),
-    async (request, response) => {
-        // controller
-        const { id } = request.params;
-        const { name } = request.query;
-        const files = request.files as IFile[];
+    (request, response) => {
+        const service = new CreateDocumentService(
+            DocumentsRepository.getInstance()
+        );
+        const controller = new CreateDocumentController(service);
 
-        // service
-
-        // TODO: Criar um filtro de arquivos como: size, mimetype
-        console.log("Files => ", files);
-
-        const repository = DocumentsRepository.getInstance();
-
-        const documents = files.map(async (file) => {
-            return await repository.create({
-                person_id: id,
-                name: String(name),
-                filename: file.filename,
-                mimetype: file.mimetype,
-            });
-        });
-
-        console.log(`documents ${documents} - name ${name} - person_id ${id} `);
-
-        return response.status(201).json({ documents });
+        return controller.handle(request, response);
     }
 );
 
