@@ -7,3 +7,5 @@ doc/
 yarn-error.log
 yarn.lock
 README.md
+tmp/
+!tmp/.gitkeep
