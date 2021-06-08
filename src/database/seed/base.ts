@@ -24,7 +24,7 @@ async function create() {
         "INSERT INTO user (id, name, document, cellphone, email, password, is_admin, is_confirmed) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
         [
-            uuidV4(),
+            "ff9bf59a-70dc-4a80-a4b1-144fadfa8209",
             "Caio Duarte",
             "01351676636",
             "31984227833",
@@ -43,4 +43,8 @@ async function create() {
     await connection.close();
 }
 
-create().then(() => console.log("User ADMIN created!"));
+create().then(() =>
+    console.log(
+        "User Admin, user Caio Duarte and person Caio Duarte were created!"
+    )
+);
