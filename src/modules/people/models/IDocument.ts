@@ -7,5 +7,5 @@ export default interface IDocument {
     value?: string;
     filename: string;
     mimetype: string;
-    createdAt: Date;
+    createdAt?: Date;
 }
