@@ -14,7 +14,11 @@ export default class LocalStorageProvider implements IStorageProvider {
         return LocalStorageProvider.INSTANCE;
     }
 
-    async save(folder: string, file: string): Promise<string> {
+    async save(
+        folder: string,
+        file: string,
+        mimetype?: string
+    ): Promise<string> {
         await fs.promises.rename(
             resolve(upload.tmpFolder, file),
             resolve(`${upload.tmpFolder}/${folder}`, file)

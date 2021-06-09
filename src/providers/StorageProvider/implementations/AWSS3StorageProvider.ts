@@ -19,12 +19,14 @@ export default class AWSS3StorageProvider implements IStorageProvider {
         return AWSS3StorageProvider.INSTANCE;
     }
 
-    async save(folder: string, file: string): Promise<string> {
+    async save(
+        folder: string,
+        file: string,
+        mimetype?: string
+    ): Promise<string> {
         const originalName = resolve(upload.tmpFolder, file);
 
         const fileContent = await fs.promises.readFile(originalName);
-
-        const contentType = mime.getType(originalName);
 
         await this.client
             .putObject({
@@ -32,7 +34,8 @@ export default class AWSS3StorageProvider implements IStorageProvider {
                 Key: file,
                 ACL: "public-read",
                 Body: fileContent,
-                ContentType: contentType || "image/jpeg",
+                ContentType:
+                    mimetype || mime.getType(originalName) || "image/jpeg",
             })
             .promise();
 

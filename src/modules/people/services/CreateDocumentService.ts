@@ -26,7 +26,7 @@ export default class CreateDocumentService {
         });
 
         files.map(async (file) => {
-            await this.storage.save("documents", file.filename);
+            await this.storage.save("documents", file.filename, file.mimetype);
 
             await this.repository.create({
                 person_id,
