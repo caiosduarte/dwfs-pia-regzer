@@ -3,7 +3,7 @@ import { resolve } from "path";
 import upload from "../../../config/upload";
 import IStorageProvider from "../IStorageProvider";
 
-export default class LocalStorageProvider implements IStorageProvider {
+export class LocalStorageProvider implements IStorageProvider {
     private static INSTANCE: LocalStorageProvider;
     private constructor() {}
 
@@ -36,5 +36,9 @@ export default class LocalStorageProvider implements IStorageProvider {
         }
 
         await fs.promises.unlink(fileName);
+    }
+
+    getUrl(folder: string, file: string): string {
+        return `${process.env.APP_API_URL}/${folder}/${file}`;
     }
 }

@@ -7,13 +7,18 @@ interface IRequest {
     files: { filename: string; mimetype: string }[];
 }
 
+interface IResponse {
+    urls: string[];
+}
+
 export default class CreateDocumentService {
     constructor(
         private repository: IDocumentsRepository,
         private storage: IStorageProvider
     ) {}
 
-    async execute({ name, person_id, files }: IRequest): Promise<void> {
+    async execute({ name, person_id, files }: IRequest): Promise<any> {
+        /*
         const documents = await this.repository.findByPersonIdAndName(
             person_id,
             name
@@ -24,8 +29,9 @@ export default class CreateDocumentService {
 
             await this.repository.deleteById(document.id);
         });
+        */
 
-        files.map(async (file) => {
+        const teste = files.map(async (file) => {
             await this.storage.save("documents", file.filename, file.mimetype);
 
             await this.repository.create({
@@ -34,6 +40,12 @@ export default class CreateDocumentService {
                 filename: file.filename,
                 mimetype: file.mimetype,
             });
+
+            const url = this.storage.getUrl("documents", file.filename);
+            console.log("url => ", url);
+
+            return url;
         });
+        return teste;
     }
 }

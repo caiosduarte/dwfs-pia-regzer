@@ -16,12 +16,12 @@ export default class CreateDocumentController {
 
         // TODO: Criar um filtro de arquivos como: size, mimetype
 
-        await this.service.execute({
+        const result = await this.service.execute({
             person_id: id,
             name: String(name) || "Documento diverso",
             files,
         });
 
-        return response.status(201).json({ files });
+        return response.status(201).json(result);
     }
 }

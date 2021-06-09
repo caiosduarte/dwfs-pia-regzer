@@ -2,6 +2,7 @@ import { Router } from "express";
 import AppError from "../errors/AppError";
 import ensureAuthenticated from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
+import UserMap from "../modules/users/mappers/UserMap";
 import UsersRepository from "../repositories/UsersRepository";
 
 const usersRouter = Router();
@@ -17,7 +18,11 @@ usersRouter.get("/", ensureAuthenticated, async (request, response) => {
     const usersRepository = UsersRepository.getInstance();
     const user = await usersRepository.findById(id);
 
-    return response.json(user);
+    if (!user) {
+        throw new AppError("User not found!", 404);
+    }
+
+    return response.json(UserMap.toDTO(user));
 });
 
 usersRouter.get("/email", async (request, response) => {
@@ -30,7 +35,7 @@ usersRouter.get("/email", async (request, response) => {
         throw new AppError("User not found!", 404);
     }
 
-    return response.json(user);
+    return response.json(UserMap.toDTO(user));
 });
 
 export default usersRouter;

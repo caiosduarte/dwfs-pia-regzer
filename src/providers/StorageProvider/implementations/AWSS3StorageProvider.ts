@@ -8,8 +8,11 @@ import IStorageProvider from "../IStorageProvider";
 export default class AWSS3StorageProvider implements IStorageProvider {
     private client: S3;
     constructor() {
-        this.client = new S3({ region: process.env.AWS_BUCKET_REGION });
+        this.client = new S3({
+            region: process.env.AWS_BUCKET_REGION,
+        });
     }
+
     private static INSTANCE: AWSS3StorageProvider;
 
     static getInstance(): AWSS3StorageProvider {
@@ -51,5 +54,9 @@ export default class AWSS3StorageProvider implements IStorageProvider {
                 Key: file,
             })
             .promise();
+    }
+
+    getUrl(folder: string, file: string): string {
+        return `${process.env.AWS_BUCKET_URL}/${folder}/${file}`;
     }
 }
