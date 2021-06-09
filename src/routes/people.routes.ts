@@ -1,15 +1,18 @@
 import { Router } from "express";
 import multer from "multer";
+import upload from "../config/upload";
 import ensureAuthenticated from "../middlewares/ensureAuthenticated";
 import ensureConfirmed from "../middlewares/ensureConfirmed";
 import CreateDocumentController from "../modules/people/controllers/CreateDocumentController";
 import CreateDocumentService from "../modules/people/services/CreateDocumentService";
+import AWSS3StorageProvider from "../providers/StorageProvider/implementations/AWSS3StorageProvider";
+import LocalStorageProvider from "../providers/StorageProvider/implementations/LocalStorageProvider";
 import DocumentsRepository from "../repositories/DocumentsRepository";
 import PeopleRepository from "../repositories/PeopleRepository";
 
 const peopleRoutes = Router();
 
-const upload = multer({ dest: "./tmp/documents" });
+const uploadDocuments = multer(upload);
 
 peopleRoutes.use(ensureAuthenticated);
 peopleRoutes.use(ensureConfirmed);
@@ -38,10 +41,11 @@ peopleRoutes.get("/:id", async (request, response) => {
 
 peopleRoutes.post(
     "/:id/document",
-    upload.array("files"),
+    uploadDocuments.array("files"),
     (request, response) => {
         const service = new CreateDocumentService(
-            DocumentsRepository.getInstance()
+            DocumentsRepository.getInstance(),
+            AWSS3StorageProvider.getInstance()
         );
         const controller = new CreateDocumentController(service);
 

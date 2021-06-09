@@ -1,6 +1,7 @@
 import { getRepository, Repository } from "typeorm";
 import Document from "../entities/Document";
 import ICreateDocumentDTO from "../modules/people/dtos/ICreateDocumentDTO";
+import IDocument from "../modules/people/models/IDocument";
 import IDocumentsRepository from "../modules/people/repositories/IDocumentsRepository";
 
 export default class DocumentsRepository implements IDocumentsRepository {
@@ -30,5 +31,16 @@ export default class DocumentsRepository implements IDocumentsRepository {
         });
 
         return await this.repository.save(document);
+    }
+
+    async deleteById(id: string): Promise<void> {
+        await this.repository.delete(id);
+    }
+
+    async findByPersonIdAndName(
+        person_id: string,
+        name: string
+    ): Promise<IDocument[]> {
+        return await this.repository.find({ where: { person_id, name } });
     }
 }

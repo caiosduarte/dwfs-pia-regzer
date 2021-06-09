@@ -1,3 +1,4 @@
+import IStorageProvider from "../../../providers/StorageProvider/IStorageProvider";
 import IDocumentsRepository from "../repositories/IDocumentsRepository";
 
 interface IRequest {
@@ -7,11 +8,27 @@ interface IRequest {
 }
 
 export default class CreateDocumentService {
-    constructor(private repository: IDocumentsRepository) {}
+    constructor(
+        private repository: IDocumentsRepository,
+        private storage: IStorageProvider
+    ) {}
 
     async execute({ name, person_id, files }: IRequest): Promise<void> {
+        const documents = await this.repository.findByPersonIdAndName(
+            person_id,
+            name
+        );
+
+        documents.map(async (document) => {
+            await this.storage.delete("documents", document.filename);
+
+            await this.repository.deleteById(document.id);
+        });
+
         files.map(async (file) => {
-            return await this.repository.create({
+            await this.storage.save("documents", file.filename);
+
+            await this.repository.create({
                 person_id,
                 name,
                 filename: file.filename,
