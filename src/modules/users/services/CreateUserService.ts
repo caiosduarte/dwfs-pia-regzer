@@ -1,17 +1,9 @@
 import { hash } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import ICreateUserDTO from "../dtos/ICreateUserDTO";
+import IUserResponseDTO from "../dtos/IUserResponseDTO";
+import UserMap from "../mappers/UserMap";
 import IUsersRepository from "../repositories/IUsersRepository";
-
-interface IUserResponse {
-    name: string;
-    document: string;
-    email: string;
-    cellphone: string;
-    isAdmin?: boolean;
-    isConfirmed?: boolean;
-    createdAt?: Date;
-}
 
 class CreateUserService {
     constructor(private repository: IUsersRepository) {}
@@ -22,7 +14,7 @@ class CreateUserService {
         cellphone,
         email,
         password,
-    }: ICreateUserDTO): Promise<IUserResponse> {
+    }: ICreateUserDTO): Promise<IUserResponseDTO> {
         this.repository;
 
         const checkEmailExists = await this.repository.findByEmail(email);
@@ -47,17 +39,7 @@ class CreateUserService {
             password: hashedPassword,
         });
 
-        const userResponse: IUserResponse = {
-            name,
-            document,
-            cellphone,
-            email,
-            isAdmin: user?.isAdmin,
-            isConfirmed: user?.isConfirmed,
-            createdAt: user?.createdAt,
-        };
-
-        return userResponse;
+        return UserMap.toDTO(user);
     }
 }
 

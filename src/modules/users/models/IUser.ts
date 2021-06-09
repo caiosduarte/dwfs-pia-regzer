@@ -1,7 +1,7 @@
 import IToken from "./IToken";
 
 interface IUser {
-    id?: string;
+    id: string;
 
     name: string;
 
