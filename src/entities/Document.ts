@@ -8,13 +8,13 @@ import {
 } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 import IDocument from "../modules/people/models/IDocument";
+import IDocumentFile from "../modules/people/models/IDocumentFile";
 import IPerson from "../modules/people/models/IPerson";
 import Person from "./Person";
 
-@Entity("person_document")
-export default class Document implements IDocument {
+export default abstract class Document implements IDocument {
     @PrimaryColumn()
-    id?: string;
+    id: string;
 
     @Column()
     person_id: string;
@@ -26,8 +26,6 @@ export default class Document implements IDocument {
     @Column()
     name: string;
 
-    value?: string;
-
     @Column()
     filename: string;
 
@@ -37,8 +35,14 @@ export default class Document implements IDocument {
     @CreateDateColumn({ name: "created_at" })
     createdAt?: Date;
 
+    number: string;
+    date: string;
+    personName: string;
+    isMain: boolean;
+    files?: IDocumentFile[] | undefined;
+
     constructor() {
-        if (!this.id) {
+        if (this.id) {
             this.id = uuidV4();
         }
     }

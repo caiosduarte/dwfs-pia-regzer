@@ -3,12 +3,14 @@ import {
     CreateDateColumn,
     Entity,
     OneToMany,
+    OneToOne,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 import IToken from "../modules/users/models/IToken";
 import IUser from "../modules/users/models/IUser";
+import Person from "./Person";
 import Token from "./Token";
 
 @Entity()
@@ -21,9 +23,6 @@ class User implements IUser {
 
     @Column()
     document: string;
-
-    @Column()
-    cellphone: string;
 
     @Column()
     email: string;
@@ -50,6 +49,9 @@ class User implements IUser {
 
     @UpdateDateColumn({ name: "updated_at" })
     updatedAt: Date;
+
+    /*     @OneToOne((type) => Person, (person) => person.user, { cascade: true })
+    person: Person; */
 
     constructor() {
         if (!this.id) {

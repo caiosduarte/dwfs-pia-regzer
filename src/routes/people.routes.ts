@@ -40,8 +40,8 @@ peopleRoutes.post("/", async (request, response) => {
     return response.status(201).json(person);
 });
 
-peopleRoutes.get("/:id", async (request, response) => {
-    const { id } = request.params;
+peopleRoutes.get("/", async (request, response) => {
+    const { id } = request.user;
 
     const repository = PeopleRepository.getInstance();
 
