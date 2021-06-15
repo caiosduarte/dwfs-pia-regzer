@@ -1,30 +1,24 @@
 import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
 import IDocumentFile from "../modules/people/models/IDocumentFile";
 import Individual from "./Individual";
+import Document from "./Document";
+import DocumentType from "./DocumentType";
+
+class CPFDocumentType extends DocumentType {}
 
 @Entity("person_document")
 export default class CPF extends Document {
-    @Column()
-    id: string;
-
-    @OneToOne((type) => Individual, (individual) => individual.cpf)
-    @JoinColumn({ name: "person_id" })
-    person: Individual;
-
-    @Column({ name: "document_type_name", default: "CPF" })
-    readonly name: string;
-
+    setType(type: CPFDocumentType): void {
+        throw new Error("Method not implemented.");
+    }
     @Column({ length: 11 })
     number: string;
 
-    @Column({ name: "is_main", default: false })
-    readonly isMain: boolean;
-
-    files: IDocumentFile[];
+    @Column({ name: "is_main" })
+    isMain: boolean;
 
     constructor() {
         super();
-        this.name = "CPF";
         this.isMain = true;
     }
 }

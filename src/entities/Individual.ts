@@ -1,13 +1,19 @@
-import { Column, Entity, OneToOne } from "typeorm";
-import IDocument from "../modules/people/models/IDocument";
-import IPerson from "../modules/people/models/IPerson";
+import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import IIndividual from "../modules/people/models/IIndividual";
 import CPF from "./CPF";
 import Person from "./Person";
 
 @Entity("person_individual")
-export default class Individual extends Person implements IPerson {
+export default class Individual extends Person implements IIndividual {
     @Column({ name: "person_individual_id" })
     id: string;
+
+    @OneToOne((type) => Person, { eager: true })
+    @JoinColumn({
+        name: "person_individual_id",
+        referencedColumnName: "person_individual_id",
+    })
+    person: Person;
 
     @Column()
     birthday: Date;
@@ -28,13 +34,14 @@ export default class Individual extends Person implements IPerson {
     })
     ethnicity: string;
 
-    @Column()
-    mother_name: string;
+    @Column({ name: "mother_name" })
+    motherName: string;
 
-    @Column()
-    father_name: string;
+    @Column({ name: "father_name" })
+    fatherName: string;
 
     @Column({
+        name: "civil_status",
         enum: [
             "SOLTEIRO",
             "UNIÃO ESTÁVEL",
@@ -44,12 +51,12 @@ export default class Individual extends Person implements IPerson {
             "VIÚVO",
         ],
     })
-    civil_status: string;
+    civilStatus: string;
 
     @OneToOne((type) => CPF, (cpf) => cpf.person)
     cpf: CPF;
 
     constructor() {
-        super();
+        super("F");
     }
 }

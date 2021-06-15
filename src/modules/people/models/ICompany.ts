@@ -1,10 +1,11 @@
 import IDocument from "./IDocument";
+import IPerson from "./IPerson";
 
 export default interface ICompany {
-    id: string;
-    fantasy_name: string;
-    open_date: Date;
-    end_date: Date;
+    person: IPerson;
+    fantasyName: string;
+    openDate: Date;
+    endDate: Date;
     responsibleDocument: IDocument;
     responsibleName: string;
 }

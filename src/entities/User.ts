@@ -10,12 +10,13 @@ import {
 import { v4 as uuidV4 } from "uuid";
 import IToken from "../modules/users/models/IToken";
 import IUser from "../modules/users/models/IUser";
+import { Dated } from "./Embedded";
 import Person from "./Person";
 import Token from "./Token";
 
 @Entity()
 class User implements IUser {
-    @PrimaryColumn()
+    @PrimaryColumn({ name: "user_id" })
     id: string;
 
     @Column()
@@ -36,22 +37,21 @@ class User implements IUser {
     @Column({ name: "is_confirmed", default: true })
     isConfirmed: boolean;
 
-    @CreateDateColumn({ name: "created_at" })
-    createdAt: Date;
-
     @OneToMany((type) => Token, (token) => token.user, {
         cascade: true,
-        //eager: true,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })
-    tokens?: IToken[];
+    tokens?: Token[];
 
-    @UpdateDateColumn({ name: "updated_at" })
-    updatedAt: Date;
+    @Column((type) => Dated)
+    dated: Dated;
 
-    /*     @OneToOne((type) => Person, (person) => person.user, { cascade: true })
-    person: Person; */
+    @OneToOne((type) => Person, (person) => person.user, {
+        onDelete: "NO ACTION",
+        onUpdate: "NO ACTION",
+    })
+    person: Person;
 
     constructor() {
         if (!this.id) {

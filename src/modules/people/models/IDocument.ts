@@ -6,7 +6,8 @@ export default interface IDocument {
     person: IPerson;
     name: string;
     number: string;
-    date: string;
+    dispatchDate: Date;
+    issuingAgency: string;
     personName: string;
     isMain: boolean;
     files?: IDocumentFile[];

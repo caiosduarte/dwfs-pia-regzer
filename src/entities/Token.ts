@@ -1,19 +1,12 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 import IToken from "../modules/users/models/IToken";
-import IUser from "../modules/users/models/IUser";
+import { CreatedTimestamp } from "./Embedded";
 import User from "./User";
 
 @Entity("user_token")
 export default class Token implements IToken {
-    @PrimaryColumn()
+    @PrimaryColumn({ name: "token_id" })
     id: string;
 
     @Column({ name: "user_id" })
@@ -21,16 +14,16 @@ export default class Token implements IToken {
 
     @JoinColumn({ name: "user_id", referencedColumnName: "id" })
     @ManyToOne((type) => User, { cascade: ["update"] })
-    user: IUser;
+    user: User;
 
     @Column()
     token: string;
 
-    @Column({ name: "expires_at" })
+    @Column({ name: "expires_at", type: "timestamp without time zone" })
     expiresAt: Date;
 
-    @CreateDateColumn({ name: "created_at" })
-    createdAt: Date;
+    @Column((type) => CreatedTimestamp)
+    createdAt: CreatedTimestamp;
 
     constructor() {
         if (!this.id) {

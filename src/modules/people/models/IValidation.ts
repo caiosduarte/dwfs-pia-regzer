@@ -9,7 +9,7 @@ interface IValidateDTO {
 }
 
 export default class IValidation {
-    id?: string;
+    id: string;
     readonly person: IPerson;
     readonly field: string;
     readonly value: string;
