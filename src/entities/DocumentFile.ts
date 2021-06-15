@@ -1,14 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import IDocumentFile from "../modules/people/models/IDocumentFile";
 import Document from "./Document";
 
 @Entity("person_document_file")
 export default class DocumentFile implements IDocumentFile {
-    @Column({ name: "person_document_file_id" })
+    @PrimaryColumn({ name: "person_document_file_id" })
     id: string;
-
-    @Column({ name: "person_document_id" })
-    personDocumentId: string;
 
     @ManyToOne((type) => Document, (document) => document.files)
     @JoinColumn({

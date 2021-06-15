@@ -7,20 +7,23 @@ import {
     PrimaryColumn,
 } from "typeorm";
 import IPerson from "../modules/people/models/IPerson";
-import IUser from "../modules/users/models/IUser";
 import Document from "./Document";
+import { ALL_PERSON_TYPES } from "./Enum";
 import User from "./User";
 
 @Entity()
 export default abstract class Person implements IPerson {
-    @PrimaryColumn({ name: "person_id" })
+    /* @PrimaryColumn({ name: "person_id" }) */
     id: string;
 
-    @OneToOne((type) => User, { eager: true })
+    @Column({ primary: true })
+    person_id: string;
+
+    @OneToOne((type) => User, { primary: true })
     @JoinColumn({ name: "person_id", referencedColumnName: "user_id" })
     user: User;
 
-    @Column({ enum: ["F", "J", "O", "A"] })
+    @Column({ enum: ALL_PERSON_TYPES })
     type: string;
 
     @Column()
@@ -32,14 +35,13 @@ export default abstract class Person implements IPerson {
     @Column({ name: "is_valid", default: false })
     isValid: boolean;
 
-    @Column({ name: "valid_at", type: "timestamp without time zone" })
+    @Column({ name: "valid_at" })
     validAt: Date;
 
     @OneToMany((type) => Document, (document) => document.person)
     documents?: Document[];
 
-    constructor(type: string) {
-        //this.id = this.user.id;
+    constructor(type: ALL_PERSON_TYPES) {
         this.type = type;
     }
 }

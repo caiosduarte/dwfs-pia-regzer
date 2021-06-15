@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 export class CreatedTimestamp {
     @CreateDateColumn({
         name: "created_at",
-        type: "timestamp without time zone",
+        type: "datetime",
     })
     createdAt: Date;
 }
@@ -11,7 +11,7 @@ export class CreatedTimestamp {
 class UpdatedTimestamp {
     @UpdateDateColumn({
         name: "created_at",
-        type: "timestamp without time zone",
+        type: "datetime",
     })
     updatedAt: Date;
 }

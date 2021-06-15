@@ -11,13 +11,14 @@
     "scripts": {
         "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts",
         "build": "tsc",
-        "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+        "typeorm": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js",
         "seed": "ts-node-dev ./src/database/seed/base.ts"
     },
     "dependencies": {
         "aws": "^0.0.3-2",
         "aws-sdk": "^2.921.0",
         "bcrypt": "^5.0.1",
+        "class-validator": "^0.13.1",
         "date-fns": "^2.21.3",
         "dayjs": "^1.10.5",
         "dotenv": "^10.0.0",

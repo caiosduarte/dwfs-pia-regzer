@@ -7,13 +7,15 @@ export class CreateToken1622140141133 implements MigrationInterface {
                 name: "user_token",
                 columns: [
                     {
-                        name: "id",
-                        type: "uuid",
+                        name: "user_token_id",
+                        type: "character",
+                        length: "36",
                         isPrimary: true,
                     },
                     {
                         name: "user_id",
-                        type: "uuid",
+                        type: "character",
+                        length: "36",
                     },
                     {
                         name: "token",
@@ -22,6 +24,7 @@ export class CreateToken1622140141133 implements MigrationInterface {
                     {
                         name: "expires_at",
                         type: "timestamp",
+                        default: "CURRENT_TIMESTAMP",
                     },
                     {
                         name: "created_at",
@@ -31,9 +34,9 @@ export class CreateToken1622140141133 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     {
-                        name: "fk_user_id",
+                        name: "fk_user_id_user_token",
                         referencedTableName: "user",
-                        referencedColumnNames: ["id"],
+                        referencedColumnNames: ["user_id"],
                         columnNames: ["user_id"],
                         onDelete: "CASCADE",
                         onUpdate: "CASCADE",

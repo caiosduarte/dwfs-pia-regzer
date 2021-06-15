@@ -1,36 +1,31 @@
-import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import { IsDate } from "class-validator";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import IIndividual from "../modules/people/models/IIndividual";
 import CPF from "./CPF";
+import { ALL_PERSON_TYPES, ETHNICITY, GENDER } from "./Enum";
 import Person from "./Person";
 
 @Entity("person_individual")
 export default class Individual extends Person implements IIndividual {
-    @Column({ name: "person_individual_id" })
+    @PrimaryColumn({ name: "person_individual_id" })
     id: string;
 
     @OneToOne((type) => Person, { eager: true })
     @JoinColumn({
         name: "person_individual_id",
-        referencedColumnName: "person_individual_id",
+        referencedColumnName: "person_id",
     })
     person: Person;
 
     @Column()
+    @IsDate()
     birthday: Date;
 
-    @Column({ enum: ["M", "F"] })
+    @Column({ enum: GENDER })
     gender: string;
 
     @Column({
-        enum: [
-            "AFRODESCENDENTE",
-            "BRANCO",
-            "ASIÁTICO",
-            "AMERÍNDIO",
-            "MULATO",
-            "MULTIRRACIAL/PARDO",
-            "NÃO DECLARADA",
-        ],
+        enum: ETHNICITY,
     })
     ethnicity: string;
 
@@ -57,6 +52,6 @@ export default class Individual extends Person implements IIndividual {
     cpf: CPF;
 
     constructor() {
-        super("F");
+        super(ALL_PERSON_TYPES.FISICA);
     }
 }

@@ -1,23 +1,24 @@
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    OneToMany,
-    OneToOne,
-    PrimaryColumn,
-    UpdateDateColumn,
-} from "typeorm";
+    Contains,
+    IsInt,
+    Length,
+    IsEmail,
+    IsFQDN,
+    IsDate,
+} from "class-validator";
 import { v4 as uuidV4 } from "uuid";
-import IToken from "../modules/users/models/IToken";
 import IUser from "../modules/users/models/IUser";
 import { Dated } from "./Embedded";
-import Person from "./Person";
 import Token from "./Token";
 
 @Entity()
 class User implements IUser {
-    @PrimaryColumn({ name: "user_id" })
+    /* @PrimaryColumn({ name: "user_id" }) */
     id: string;
+
+    @Column({ primary: true })
+    user_id: string;
 
     @Column()
     name: string;
@@ -26,6 +27,7 @@ class User implements IUser {
     document: string;
 
     @Column()
+    @IsEmail()
     email: string;
 
     @Column()
@@ -34,8 +36,14 @@ class User implements IUser {
     @Column({ name: "is_admin", default: false })
     isAdmin: boolean;
 
-    @Column({ name: "is_confirmed", default: true })
+    @Column({ name: "is_valid", default: false })
+    isValid: boolean;
+
+    @Column({ name: "is_confirmed", default: false })
     isConfirmed: boolean;
+
+    @Column((type) => Dated)
+    dated: Dated;
 
     @OneToMany((type) => Token, (token) => token.user, {
         cascade: true,
@@ -43,15 +51,6 @@ class User implements IUser {
         onUpdate: "CASCADE",
     })
     tokens?: Token[];
-
-    @Column((type) => Dated)
-    dated: Dated;
-
-    @OneToOne((type) => Person, (person) => person.user, {
-        onDelete: "NO ACTION",
-        onUpdate: "NO ACTION",
-    })
-    person: Person;
 
     constructor() {
         if (!this.id) {
@@ -61,3 +60,6 @@ class User implements IUser {
 }
 
 export default User;
+function isEmail() {
+    throw new Error("Function not implemented.");
+}

@@ -9,17 +9,16 @@ export default class Token implements IToken {
     @PrimaryColumn({ name: "token_id" })
     id: string;
 
-    @Column({ name: "user_id" })
-    userId: string;
-
-    @JoinColumn({ name: "user_id", referencedColumnName: "id" })
-    @ManyToOne((type) => User, { cascade: ["update"] })
+    @ManyToOne((type) => User, (user) => user.tokens, {
+        cascade: ["update"],
+    })
+    @JoinColumn({ name: "user_id" })
     user: User;
 
     @Column()
     token: string;
 
-    @Column({ name: "expires_at", type: "timestamp without time zone" })
+    @Column({ name: "expires_at" })
     expiresAt: Date;
 
     @Column((type) => CreatedTimestamp)

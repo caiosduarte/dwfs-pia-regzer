@@ -1,9 +1,12 @@
-import { Column, Entity } from "typeorm";
+import { PrimaryColumn, Column, Entity } from "typeorm";
 
 @Entity("document_type")
 export default abstract class DocumentType {
-    @Column("document_type_id")
+    /*    @PrimaryColumn({ name: "document_type_id" }) */
     id: string;
+
+    @Column({ primary: true })
+    document_type_id: string;
 
     @Column()
     initials: string;
@@ -11,7 +14,7 @@ export default abstract class DocumentType {
     @Column()
     description: string;
 
-    @Column({ name: "person_type", enum: ["F", "J"] })
+    @Column({ name: "person_type", enum: ["F", "J", "T"] })
     personType: string;
 
     @Column()

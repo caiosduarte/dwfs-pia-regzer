@@ -18,7 +18,8 @@ export default class CPF extends Document {
     isMain: boolean;
 
     constructor() {
-        super();
+        //super();
+        super(new CPFDocumentType());
         this.isMain = true;
     }
 }
