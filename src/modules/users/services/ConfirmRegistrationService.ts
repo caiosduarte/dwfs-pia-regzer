@@ -1,16 +1,10 @@
-import { hash } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import ITokensRepository from "../repositories/ITokensRepository";
 
-interface IRequest {
-    tokenEncoded: string;
-    password: string;
-}
-
-export default class ResetPasswordService {
+export default class ConfirmRegistrationService {
     constructor(private repository: ITokensRepository) {}
 
-    async execute({ tokenEncoded, password }: IRequest): Promise<void> {
+    async execute(tokenEncoded: string): Promise<void> {
         const token = await this.repository.findByEncoded(tokenEncoded);
 
         const user = token?.user;
@@ -28,17 +22,11 @@ export default class ResetPasswordService {
             throw new AppError("Token expired!");
         }
 
-        // atualiza o password
-        user.password = await hash(password, 8);
-
-        if (!user.isConfirmed) {
-            user.isConfirmed = true;
-        }
-        // salva a senha do usuário e remove o token
-
+        // salva e remove o token
+        user.isConfirmed = true;
         const tokenId = token.id;
 
-        // salva a senha do usuário
+        // salva a confimação do usuário
         await this.repository.save(token);
 
         // remove o token antigo

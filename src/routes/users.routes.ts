@@ -3,6 +3,11 @@ import AppError from "../errors/AppError";
 import ensureAuthenticated from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
 import UserMap from "../modules/users/mappers/UserMap";
+import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
+import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
+import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
+import EtherealMailProvider from "../providers/MailProvider/implementations/EtherealMailProvider";
+import TokensRepository from "../repositories/TokensRepository";
 import UsersRepository from "../repositories/UsersRepository";
 
 const usersRouter = Router();
@@ -36,6 +41,41 @@ usersRouter.get("/email", async (request, response) => {
     }
 
     return response.json(UserMap.toDTO(user));
+});
+
+usersRouter.post(
+    "/confirmation",
+    ensureAuthenticated,
+    async (request, response) => {
+        const { id } = request.user;
+        const usersRepository = UsersRepository.getInstance();
+        const tokensRepository = TokensRepository.getInstance();
+        const mailProvider = EtherealMailProvider.getInstance();
+        const dateProvider = DayjsProvider.getInstance();
+
+        const service = new SendConfirmationMailService(
+            usersRepository,
+            tokensRepository,
+            mailProvider,
+            dateProvider
+        );
+
+        await service.execute(id);
+
+        return response.status(201).send();
+    }
+);
+
+usersRouter.post("/confirm", async (request, response) => {
+    const { token } = request.query;
+
+    const repository = TokensRepository.getInstance();
+
+    const service = new ConfirmRegistrationService(repository);
+
+    await service.execute(String(token));
+
+    return response.status(201).send();
 });
 
 export default usersRouter;
