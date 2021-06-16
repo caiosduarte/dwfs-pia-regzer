@@ -11,6 +11,8 @@ export default class ConfirmRegistrationService {
 
         if (!token || !user) {
             throw new AppError("Token invalid!");
+        } else if (user.isConfirmed) {
+            throw new AppError("User already confirmed!");
         }
 
         // verifica se token expirado
