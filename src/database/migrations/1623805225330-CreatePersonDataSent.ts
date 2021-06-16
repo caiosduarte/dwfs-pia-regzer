@@ -69,6 +69,12 @@ export class CreatePersonDataSent1623805225330 implements MigrationInterface {
                         referencedColumnNames: ["person_id"],
                         columnNames: ["person_id"],
                     },
+                    {
+                        name: "fk_user_id_person_data_sent",
+                        referencedTableName: "user",
+                        referencedColumnNames: ["user_id"],
+                        columnNames: ["analyst_id"],
+                    },
                 ],
             })
         );
