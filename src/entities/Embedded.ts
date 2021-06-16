@@ -8,18 +8,10 @@ export class CreatedTimestamp {
     createdAt: Date;
 }
 
-class UpdatedTimestamp {
-    @UpdateDateColumn({
-        name: "created_at",
-        type: "datetime",
-    })
-    updatedAt: Date;
-}
-
 export class Dated {
-    @Column((type) => CreatedTimestamp)
-    createdAt: CreatedTimestamp;
+    @Column((type) => CreatedTimestamp, { prefix: false })
+    createdTimestamp: CreatedTimestamp;
 
-    @Column((type) => UpdatedTimestamp)
-    updatedAt: UpdatedTimestamp;
+    @UpdateDateColumn({ name: "updated_at", type: "datetime" })
+    updatedAt: Date;
 }

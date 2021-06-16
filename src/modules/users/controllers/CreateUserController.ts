@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import IUsersRepository from "../repositories/IUsersRepository";
 import CreateUserService from "../services/CreateUserService";
 
 export default class CreateUserController {

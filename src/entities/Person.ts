@@ -20,7 +20,7 @@ export default abstract class Person implements IPerson {
     person_id: string;
 
     @OneToOne((type) => User, { primary: true })
-    @JoinColumn({ name: "person_id", referencedColumnName: "user_id" })
+    @JoinColumn({ name: "person_id" /* , referencedColumnName: "user_id"  */ })
     user: User;
 
     @Column({ enum: ALL_PERSON_TYPES })

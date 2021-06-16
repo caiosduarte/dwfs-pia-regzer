@@ -6,7 +6,7 @@ import User from "./User";
 
 @Entity("user_token")
 export default class Token implements IToken {
-    @PrimaryColumn({ name: "token_id" })
+    @PrimaryColumn({ name: "user_token_id" })
     id: string;
 
     @ManyToOne((type) => User, (user) => user.tokens, {
@@ -15,14 +15,17 @@ export default class Token implements IToken {
     @JoinColumn({ name: "user_id" })
     user: User;
 
+    @Column({ name: "user_id" })
+    userId: string;
+
     @Column()
     token: string;
 
-    @Column({ name: "expires_at" })
+    @Column({ name: "expires_at", type: "datetime" })
     expiresAt: Date;
 
-    @Column((type) => CreatedTimestamp)
-    createdAt: CreatedTimestamp;
+    @Column((type) => CreatedTimestamp, { prefix: false })
+    created: CreatedTimestamp;
 
     constructor() {
         if (!this.id) {

@@ -14,11 +14,11 @@ import Token from "./Token";
 
 @Entity()
 class User implements IUser {
-    /* @PrimaryColumn({ name: "user_id" }) */
+    @PrimaryColumn({ name: "user_id" })
     id: string;
 
-    @Column({ primary: true })
-    user_id: string;
+    /*     @Column({ primary: true })
+    user_id: string; */
 
     @Column()
     name: string;
@@ -42,7 +42,7 @@ class User implements IUser {
     @Column({ name: "is_confirmed", default: false })
     isConfirmed: boolean;
 
-    @Column((type) => Dated)
+    @Column((type) => Dated, { prefix: false })
     dated: Dated;
 
     @OneToMany((type) => Token, (token) => token.user, {
@@ -55,11 +55,9 @@ class User implements IUser {
     constructor() {
         if (!this.id) {
             this.id = uuidV4();
+            //this.user_id = this.id;
         }
     }
 }
 
 export default User;
-function isEmail() {
-    throw new Error("Function not implemented.");
-}
