@@ -9,7 +9,7 @@ const usersRouter = Router();
 
 usersRouter.post("/", (request, response) => {
     const repository = UsersRepository.getInstance();
-    createUserController(repository).handle(request, response);
+    return createUserController(repository).handle(request, response);
 });
 
 usersRouter.get("/", ensureAuthenticated, async (request, response) => {

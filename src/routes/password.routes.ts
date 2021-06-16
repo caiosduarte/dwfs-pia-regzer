@@ -13,7 +13,7 @@ const passwordRoutes = Router();
 passwordRoutes.post("/forgot", (request, response) => {
     const usersRepository = UsersRepository.getInstance();
     const tokensRepository = TokensRepository.getInstance();
-    const mailProvider = new EtherealMailProvider();
+    const mailProvider = EtherealMailProvider.getInstance();
     const dateProvider = DayjsProvider.getInstance();
 
     return sendForgotPasswordMailController(

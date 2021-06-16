@@ -15,26 +15,7 @@ export default class EtherealMailProvider implements IMailProvider {
 
     private transporter: Transporter;
 
-    constructor() {
-        nodemailer
-            .createTestAccount()
-            .then((account) => {
-                this.transporter = nodemailer.createTransport({
-                    host: account.smtp.host,
-                    port: account.smtp.port,
-                    secure: account.smtp.secure,
-                    auth: {
-                        user: account.user,
-                        pass: account.pass,
-                    },
-                });
-            })
-            .catch((err) => {
-                console.error(
-                    "Failed to create a testing account. " + err.message
-                );
-            });
-    }
+    private constructor() {}
 
     async sendMail(
         to: string,
@@ -48,7 +29,7 @@ export default class EtherealMailProvider implements IMailProvider {
 
         const templateHTML = templateParse(variables);
 
-        const message = await this.transporter.sendMail({
+        /*         const message = await this.transporter.sendMail({
             to,
             from: "Regzer <noreplay@regzer.com.br>",
             subject,
@@ -56,6 +37,44 @@ export default class EtherealMailProvider implements IMailProvider {
         });
 
         console.log("Message sent: %s", message.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(message));
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(message)); */
+
+        nodemailer
+            .createTestAccount()
+            .then((account) => {
+                return (
+                    this.transporter ||
+                    nodemailer.createTransport({
+                        host: account.smtp.host,
+                        port: account.smtp.port,
+                        secure: account.smtp.secure,
+                        auth: {
+                            user: account.user,
+                            pass: account.pass,
+                        },
+                    })
+                );
+            })
+            .then((transporter) => {
+                this.transporter = transporter;
+                return this.transporter.sendMail({
+                    to,
+                    from: "Regzer <noreplay@regzer.com.br>",
+                    subject,
+                    html: templateHTML,
+                });
+            })
+            .then((message) => {
+                console.log("Message sent: %s", message.messageId);
+                console.log(
+                    "Preview URL: %s",
+                    nodemailer.getTestMessageUrl(message)
+                );
+            })
+            .catch((err) => {
+                console.error(
+                    "Failed to create a testing account. " + err.message
+                );
+            });
     }
 }
