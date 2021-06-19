@@ -5,7 +5,6 @@ coverage
 ormconfig.json
 tmp/*
 !tmp/.gitkeep
-dist
 yarn-error.log
 *.bak
 *.~lock*
