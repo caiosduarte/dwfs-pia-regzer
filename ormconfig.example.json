@@ -3,7 +3,7 @@
     "type": "sqlite",
     "database": "./database/db.sqlite",
     "autoSchemaSync": true,
-    "entities": ["./sit/entities/*.js"],
+    "entities": ["./dist/entities/*.js"],
     "migrations": ["./dist/database/migrations/*.js"],
     "cli": { "migrationsDir": "./dist/database/migrations" },
     "logging": ["error"]

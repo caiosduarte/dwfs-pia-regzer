@@ -8,14 +8,14 @@ services:
     # sempre reinicia o container
     #    restart: always
     #    ports:
-    #        - 5432:5432
+    #        - 68956:5432
     #    volumes:
     #        - pgdata:/data/postgres
     #    environment:
     #        - POSTGRES_USER=docker
 
     #       - POSTGRES_PASSWORD=dwfs
-    #        - POSTGRES_DB=registration_analyzer
+    #        - POSTGRES_DB=regzer
     # cria o container na mesma rede que o host (máquina local)
     #    network_mode: host # versão antiga do Docker Compose
     app:
