@@ -1,6 +1,11 @@
-node_modules/
+node_modules
+.vscode
+coverage
+.env
+ormconfig.json
+tmp/*
+!tmp/.gitkeep
+dist
 yarn-error.log
 *.bak
 *.~lock*
-tmp/
-dist/

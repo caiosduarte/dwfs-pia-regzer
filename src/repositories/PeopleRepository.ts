@@ -17,7 +17,7 @@ export default class PeopleRepository implements IPeopleRepository {
     }
 
     async create({ name }: ICreatePersonDTO): Promise<IPerson> {
-        const person = this.repository.create({ name });
+        const person = this.repository.create({});
 
         return await this.repository.save(person);
     }

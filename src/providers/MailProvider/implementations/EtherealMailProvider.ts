@@ -13,7 +13,7 @@ export default class EtherealMailProvider implements IMailProvider {
         return EtherealMailProvider.INSTANCE;
     }
 
-    private transporter: Transporter;
+    private client: Transporter;
 
     private constructor() {}
 
@@ -29,21 +29,11 @@ export default class EtherealMailProvider implements IMailProvider {
 
         const templateHTML = templateParse(variables);
 
-        /*         const message = await this.transporter.sendMail({
-            to,
-            from: "Regzer <noreplay@regzer.com.br>",
-            subject,
-            html: templateHTML,
-        });
-
-        console.log("Message sent: %s", message.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(message)); */
-
         nodemailer
             .createTestAccount()
             .then((account) => {
                 return (
-                    this.transporter ||
+                    this.client ||
                     nodemailer.createTransport({
                         host: account.smtp.host,
                         port: account.smtp.port,
@@ -56,8 +46,8 @@ export default class EtherealMailProvider implements IMailProvider {
                 );
             })
             .then((transporter) => {
-                this.transporter = transporter;
-                return this.transporter.sendMail({
+                this.client = transporter;
+                return this.client.sendMail({
                     to,
                     from: "Regzer <noreplay@regzer.com.br>",
                     subject,

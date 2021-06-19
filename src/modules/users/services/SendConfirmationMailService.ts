@@ -22,18 +22,13 @@ export default class SendConfirmationMailService {
             throw new AppError("User/email does not exists!");
         }
 
-        // gera um token para acessar o link de e-mail
-        const newToken = await this.tokensRepository.create({
-            userId: user.id,
-            token: uuidV4(),
-            expiresAt: this.dateProvider.addMinutes(180),
-        } as ICreateTokenDTO);
+        const token = uuidV4();
 
         // envia o email para o usuário
 
         const variables = {
             name: user.name,
-            link: `${process.env.CONFIRMATION_MAIL_URL}${newToken.token}`,
+            link: `${process.env.CONFIRMATION_MAIL_URL}${token}`,
         };
 
         const templatePath = resolve(
@@ -50,5 +45,12 @@ export default class SendConfirmationMailService {
             variables,
             templatePath
         );
+
+        // gera um token para acessar o link de e-mail
+        await this.tokensRepository.create({
+            userId: user.id,
+            token,
+            expiresAt: this.dateProvider.addMinutes(180),
+        } as ICreateTokenDTO);
     }
 }

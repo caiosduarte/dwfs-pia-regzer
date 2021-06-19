@@ -49,9 +49,9 @@ peopleRoutes.get("/", async (request, response) => {
 
     const storageProvider = diskStorage();
 
-    const documentsUrl = person?.documents?.map((doc) =>
+    /*     const documentsUrl = person?.documents?.map((doc) =>
         storageProvider.getUrl("documents", doc.filename)
-    );
+    ); */
 
     return response.json(person);
 });

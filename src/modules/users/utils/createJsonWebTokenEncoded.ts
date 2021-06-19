@@ -1,5 +1,5 @@
 import { sign } from "jsonwebtoken";
-import ICreateJsonWebTokenDTO from "../dTOs/ICreateJsonWebTokenDTO";
+import ICreateJsonWebTokenDTO from "../dtos/ICreateEncodedJwtDTO";
 
 export default function createJsonWebTokenEncoded({
     payload,

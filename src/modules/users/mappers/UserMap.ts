@@ -6,21 +6,16 @@ export default class UserMap {
         id,
         name,
         email,
-        cellphone,
         document,
         isAdmin,
-        updatedAt,
         isConfirmed,
-        createdAt,
     }: IUser): IUserResponseDTO {
         return {
             id,
             name,
             email,
             document,
-            cellphone,
             isConfirmed,
-            createdAt,
         };
     }
 }
