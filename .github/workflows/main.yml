@@ -31,7 +31,21 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
-          source: ".,!node_modules"
+          source: ".,!node_modules,!docs"
           target: "~/regzer_api"
+          
+      - name: "Update API: modules, migrations and app process"
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd ~/regzer_api
+            yarn
+            ./node_modules/typeorm/cli.js migration:run
+            pm2 restart regzer_api
+          
           
   
