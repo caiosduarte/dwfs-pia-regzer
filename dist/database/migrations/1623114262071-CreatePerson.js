@@ -39,14 +39,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreatePeople1623114262071 = void 0;
 var typeorm_1 = require("typeorm");
 var Enum_1 = require("../../entities/Enum");
-var CreatePeople1623114262071 = /** @class */ (function () {
+var CreatePeople1623114262071 = (function () {
     function CreatePeople1623114262071() {
     }
     CreatePeople1623114262071.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
+                    case 0: return [4, queryRunner.createTable(new typeorm_1.Table({
                             name: "person",
                             columns: [
                                 {
@@ -99,7 +99,7 @@ var CreatePeople1623114262071 = /** @class */ (function () {
                         }))];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -108,10 +108,10 @@ var CreatePeople1623114262071 = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable("person")];
+                    case 0: return [4, queryRunner.dropTable("person")];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

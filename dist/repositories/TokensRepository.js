@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Token_1 = __importDefault(require("../entities/Token"));
-var TokensRepository = /** @class */ (function () {
+var TokensRepository = (function () {
     function TokensRepository() {
         this.repository = typeorm_1.getRepository(Token_1.default);
         this.INSTANCE = this;
@@ -60,10 +60,10 @@ var TokensRepository = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         newToken = this.repository.create({ userId: userId, token: token, expiresAt: expiresAt });
-                        return [4 /*yield*/, this.repository.save(newToken)];
+                        return [4, this.repository.save(newToken)];
                     case 1:
                         _b.sent();
-                        return [2 /*return*/, newToken];
+                        return [2, newToken];
                 }
             });
         });
@@ -72,8 +72,8 @@ var TokensRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findOne(id, { relations: ["user"] })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4, this.repository.findOne(id, { relations: ["user"] })];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -82,8 +82,8 @@ var TokensRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.delete(id)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4, this.repository.delete(id)];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -92,11 +92,11 @@ var TokensRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findOne({
+                    case 0: return [4, this.repository.findOne({
                             where: { token: encoded },
                             relations: ["user"],
                         })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -105,8 +105,8 @@ var TokensRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.save(token)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4, this.repository.save(token)];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -115,11 +115,11 @@ var TokensRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findOne({
+                    case 0: return [4, this.repository.findOne({
                             where: { token: encoded, userId: userId },
                             relations: ["user"],
                         })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });

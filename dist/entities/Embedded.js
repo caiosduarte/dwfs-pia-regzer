@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Dated = exports.CreatedTimestamp = void 0;
 var typeorm_1 = require("typeorm");
-var CreatedTimestamp = /** @class */ (function () {
+var CreatedTimestamp = (function () {
     function CreatedTimestamp() {
     }
     __decorate([
@@ -24,7 +24,7 @@ var CreatedTimestamp = /** @class */ (function () {
     return CreatedTimestamp;
 }());
 exports.CreatedTimestamp = CreatedTimestamp;
-var Dated = /** @class */ (function () {
+var Dated = (function () {
     function Dated() {
     }
     __decorate([

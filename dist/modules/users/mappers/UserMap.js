@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var UserMap = /** @class */ (function () {
+var UserMap = (function () {
     function UserMap() {
     }
     UserMap.toDTO = function (_a) {

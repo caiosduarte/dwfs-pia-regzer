@@ -62,13 +62,13 @@ usersRouter.get("/", ensureAuthenticated_1.default, function (request, response)
             case 0:
                 id = request.user.id;
                 usersRepository = UsersRepository_1.default.getInstance();
-                return [4 /*yield*/, usersRepository.findById(id)];
+                return [4, usersRepository.findById(id)];
             case 1:
                 user = _a.sent();
                 if (!user) {
                     throw new AppError_1.default("User not found!", 404);
                 }
-                return [2 /*return*/, response.json(UserMap_1.default.toDTO(user))];
+                return [2, response.json(UserMap_1.default.toDTO(user))];
         }
     });
 }); });
@@ -79,13 +79,13 @@ usersRouter.get("/email", function (request, response) { return __awaiter(void 0
             case 0:
                 email = request.body.email;
                 usersRepository = UsersRepository_1.default.getInstance();
-                return [4 /*yield*/, usersRepository.findByEmail(email)];
+                return [4, usersRepository.findByEmail(email)];
             case 1:
                 user = _a.sent();
                 if (!user) {
                     throw new AppError_1.default("User not found!", 404);
                 }
-                return [2 /*return*/, response.json(UserMap_1.default.toDTO(user))];
+                return [2, response.json(UserMap_1.default.toDTO(user))];
         }
     });
 }); });
@@ -100,10 +100,10 @@ usersRouter.post("/confirmation", ensureAuthenticated_1.default, function (reque
                 mailProvider = EtherealMailProvider_1.default.getInstance();
                 dateProvider = DayjsProvider_1.default.getInstance();
                 service = new SendConfirmationMailService_1.default(usersRepository, tokensRepository, mailProvider, dateProvider);
-                return [4 /*yield*/, service.execute(id)];
+                return [4, service.execute(id)];
             case 1:
                 _a.sent();
-                return [2 /*return*/, response.status(201).send()];
+                return [2, response.status(201).send()];
         }
     });
 }); });
@@ -115,10 +115,10 @@ usersRouter.post("/confirm", function (request, response) { return __awaiter(voi
                 token = request.query.token;
                 repository = TokensRepository_1.default.getInstance();
                 service = new ConfirmRegistrationService_1.default(repository);
-                return [4 /*yield*/, service.execute(String(token))];
+                return [4, service.execute(String(token))];
             case 1:
                 _a.sent();
-                return [2 /*return*/, response.status(201).send()];
+                return [2, response.status(201).send()];
         }
     });
 }); });

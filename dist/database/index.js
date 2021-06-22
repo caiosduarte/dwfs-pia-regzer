@@ -43,12 +43,10 @@ exports.default = (function (host) {
         var options;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, typeorm_1.getConnectionOptions()];
+                case 0: return [4, typeorm_1.getConnectionOptions()];
                 case 1:
                     options = _a.sent();
-                    return [2 /*return*/, typeorm_1.createConnection(Object.assign(options, {
-                        //host,
-                        }))];
+                    return [2, typeorm_1.createConnection(Object.assign(options, {}))];
             }
         });
     });

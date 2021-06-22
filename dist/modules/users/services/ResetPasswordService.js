@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var ResetPasswordService = /** @class */ (function () {
+var ResetPasswordService = (function () {
     function ResetPasswordService(repository) {
         this.repository = repository;
     }
@@ -51,7 +51,7 @@ var ResetPasswordService = /** @class */ (function () {
             var token, user, currentDate, expiresDate, _b, tokenId;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4 /*yield*/, this.repository.findByEncoded(tokenEncoded)];
+                    case 0: return [4, this.repository.findByEncoded(tokenEncoded)];
                     case 1:
                         token = _c.sent();
                         user = token === null || token === void 0 ? void 0 : token.user;
@@ -63,27 +63,21 @@ var ResetPasswordService = /** @class */ (function () {
                         if (!expiresDate || currentDate.getTime() > expiresDate.getTime()) {
                             throw new AppError_1.default("Token expired!");
                         }
-                        // atualiza o password
                         _b = user;
-                        return [4 /*yield*/, bcrypt_1.hash(password, 8)];
+                        return [4, bcrypt_1.hash(password, 8)];
                     case 2:
-                        // atualiza o password
                         _b.password = _c.sent();
                         if (!user.isConfirmed) {
                             user.isConfirmed = true;
                         }
                         tokenId = token.id;
-                        // salva a senha do usuário
-                        return [4 /*yield*/, this.repository.save(token)];
+                        return [4, this.repository.save(token)];
                     case 3:
-                        // salva a senha do usuário
                         _c.sent();
-                        // remove o token antigo
-                        return [4 /*yield*/, this.repository.deleteById(tokenId)];
+                        return [4, this.repository.deleteById(tokenId)];
                     case 4:
-                        // remove o token antigo
                         _c.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

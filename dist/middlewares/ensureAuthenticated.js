@@ -56,12 +56,12 @@ function ensureAuthenticated(request, response, next) {
                 request.user = {
                     id: userId,
                 };
-                return [2 /*return*/, next()];
+                return [2, next()];
             }
             catch (_c) {
                 throw new AppError_1.default("Invalid JWT Token.", 401);
             }
-            return [2 /*return*/];
+            return [2];
         });
     });
 }

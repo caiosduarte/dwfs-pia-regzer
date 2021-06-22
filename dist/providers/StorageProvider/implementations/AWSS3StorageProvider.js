@@ -44,7 +44,7 @@ var fs_1 = __importDefault(require("fs"));
 var mime_1 = __importDefault(require("mime"));
 var path_1 = require("path");
 var upload_1 = __importDefault(require("../../../config/upload"));
-var AWSS3StorageProvider = /** @class */ (function () {
+var AWSS3StorageProvider = (function () {
     function AWSS3StorageProvider() {
         this.client = new aws_sdk_1.S3({
             region: process.env.AWS_BUCKET_REGION,
@@ -67,10 +67,10 @@ var AWSS3StorageProvider = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         originalName = path_1.resolve(upload_1.default.tmpFolder, file);
-                        return [4 /*yield*/, fs_1.default.promises.readFile(originalName)];
+                        return [4, fs_1.default.promises.readFile(originalName)];
                     case 1:
                         fileContent = _a.sent();
-                        return [4 /*yield*/, this.client
+                        return [4, this.client
                                 .putObject({
                                 Bucket: process.env.AWS_BUCKET + "/" + folder,
                                 Key: file,
@@ -81,10 +81,10 @@ var AWSS3StorageProvider = /** @class */ (function () {
                                 .promise()];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, fs_1.default.promises.unlink(originalName)];
+                        return [4, fs_1.default.promises.unlink(originalName)];
                     case 3:
                         _a.sent();
-                        return [2 /*return*/, file];
+                        return [2, file];
                 }
             });
         });
@@ -93,7 +93,7 @@ var AWSS3StorageProvider = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.client
+                    case 0: return [4, this.client
                             .deleteObject({
                             Bucket: process.env.AWS_BUCKET + "/" + folder,
                             Key: file,
@@ -101,7 +101,7 @@ var AWSS3StorageProvider = /** @class */ (function () {
                             .promise()];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

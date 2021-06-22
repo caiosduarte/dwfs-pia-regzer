@@ -43,7 +43,7 @@ var jsonwebtoken_1 = require("jsonwebtoken");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var auth_1 = __importDefault(require("../config/auth"));
 var createJsonWebTokenEncoded_1 = __importDefault(require("../utils/createJsonWebTokenEncoded"));
-var RefreshTokenService = /** @class */ (function () {
+var RefreshTokenService = (function () {
     function RefreshTokenService(repository) {
         this.repository = repository;
     }
@@ -61,13 +61,12 @@ var RefreshTokenService = /** @class */ (function () {
                         catch (_d) {
                             throw new AppError_1.default("Invalid JWT Token.", 401);
                         }
-                        return [4 /*yield*/, this.repository.findByEncodedAndUserId(token, userId)];
+                        return [4, this.repository.findByEncodedAndUserId(token, userId)];
                     case 1:
                         oldToken = _c.sent();
                         if (!oldToken) {
                             throw new AppError_1.default("Refresh Token does not exists!");
                         }
-                        // apaga o token antigo
                         this.repository.deleteById(oldToken.id);
                         emailAtualizado = (_a = oldToken.user) === null || _a === void 0 ? void 0 : _a.email;
                         refreshToken = jsonwebtoken_1.sign({ emailAtualizado: emailAtualizado }, refreshTokenSecret, {
@@ -83,7 +82,6 @@ var RefreshTokenService = /** @class */ (function () {
                         newRefreshToken = this.repository.create({
                             userId: userId,
                             token: refreshToken,
-                            // TODO: Está fixo, mas deveria implementar a lógica com refreshTokenExpiresIn
                             expiresAt: addDays(10),
                         });
                         newToken = createJsonWebTokenEncoded_1.default({
@@ -91,7 +89,7 @@ var RefreshTokenService = /** @class */ (function () {
                             subject: userId,
                             expiresIn: tokenExpiresIn,
                         });
-                        return [2 /*return*/, {
+                        return [2, {
                                 token: newToken,
                                 userId: userId,
                                 refreshToken: refreshToken,

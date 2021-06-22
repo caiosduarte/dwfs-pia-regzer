@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var IValidation = /** @class */ (function () {
+var IValidation = (function () {
     function IValidation() {
     }
     IValidation.prototype.validate = function (_a) {

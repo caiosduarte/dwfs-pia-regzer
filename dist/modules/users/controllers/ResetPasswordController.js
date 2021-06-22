@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ResetPasswordController = /** @class */ (function () {
+var ResetPasswordController = (function () {
     function ResetPasswordController(service) {
         this.service = service;
     }
@@ -48,10 +48,10 @@ var ResetPasswordController = /** @class */ (function () {
                     case 0:
                         token = request.query.token;
                         password = request.body.password;
-                        return [4 /*yield*/, this.service.execute({ tokenEncoded: String(token), password: password })];
+                        return [4, this.service.execute({ tokenEncoded: String(token), password: password })];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, response.status(201).send()];
+                        return [2, response.status(201).send()];
                 }
             });
         });

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var RefreshTokenController = /** @class */ (function () {
+var RefreshTokenController = (function () {
     function RefreshTokenController(service) {
         this.service = service;
     }
@@ -49,10 +49,10 @@ var RefreshTokenController = /** @class */ (function () {
                         token = request.body.token ||
                             request.headers["x-access-token"] ||
                             request.query.token;
-                        return [4 /*yield*/, this.service.execute(token)];
+                        return [4, this.service.execute(token)];
                     case 1:
                         refreshToken = _a.sent();
-                        return [2 /*return*/, response.status(201).json(refreshToken)];
+                        return [2, response.status(201).json(refreshToken)];
                 }
             });
         });

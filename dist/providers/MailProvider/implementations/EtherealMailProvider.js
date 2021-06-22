@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = __importDefault(require("fs"));
 var handlebars_1 = __importDefault(require("handlebars"));
 var nodemailer_1 = __importDefault(require("nodemailer"));
-var EtherealMailProvider = /** @class */ (function () {
+var EtherealMailProvider = (function () {
     function EtherealMailProvider() {
     }
     EtherealMailProvider.getInstance = function () {
@@ -89,7 +89,7 @@ var EtherealMailProvider = /** @class */ (function () {
                     .catch(function (err) {
                     console.error("Failed to create a testing account. " + err.message);
                 });
-                return [2 /*return*/];
+                return [2];
             });
         });
     };

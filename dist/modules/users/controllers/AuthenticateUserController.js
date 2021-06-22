@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var AuthenticateUserController = /** @class */ (function () {
+var AuthenticateUserController = (function () {
     function AuthenticateUserController(service) {
         this.service = service;
     }
@@ -47,13 +47,13 @@ var AuthenticateUserController = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         _a = request.body, email = _a.email, password = _a.password;
-                        return [4 /*yield*/, this.service.execute({
+                        return [4, this.service.execute({
                                 email: email,
                                 password: password,
                             })];
                     case 1:
                         _b = _c.sent(), user = _b.user, token = _b.token, refreshToken = _b.refreshToken;
-                        return [2 /*return*/, response.status(200).json({ user: user, token: token, refreshToken: refreshToken })];
+                        return [2, response.status(200).json({ user: user, token: token, refreshToken: refreshToken })];
                 }
             });
         });

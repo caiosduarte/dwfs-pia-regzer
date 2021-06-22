@@ -30,19 +30,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Document_1 = __importDefault(require("./Document"));
 var DocumentType_1 = __importDefault(require("./DocumentType"));
-var CPFDocumentType = /** @class */ (function (_super) {
+var CPFDocumentType = (function (_super) {
     __extends(CPFDocumentType, _super);
     function CPFDocumentType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return CPFDocumentType;
 }(DocumentType_1.default));
-var CPF = /** @class */ (function (_super) {
+var CPF = (function (_super) {
     __extends(CPF, _super);
     function CPF() {
-        var _this = 
-        //super();
-        _super.call(this, new CPFDocumentType()) || this;
+        var _this = _super.call(this, new CPFDocumentType()) || this;
         _this.isMain = true;
         return _this;
     }

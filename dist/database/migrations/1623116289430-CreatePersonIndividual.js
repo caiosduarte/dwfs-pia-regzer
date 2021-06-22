@@ -39,14 +39,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreatePersonIndividual1623116289430 = void 0;
 var typeorm_1 = require("typeorm");
 var Enum_1 = require("../../entities/Enum");
-var CreatePersonIndividual1623116289430 = /** @class */ (function () {
+var CreatePersonIndividual1623116289430 = (function () {
     function CreatePersonIndividual1623116289430() {
     }
     CreatePersonIndividual1623116289430.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
+                    case 0: return [4, queryRunner.createTable(new typeorm_1.Table({
                             name: "person_individual",
                             columns: [
                                 {
@@ -113,7 +113,7 @@ var CreatePersonIndividual1623116289430 = /** @class */ (function () {
                         }))];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -122,10 +122,10 @@ var CreatePersonIndividual1623116289430 = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable("person_individual")];
+                    case 0: return [4, queryRunner.dropTable("person_individual")];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

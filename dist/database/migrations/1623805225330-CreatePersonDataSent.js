@@ -38,14 +38,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreatePersonDataSent1623805225330 = void 0;
 var typeorm_1 = require("typeorm");
-var CreatePersonDataSent1623805225330 = /** @class */ (function () {
+var CreatePersonDataSent1623805225330 = (function () {
     function CreatePersonDataSent1623805225330() {
     }
     CreatePersonDataSent1623805225330.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
+                    case 0: return [4, queryRunner.createTable(new typeorm_1.Table({
                             name: "person_data_sent",
                             columns: [
                                 {
@@ -121,7 +121,7 @@ var CreatePersonDataSent1623805225330 = /** @class */ (function () {
                         }))];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -130,10 +130,10 @@ var CreatePersonDataSent1623805225330 = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable("person_data_sent")];
+                    case 0: return [4, queryRunner.dropTable("person_data_sent")];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

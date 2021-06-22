@@ -52,13 +52,13 @@ function ensureAdmin(request, response, next) {
                         throw new AppError_1.default("User is missing!", 401);
                     }
                     usersRepository = UsersRepository_1.default.getInstance();
-                    return [4 /*yield*/, usersRepository.findById(id)];
+                    return [4, usersRepository.findById(id)];
                 case 1:
                     user = _a.sent();
                     if (!(user === null || user === void 0 ? void 0 : user.isAdmin)) {
                         throw new AppError_1.default("User is not ADMIN!", 401);
                     }
-                    return [2 /*return*/, next()];
+                    return [2, next()];
             }
         });
     });

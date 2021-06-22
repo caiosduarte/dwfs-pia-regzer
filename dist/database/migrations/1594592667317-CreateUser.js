@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUsers1594592667317 = void 0;
 var bcrypt_1 = require("bcrypt");
 var typeorm_1 = require("typeorm");
-var CreateUsers1594592667317 = /** @class */ (function () {
+var CreateUsers1594592667317 = (function () {
     function CreateUsers1594592667317() {
     }
     CreateUsers1594592667317.prototype.up = function (queryRunner) {
@@ -47,7 +47,7 @@ var CreateUsers1594592667317 = /** @class */ (function () {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             return __generator(this, function (_j) {
                 switch (_j.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
+                    case 0: return [4, queryRunner.createTable(new typeorm_1.Table({
                             name: "user",
                             columns: [
                                 {
@@ -116,8 +116,8 @@ var CreateUsers1594592667317 = /** @class */ (function () {
                             "",
                             "",
                             "caiosduarte@yahoo.com.br"];
-                        return [4 /*yield*/, bcrypt_1.hash("root", 8)];
-                    case 2: return [4 /*yield*/, _b.apply(_a, _c.concat([_d.concat([
+                        return [4, bcrypt_1.hash("root", 8)];
+                    case 2: return [4, _b.apply(_a, _c.concat([_d.concat([
                                 _j.sent(),
                                 true,
                                 true,
@@ -133,8 +133,8 @@ var CreateUsers1594592667317 = /** @class */ (function () {
                             "01351676636",
                             "31984227833",
                             "caiosduarte@gmail.com"];
-                        return [4 /*yield*/, bcrypt_1.hash("password123", 8)];
-                    case 4: return [4 /*yield*/, _f.apply(_e, _g.concat([_h.concat([
+                        return [4, bcrypt_1.hash("password123", 8)];
+                    case 4: return [4, _f.apply(_e, _g.concat([_h.concat([
                                 _j.sent(),
                                 false,
                                 true,
@@ -142,7 +142,7 @@ var CreateUsers1594592667317 = /** @class */ (function () {
                             ])]))];
                     case 5:
                         _j.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -151,10 +151,10 @@ var CreateUsers1594592667317 = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable("user")];
+                    case 0: return [4, queryRunner.dropTable("user")];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

@@ -17,11 +17,10 @@ var class_validator_1 = require("class-validator");
 var uuid_1 = require("uuid");
 var Embedded_1 = require("./Embedded");
 var Token_1 = __importDefault(require("./Token"));
-var User = /** @class */ (function () {
+var User = (function () {
     function User() {
         if (!this.id) {
             this.id = uuid_1.v4();
-            //this.user_id = this.id;
         }
     }
     __decorate([

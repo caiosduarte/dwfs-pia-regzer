@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var CreateUserController = /** @class */ (function () {
+var CreateUserController = (function () {
     function CreateUserController(createUserService) {
         this.createUserService = createUserService;
     }
@@ -47,7 +47,7 @@ var CreateUserController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = request.body, name = _a.name, email = _a.email, document = _a.document, cellphone = _a.cellphone, password = _a.password;
-                        return [4 /*yield*/, this.createUserService.execute({
+                        return [4, this.createUserService.execute({
                                 name: name,
                                 document: document,
                                 cellphone: cellphone,
@@ -56,7 +56,7 @@ var CreateUserController = /** @class */ (function () {
                             })];
                     case 1:
                         user = _b.sent();
-                        return [2 /*return*/, response.status(201).json(user)];
+                        return [2, response.status(201).json(user)];
                 }
             });
         });

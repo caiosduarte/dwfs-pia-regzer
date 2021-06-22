@@ -16,7 +16,7 @@ var typeorm_1 = require("typeorm");
 var Document_1 = __importDefault(require("./Document"));
 var Enum_1 = require("./Enum");
 var User_1 = __importDefault(require("./User"));
-var Person = /** @class */ (function () {
+var Person = (function () {
     function Person(type) {
         this.type = type;
     }
@@ -26,7 +26,7 @@ var Person = /** @class */ (function () {
     ], Person.prototype, "person_id", void 0);
     __decorate([
         typeorm_1.OneToOne(function (type) { return User_1.default; }, { primary: true }),
-        typeorm_1.JoinColumn({ name: "person_id" /* , referencedColumnName: "user_id"  */ }),
+        typeorm_1.JoinColumn({ name: "person_id" }),
         __metadata("design:type", User_1.default)
     ], Person.prototype, "user", void 0);
     __decorate([

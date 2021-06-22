@@ -18,7 +18,7 @@ var DocumentType_1 = __importDefault(require("./DocumentType"));
 var DocumentFile_1 = __importDefault(require("./DocumentFile"));
 var Embedded_1 = require("./Embedded");
 var Person_1 = __importDefault(require("./Person"));
-var Document = /** @class */ (function () {
+var Document = (function () {
     function Document(type) {
         var _a;
         if (this.id) {

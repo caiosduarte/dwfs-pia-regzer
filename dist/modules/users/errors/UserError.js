@@ -15,12 +15,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var UserError = /** @class */ (function (_super) {
+var UserError = (function (_super) {
     __extends(UserError, _super);
     function UserError(message, statusCode) {
         if (statusCode === void 0) { statusCode = 400; }
         var _this = _super.call(this, message) || this;
-        //this.message = message;
         _this.statusCode = statusCode;
         return _this;
     }

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var CreateDocumentService = /** @class */ (function () {
+var CreateDocumentService = (function () {
     function CreateDocumentService(repository, storage) {
         this.repository = repository;
         this.storage = storage;
@@ -51,10 +51,10 @@ var CreateDocumentService = /** @class */ (function () {
                     var url;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.storage.save("documents", file.filename, file.mimetype)];
+                            case 0: return [4, this.storage.save("documents", file.filename, file.mimetype)];
                             case 1:
                                 _a.sent();
-                                return [4 /*yield*/, this.repository.create({
+                                return [4, this.repository.create({
                                         person_id: person_id,
                                         name: name,
                                         filename: file.filename,
@@ -64,11 +64,11 @@ var CreateDocumentService = /** @class */ (function () {
                                 _a.sent();
                                 url = this.storage.getUrl("documents", file.filename);
                                 console.log("url => ", url);
-                                return [2 /*return*/, url];
+                                return [2, url];
                         }
                     });
                 }); });
-                return [2 /*return*/, teste];
+                return [2, teste];
             });
         });
     };

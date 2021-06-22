@@ -38,14 +38,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateToken1622140141133 = void 0;
 var typeorm_1 = require("typeorm");
-var CreateToken1622140141133 = /** @class */ (function () {
+var CreateToken1622140141133 = (function () {
     function CreateToken1622140141133() {
     }
     CreateToken1622140141133.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
+                    case 0: return [4, queryRunner.createTable(new typeorm_1.Table({
                             name: "user_token",
                             columns: [
                                 {
@@ -87,7 +87,7 @@ var CreateToken1622140141133 = /** @class */ (function () {
                         }))];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -96,10 +96,10 @@ var CreateToken1622140141133 = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable("user_token")];
+                    case 0: return [4, queryRunner.dropTable("user_token")];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

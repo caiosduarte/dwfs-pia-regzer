@@ -39,14 +39,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateDocumentType1623742832935 = void 0;
 var typeorm_1 = require("typeorm");
 var Enum_1 = require("../../entities/Enum");
-var CreateDocumentType1623742832935 = /** @class */ (function () {
+var CreateDocumentType1623742832935 = (function () {
     function CreateDocumentType1623742832935() {
     }
     CreateDocumentType1623742832935.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
+                    case 0: return [4, queryRunner.createTable(new typeorm_1.Table({
                             name: "document_type",
                             columns: [
                                 {
@@ -91,7 +91,7 @@ var CreateDocumentType1623742832935 = /** @class */ (function () {
                         }))];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -100,10 +100,10 @@ var CreateDocumentType1623742832935 = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable("document_type")];
+                    case 0: return [4, queryRunner.dropTable("document_type")];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

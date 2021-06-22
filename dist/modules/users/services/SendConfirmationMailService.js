@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = require("path");
 var uuid_1 = require("uuid");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var SendConfirmationMailService = /** @class */ (function () {
+var SendConfirmationMailService = (function () {
     function SendConfirmationMailService(usersRepository, tokensRepository, mailProvider, dateProvider) {
         this.usersRepository = usersRepository;
         this.tokensRepository = tokensRepository;
@@ -54,7 +54,7 @@ var SendConfirmationMailService = /** @class */ (function () {
             var user, token, variables, templatePath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.usersRepository.findById(userId)];
+                    case 0: return [4, this.usersRepository.findById(userId)];
                     case 1:
                         user = _a.sent();
                         if (!user || !user.email) {
@@ -66,19 +66,17 @@ var SendConfirmationMailService = /** @class */ (function () {
                             link: "" + process.env.CONFIRMATION_MAIL_URL + token,
                         };
                         templatePath = path_1.resolve(__dirname, "..", "views", "emails", "confirmRegistration.hbs");
-                        return [4 /*yield*/, this.mailProvider.sendMail(user.email, "Confirmação de registro", variables, templatePath)];
+                        return [4, this.mailProvider.sendMail(user.email, "Confirmação de registro", variables, templatePath)];
                     case 2:
                         _a.sent();
-                        // gera um token para acessar o link de e-mail
-                        return [4 /*yield*/, this.tokensRepository.create({
+                        return [4, this.tokensRepository.create({
                                 userId: user.id,
                                 token: token,
                                 expiresAt: this.dateProvider.addMinutes(180),
                             })];
                     case 3:
-                        // gera um token para acessar o link de e-mail
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

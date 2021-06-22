@@ -16,7 +16,7 @@ var typeorm_1 = require("typeorm");
 var uuid_1 = require("uuid");
 var Embedded_1 = require("./Embedded");
 var User_1 = __importDefault(require("./User"));
-var Token = /** @class */ (function () {
+var Token = (function () {
     function Token() {
         if (!this.id) {
             this.id = uuid_1.v4();

@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var User_1 = __importDefault(require("../entities/User"));
-var UsersRepository = /** @class */ (function () {
+var UsersRepository = (function () {
     function UsersRepository() {
         this.repository = typeorm_1.getRepository(User_1.default);
         this.INSTANCE = this;
@@ -56,8 +56,8 @@ var UsersRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findOne({ document: document })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4, this.repository.findOne({ document: document })];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -67,13 +67,13 @@ var UsersRepository = /** @class */ (function () {
             var user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findOne({
+                    case 0: return [4, this.repository.findOne({
                             where: { email: email },
                             relations: ["tokens"],
                         })];
                     case 1:
                         user = _a.sent();
-                        return [2 /*return*/, user];
+                        return [2, user];
                 }
             });
         });
@@ -85,8 +85,8 @@ var UsersRepository = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         user = this.repository.create(data);
-                        return [4 /*yield*/, this.repository.save(user)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                        return [4, this.repository.save(user)];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -95,8 +95,8 @@ var UsersRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findOne(id, { relations: ["tokens"] })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4, this.repository.findOne(id, { relations: ["tokens"] })];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -105,8 +105,8 @@ var UsersRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.save(user)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4, this.repository.save(user)];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -115,12 +115,12 @@ var UsersRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository
+                    case 0: return [4, this.repository
                             .createQueryBuilder("user")
                             .innerJoinAndSelect("user.tokens", "token")
                             .where("token.token = :token", { token: token })
                             .getOne()];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });

@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Person_1 = __importDefault(require("../entities/Person"));
-var PeopleRepository = /** @class */ (function () {
+var PeopleRepository = (function () {
     function PeopleRepository(repository) {
         this.repository = repository;
     }
@@ -59,8 +59,8 @@ var PeopleRepository = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         person = this.repository.create({});
-                        return [4 /*yield*/, this.repository.save(person)];
-                    case 1: return [2 /*return*/, _b.sent()];
+                        return [4, this.repository.save(person)];
+                    case 1: return [2, _b.sent()];
                 }
             });
         });
@@ -69,8 +69,8 @@ var PeopleRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.save(person)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4, this.repository.save(person)];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -80,12 +80,12 @@ var PeopleRepository = /** @class */ (function () {
             var person;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findOne(id, {
+                    case 0: return [4, this.repository.findOne(id, {
                             relations: ["documents"],
                         })];
                     case 1:
                         person = _a.sent();
-                        return [2 /*return*/, person];
+                        return [2, person];
                 }
             });
         });

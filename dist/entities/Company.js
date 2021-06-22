@@ -32,7 +32,7 @@ var typeorm_1 = require("typeorm");
 var CPF_1 = __importDefault(require("./CPF"));
 var Enum_1 = require("./Enum");
 var Person_1 = __importDefault(require("./Person"));
-var Company = /** @class */ (function (_super) {
+var Company = (function (_super) {
     __extends(Company, _super);
     function Company() {
         return _super.call(this, Enum_1.ALL_PERSON_TYPES.JURIDICA) || this;

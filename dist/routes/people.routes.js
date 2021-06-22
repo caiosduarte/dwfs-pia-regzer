@@ -71,11 +71,11 @@ peopleRoutes.post("/", function (request, response) { return __awaiter(void 0, v
             case 0:
                 name = request.body.name;
                 repository = PeopleRepository_1.default.getInstance();
-                return [4 /*yield*/, repository.create({ name: name })];
+                return [4, repository.create({ name: name })];
             case 1:
                 person = _a.sent();
                 console.log("Person saved ", person);
-                return [2 /*return*/, response.status(201).json(person)];
+                return [2, response.status(201).json(person)];
         }
     });
 }); });
@@ -86,14 +86,11 @@ peopleRoutes.get("/", function (request, response) { return __awaiter(void 0, vo
             case 0:
                 id = request.user.id;
                 repository = PeopleRepository_1.default.getInstance();
-                return [4 /*yield*/, repository.findById(id)];
+                return [4, repository.findById(id)];
             case 1:
                 person = _a.sent();
                 storageProvider = diskStorage();
-                /*     const documentsUrl = person?.documents?.map((doc) =>
-                    storageProvider.getUrl("documents", doc.filename)
-                ); */
-                return [2 /*return*/, response.json(person)];
+                return [2, response.json(person)];
         }
     });
 }); });
@@ -105,8 +102,8 @@ peopleRoutes.post("/:id/document", uploadDocuments.array("files"), function (req
                 storageProvider = diskStorage();
                 service = new CreateDocumentService_1.default(DocumentsRepository_1.default.getInstance(), storageProvider);
                 controller = new CreateDocumentController_1.default(service);
-                return [4 /*yield*/, controller.handle(request, response)];
-            case 1: return [2 /*return*/, _a.sent()];
+                return [4, controller.handle(request, response)];
+            case 1: return [2, _a.sent()];
         }
     });
 }); });

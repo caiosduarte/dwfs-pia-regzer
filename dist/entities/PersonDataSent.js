@@ -17,7 +17,7 @@ var uuid_1 = require("uuid");
 var Embedded_1 = require("./Embedded");
 var Person_1 = __importDefault(require("./Person"));
 var User_1 = __importDefault(require("./User"));
-var PersonDataSent = /** @class */ (function () {
+var PersonDataSent = (function () {
     function PersonDataSent() {
         if (!this.id) {
             this.id = uuid_1.v4();
@@ -46,7 +46,7 @@ var PersonDataSent = /** @class */ (function () {
     ], PersonDataSent.prototype, "newValue", void 0);
     __decorate([
         typeorm_1.ManyToOne(function (type) { return User_1.default; }, { eager: true }),
-        typeorm_1.JoinColumn({ name: "analyst_id" /* , referencedColumnName: "user_id" */ }),
+        typeorm_1.JoinColumn({ name: "analyst_id" }),
         __metadata("design:type", User_1.default)
     ], PersonDataSent.prototype, "analyst", void 0);
     __decorate([

@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = require("path");
 var uuid_1 = require("uuid");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var SendForgotPasswordMailService = /** @class */ (function () {
+var SendForgotPasswordMailService = (function () {
     function SendForgotPasswordMailService(usersRepository, tokensRepository, mailProvider, dateProvider) {
         this.usersRepository = usersRepository;
         this.tokensRepository = tokensRepository;
@@ -54,7 +54,7 @@ var SendForgotPasswordMailService = /** @class */ (function () {
             var user, token, variables, templatePath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.usersRepository.findByEmail(email)];
+                    case 0: return [4, this.usersRepository.findByEmail(email)];
                     case 1:
                         user = _a.sent();
                         if (!user) {
@@ -66,19 +66,17 @@ var SendForgotPasswordMailService = /** @class */ (function () {
                             link: "" + process.env.FORGOT_MAIL_URL + token,
                         };
                         templatePath = path_1.resolve(__dirname, "..", "views", "emails", "forgotPassword.hbs");
-                        return [4 /*yield*/, this.mailProvider.sendMail(email, "Recuperação de senha", variables, templatePath)];
+                        return [4, this.mailProvider.sendMail(email, "Recuperação de senha", variables, templatePath)];
                     case 2:
                         _a.sent();
-                        // gera um token para acessar o link de e-mail
-                        return [4 /*yield*/, this.tokensRepository.create({
+                        return [4, this.tokensRepository.create({
                                 userId: user.id,
                                 token: token,
                                 expiresAt: this.dateProvider.addMinutes(180),
                             })];
                     case 3:
-                        // gera um token para acessar o link de e-mail
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

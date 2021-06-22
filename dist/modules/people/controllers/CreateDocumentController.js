@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var CreateDocumentController = /** @class */ (function () {
+var CreateDocumentController = (function () {
     function CreateDocumentController(service) {
         this.service = service;
     }
@@ -49,14 +49,14 @@ var CreateDocumentController = /** @class */ (function () {
                         id = request.params.id;
                         name = request.query.name;
                         files = request.files;
-                        return [4 /*yield*/, this.service.execute({
+                        return [4, this.service.execute({
                                 person_id: id,
                                 name: String(name) || "Documento diverso",
                                 files: files,
                             })];
                     case 1:
                         result = _a.sent();
-                        return [2 /*return*/, response.status(201).json(result)];
+                        return [2, response.status(201).json(result)];
                 }
             });
         });

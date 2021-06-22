@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Document_1 = __importDefault(require("../entities/Document"));
-var DocumentsRepository = /** @class */ (function () {
+var DocumentsRepository = (function () {
     function DocumentsRepository(repository) {
         this.repository = repository;
     }

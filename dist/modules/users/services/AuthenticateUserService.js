@@ -43,7 +43,7 @@ var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var auth_1 = __importDefault(require("../config/auth"));
 var createJsonWebTokenEncoded_1 = __importDefault(require("../utils/createJsonWebTokenEncoded"));
-var AuthenticateUserService = /** @class */ (function () {
+var AuthenticateUserService = (function () {
     function AuthenticateUserService(usersRepository, tokensRepository, dateProvider) {
         this.usersRepository = usersRepository;
         this.tokensRepository = tokensRepository;
@@ -55,13 +55,13 @@ var AuthenticateUserService = /** @class */ (function () {
             var user, passwordValid, _b, tokenSecret, tokenExpiresIn, refreshTokenSecret, refreshTokenExpiresIn, tokenEncoded, refreshTokenEncoded, refreshToken;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4 /*yield*/, this.usersRepository.findByEmail(email)];
+                    case 0: return [4, this.usersRepository.findByEmail(email)];
                     case 1:
                         user = _c.sent();
                         if (!user) {
                             throw new AppError_1.default("Email/password don't match.", 401);
                         }
-                        return [4 /*yield*/, bcrypt_1.compare(password, user.password)];
+                        return [4, bcrypt_1.compare(password, user.password)];
                     case 2:
                         passwordValid = _c.sent();
                         if (!passwordValid) {
@@ -84,7 +84,7 @@ var AuthenticateUserService = /** @class */ (function () {
                             token: refreshTokenEncoded,
                             expiresAt: this.dateProvider.addDays(10),
                         });
-                        return [2 /*return*/, {
+                        return [2, {
                                 token: tokenEncoded,
                                 refreshToken: refreshTokenEncoded,
                                 user: {

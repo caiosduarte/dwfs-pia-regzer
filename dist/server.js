@@ -18,7 +18,6 @@ app.use("/documents", express_1.default.static(upload_1.default.tmpFolder + "/do
 database_1.default();
 app.use(cors_1.default({}));
 app.use(routes_1.default);
-// TODO: Aplicar inversão de dependência para errors vindos dos módulos
 app.use(function (err, request, response, next) {
     if (err instanceof AppError_1.default) {
         return response.status(err.statusCode).json({

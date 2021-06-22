@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var ConfirmRegistrationService = /** @class */ (function () {
+var ConfirmRegistrationService = (function () {
     function ConfirmRegistrationService(repository) {
         this.repository = repository;
     }
@@ -49,7 +49,7 @@ var ConfirmRegistrationService = /** @class */ (function () {
             var token, user, currentDate, expiresDate, tokenId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.findByEncoded(tokenEncoded)];
+                    case 0: return [4, this.repository.findByEncoded(tokenEncoded)];
                     case 1:
                         token = _a.sent();
                         user = token === null || token === void 0 ? void 0 : token.user;
@@ -64,20 +64,15 @@ var ConfirmRegistrationService = /** @class */ (function () {
                         if (!expiresDate || currentDate.getTime() > expiresDate.getTime()) {
                             throw new AppError_1.default("Token expired!");
                         }
-                        // salva e remove o token
                         user.isConfirmed = true;
                         tokenId = token.id;
-                        // salva a confimação do usuário
-                        return [4 /*yield*/, this.repository.save(token)];
+                        return [4, this.repository.save(token)];
                     case 2:
-                        // salva a confimação do usuário
                         _a.sent();
-                        // remove o token antigo
-                        return [4 /*yield*/, this.repository.deleteById(tokenId)];
+                        return [4, this.repository.deleteById(tokenId)];
                     case 3:
-                        // remove o token antigo
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

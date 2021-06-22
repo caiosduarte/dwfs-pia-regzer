@@ -51,7 +51,7 @@ authenticateRoutes.post("/sessions", function (request, response) { return __awa
         usersRepo = UsersRepository_1.default.getInstance();
         tokensRepo = TokensRepository_1.default.getInstance();
         dateProvider = DayjsProvider_1.default.getInstance();
-        return [2 /*return*/, controllers_1.authenticateUserController(usersRepo, tokensRepo, dateProvider).handle(request, response)];
+        return [2, controllers_1.authenticateUserController(usersRepo, tokensRepo, dateProvider).handle(request, response)];
     });
 }); });
 authenticateRoutes.post("/refresh-token", function (request, response) {

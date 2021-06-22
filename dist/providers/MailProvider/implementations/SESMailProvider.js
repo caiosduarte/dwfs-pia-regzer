@@ -43,7 +43,7 @@ var fs_1 = __importDefault(require("fs"));
 var handlebars_1 = __importDefault(require("handlebars"));
 var nodemailer_1 = __importDefault(require("nodemailer"));
 var aws_sdk_1 = require("aws-sdk");
-var SESMailProvider = /** @class */ (function () {
+var SESMailProvider = (function () {
     function SESMailProvider() {
         this.client = nodemailer_1.default.createTransport({
             SES: new aws_sdk_1.SES({
@@ -71,7 +71,7 @@ var SESMailProvider = /** @class */ (function () {
                         templateFileContent = fs_1.default.readFileSync(path).toString("utf-8");
                         templateParse = handlebars_1.default.compile(templateFileContent);
                         templateHTML = templateParse(variables);
-                        return [4 /*yield*/, this.client.sendMail({
+                        return [4, this.client.sendMail({
                                 to: to,
                                 from: "" + process.env.SEND_MAIL,
                                 subject: subject,
@@ -79,7 +79,7 @@ var SESMailProvider = /** @class */ (function () {
                             })];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var SendForgotPasswordMailController = /** @class */ (function () {
+var SendForgotPasswordMailController = (function () {
     function SendForgotPasswordMailController(service) {
         this.service = service;
     }
@@ -47,10 +47,10 @@ var SendForgotPasswordMailController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         email = request.body.email;
-                        return [4 /*yield*/, this.service.execute(email)];
+                        return [4, this.service.execute(email)];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, response.status(201).send()];
+                        return [2, response.status(201).send()];
                 }
             });
         });

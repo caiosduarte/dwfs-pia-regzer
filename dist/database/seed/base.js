@@ -46,7 +46,7 @@ function create() {
         var connection, _a, _b, _c, _d, _e, _f, _g, _h;
         return __generator(this, function (_j) {
             switch (_j.label) {
-                case 0: return [4 /*yield*/, index_1.default()];
+                case 0: return [4, index_1.default()];
                 case 1:
                     connection = _j.sent();
                     _b = (_a = connection).query;
@@ -57,8 +57,8 @@ function create() {
                         "",
                         "",
                         "caiosduarte@yahoo.com.br"];
-                    return [4 /*yield*/, bcrypt_1.hash("root", 8)];
-                case 2: return [4 /*yield*/, _b.apply(_a, _c.concat([_d.concat([
+                    return [4, bcrypt_1.hash("root", 8)];
+                case 2: return [4, _b.apply(_a, _c.concat([_d.concat([
                             _j.sent(),
                             true,
                             true
@@ -73,21 +73,21 @@ function create() {
                         "01351676636",
                         "31984227833",
                         "caiosduarte@gmail.com"];
-                    return [4 /*yield*/, bcrypt_1.hash("password123", 8)];
-                case 4: return [4 /*yield*/, _f.apply(_e, _g.concat([_h.concat([
+                    return [4, bcrypt_1.hash("password123", 8)];
+                case 4: return [4, _f.apply(_e, _g.concat([_h.concat([
                             _j.sent(),
                             false,
                             true
                         ])]))];
                 case 5:
                     _j.sent();
-                    return [4 /*yield*/, connection.query("INSERT INTO person (id, name, is_valid) " + "VALUES (?, ?, ?);", ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209", "Caio Duarte", false])];
+                    return [4, connection.query("INSERT INTO person (id, name, is_valid) " + "VALUES (?, ?, ?);", ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209", "Caio Duarte", false])];
                 case 6:
                     _j.sent();
-                    return [4 /*yield*/, connection.close()];
+                    return [4, connection.close()];
                 case 7:
                     _j.sent();
-                    return [2 /*return*/];
+                    return [2];
             }
         });
     });

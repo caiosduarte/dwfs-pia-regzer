@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = __importDefault(require("fs"));
 var handlebars_1 = __importDefault(require("handlebars"));
 var nodemailer_1 = __importDefault(require("nodemailer"));
-var SESSMTPMailProvider = /** @class */ (function () {
+var SESSMTPMailProvider = (function () {
     function SESSMTPMailProvider() {
         this.client = nodemailer_1.default.createTransport({
             auth: {
@@ -70,24 +70,16 @@ var SESSMTPMailProvider = /** @class */ (function () {
                         templateFileContent = fs_1.default.readFileSync(path).toString("utf-8");
                         templateParse = handlebars_1.default.compile(templateFileContent);
                         templateHTML = templateParse(variables);
-                        return [4 /*yield*/, this.client.sendMail({
-                                // Custom headers for configuration set and message tags.
-                                /*
-                                headers: {
-                                    //'X-SES-CONFIGURATION-SET': configurationSet,
-                                    "X-SES-MESSAGE-TAGS": tag0, // const tag0 = "key0=value0";
-                                    "X-SES-MESSAGE-TAGS": tag1,
-                                },*/
+                        return [4, this.client.sendMail({
                                 from: "" + process.env.SEND_MAIL,
                                 to: to,
                                 subject: subject,
-                                /* text: */
                                 html: templateHTML,
                             })];
                     case 1:
                         result = _a.sent();
                         console.log("SES SMTP send info: ", result);
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

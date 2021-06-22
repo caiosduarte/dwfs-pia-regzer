@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var UserMap_1 = __importDefault(require("../mappers/UserMap"));
-var CreateUserService = /** @class */ (function () {
+var CreateUserService = (function () {
     function CreateUserService(repository) {
         this.repository = repository;
     }
@@ -54,22 +54,22 @@ var CreateUserService = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         this.repository;
-                        return [4 /*yield*/, this.repository.findByEmail(email)];
+                        return [4, this.repository.findByEmail(email)];
                     case 1:
                         checkEmailExists = _b.sent();
                         if (checkEmailExists) {
                             throw new AppError_1.default("This email is already been used.", 403);
                         }
-                        return [4 /*yield*/, this.repository.findByDocument(document)];
+                        return [4, this.repository.findByDocument(document)];
                     case 2:
                         checkDocument = _b.sent();
                         if (checkDocument) {
                             throw new AppError_1.default("This document is already been used.", 403);
                         }
-                        return [4 /*yield*/, bcrypt_1.hash(password, 8)];
+                        return [4, bcrypt_1.hash(password, 8)];
                     case 3:
                         hashedPassword = _b.sent();
-                        return [4 /*yield*/, this.repository.create({
+                        return [4, this.repository.create({
                                 name: name,
                                 document: document,
                                 cellphone: cellphone,
@@ -78,7 +78,7 @@ var CreateUserService = /** @class */ (function () {
                             })];
                     case 4:
                         user = _b.sent();
-                        return [2 /*return*/, UserMap_1.default.toDTO(user)];
+                        return [2, UserMap_1.default.toDTO(user)];
                 }
             });
         });
