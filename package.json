@@ -11,7 +11,7 @@
     "scripts": {
         "clean": "rimraf dist/",
         "copy-files": "copyfiles -e src/**/*.ts -as -u 1 src/**/*.* dist/",
-        "build-w-tsc": "yarn clean && cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc && yarn copy-files",
+        "build-w-tsc": "yarn clean && cross-env NODE_OPTIONS=--max-old-space-size=768 tsc && yarn copy-files",
         "build": "echo Deve ser com o babel, tsc com erro de memória",
         "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts",
         "typeorm": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js",
