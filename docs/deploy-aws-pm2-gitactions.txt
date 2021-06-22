@@ -1,0 +1,386 @@
+
+sudo apt update 
+sudo apt install nginx
+# mudar as políticas de segurança e visualizar o nginx
+
+sudo adduser regzer
+sudo usermod -aG sudo regzer
+sudo su - regzer
+
+mkdir .ssh
+chmod 700 .ssh/
+ll
+cd .ssh/
+touch authorized_keys
+nano authorized_keys # copiar a ssh-key da minha máquina
+cat authorized_keys
+ssh-keygen
+cat .ssh/id_rsa.pub # enviar a chave publica para o github
+git clone git@github.com:caiosduarte/dwfs-pia-regzer-server.git
+
+# Node.js LTS (v14.x):
+# Using Ubuntu
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Yarn 
+sudo npm install --global yarn
+
+# Docker
+
+# uninstall older versions 
+
+sudo apt-get remove docker docker-engine docker.io containerd runc
+
+# set package 
+
+sudo apt-get update
+
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release -y
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  # install docker
+
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+# test docker 
+
+sudo docker run hello-world
+
+# Install docker-compose
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+# testing compose
+
+docker-compose -v
+
+# Config do proxy reverso com o nginx:
+https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04-quickstart-pt
+
+
+
+regzer.com.br
+
+
+    location / {
+        proxy_pass http://localhost:3333;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+
+# pm2
+
+sudo npm install pm2@latest -g
+
+NODE_ENV=production pm2 start ~/regzer_api/dist/server.js --name regzer_api --node-args="--max_old_space_size=500 --optimize_for_size --gc_interval=100"
+
+
+module.exports = {
+  apps : [
+      {
+        name: "regzer_api",
+        script: "~/regzer_api/dist/server.ts",
+        watch: true,
+        node_args: ["--optimize_for_size" , "--gc_interval=100", "--max_old_space_size=500"],
+        env: {
+          "NODE_ENV": "production",
+        }
+      }
+  ]
+}
+ 
+
+
+# CI com o github actions
+
+ssh-keygen
+
+github_actions
+
+
+
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Nodejs 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          
+      - name: Install dependencies
+        run: yarn
+        
+      - name: Build
+        run: yarn build
+        
+      - name: Copy files with ssh key
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.KEY }}
+          source: ".,!node_modules,!docs"
+          target: "~/regzer_api"
+
+
+
+
+
+
+
+
+
+
+
+
+
+# muitos domínios no mesmo servidor
+
+Crie o diretório para your_domain, utilizando a flag -p para criar todos os diretórios pais necessários:
+
+sudo mkdir -p /var/www/your_domain/html
+ 
+Atribua a posse do diretório:
+
+sudo chown -R $USER:$USER /var/www/your_domain/html
+ 
+As permissões dos Web roots devem estar corretas se ainda não tiver modificado seu valor umask, mas você pode certificar-se digitando:
+
+sudo chmod -R 755 /var/www/your_domain
+ 
+Crie uma página de amostra index.html utilizando o nano ou seu editor favorito:
+
+nano /var/www/your_domain/html/index.html
+ 
+Dentro, adicione a seguinte amostra HTML:
+
+/var/www/your_domain/html/index.html
+<html>
+    <head>
+        <title>Welcome to your_domain!</title>
+    </head>
+    <body>
+        <h1>Success!  The your_domain server block is working!</h1>
+    </body>
+</html>
+ 
+Salve e feche o arquivo quando você terminar.
+
+Crie um novo bloco de servidor em /etc/nginx/sites-available/your_domain:
+
+sudo nano /etc/nginx/sites-available/your_domain
+ 
+Cole no seguinte bloco de configuração, atualizado para nosso novo diretório e nome de domínio:
+
+/etc/nginx/sites-available/your_domain
+server {
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/your_domain/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name your_domain www.your_domain;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+ 
+Salve e feche o arquivo quando terminar.
+
+Habilite o arquivo criando um link dele para o diretório sites-enabled:
+
+sudo ln -s /etc/nginx/sites-available/your_domain /etc/nginx/sites-enabled/
+ 
+Agora, dois blocos de servidor estão habilitados e configurados para responder a pedidos baseados nas diretrizes listen e server_name:
+
+your_domain: irá responder às solicitações para your_domain e www.your_domain.
+default: responderá a quaisquer pedidos na porta 80 que não correspondam aos outros dois blocos.
+Para evitar um possível problema de memória de hash que possa surgir ao adicionar nomes adicionais de servidor, é necessário ajustar um valor único no arquivo /etc/nginx/nginx.conf. Abra o arquivo:
+
+sudo nano /etc/nginx/nginx.conf
+ 
+Encontre a diretriz server_names_hash_bucket_size e remova o símbolo # para remover a marca de comentário da linha:
+
+/etc/nginx/nginx.conf
+...
+http {
+    ...
+    server_names_hash_bucket_size 64;
+    ...
+}
+...
+ 
+Teste para conferir se há erros de sintaxe:
+
+sudo nginx -t
+
+
+ 
+--optimize_for_size , --gc_interval=100
+
+
+
+
+
+
+
+ 
+
+
+
+   19  ls
+   20  cd ..
+   21  ll
+   22  cd app/
+   23  ll
+   24  cd dwfs-pia-regzer-server/
+   25  ll
+   26  yarn
+   27  yarn build
+   28  ls
+   29  cat package.json
+   30  git pull
+   31  yarn build
+   32  clear
+   33  ls
+   34  yarn build
+   35  export NODE_OPTIONS="–max-old-space-size=2048"
+   36  yarn build
+   37  export NODE_OPTIONS="-–max-old-space-size=512"
+   38  echo $NODE_OPTIONS
+   39  yarn build
+   40  ls
+   41  cd dwfs-pia-regzer-server/
+   42  ll
+   43  git push
+   44  clear
+   45  git push
+   46  clear
+   47  git pull
+   48  clear
+   49  ls
+   50  cd dist
+   51  ll
+   52  node server.js
+   53  clear
+   54  ll
+   55  cd database/
+   56  ll
+   57  cd ..
+   58  ll
+   59  cd ..
+   60  ll
+   61  mv ormconfig.example.json ormconfig.json
+   62  mv .env.example .env
+   63  clear
+   64  cd dist
+   65  node server.js
+   66  git status
+   67  cd ..
+   68  ll
+   69  nano .env
+   70  cd dist
+   71  clear
+   72  node server.js
+   73  clear
+   74  sudo groupadd docker
+   75  sudo usermod -aG docker $USER
+   76  docker ps
+   77  exit
+   78  docker ps
+   79  cd dwfs-pia-regzer-server/
+   80  clear
+   81  ls
+   82  clear
+   83  sudo apt install ngnix
+   84  sudo apt install nginx
+   85  clear
+   86  cd /etc/nginx/
+   87  llls
+   88  ll
+   89  cd sites-available/
+   90  ll
+   91  ls -lah
+   92  cp default regzer
+   93  sudo cp default regzer
+   94  nano regzer
+   95  sudo nano regzer
+   96  sudo service nginx restart
+   97  ls
+   98  cd ../sites-enabled/
+   99  ll
+  100  sudo ln -s ../sites-available/regzer regzer
+  101  rm -rf default
+  102  sudo rm -rf default
+  103  sudo service nginx restart
+  104  node ~/dwfs-pia-regzer-server/dist/server.js
+  105  ll
+  106  rm -rf regzer
+  107  sudo rm -rf regzer
+  108  sudo ln -s /etc/nginx/sites-available/regzer regzer
+  109  ls -lah
+  110  sudo service nginx restart
+  111  node ~/dwfs-pia-regzer-server/dist/server.js
+  112  sudo nginx -t
+  113  cd /etc/nginx/
+  114  ll
+  115  ll
+  116  sudo nginx -t
+  117  sudo apt --help
+  118  sudo apt remove nginx
+  119  sudo apt install nginx
+  120  sudo service nginx status
+  121  cd /etc/nginx
+  122  ll
+  123  cd sites-enabled/
+  124  ll
+  125  ll ../sites-available/
+  126  clear
+  127  cat default
+  128  cd /var/www/
+  129  ll
+  130  cd html/
+  131  ll
+  132  cat index.nginx-debian.html
+  133  link http://localhost
+  134  link --help
+  135  logout
+  136  sudo apt update
+  137  curl 127.0.0.1
+  138  curl https://54.207.224.155/
+  139  clear
