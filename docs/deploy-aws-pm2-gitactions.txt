@@ -93,6 +93,7 @@ sudo npm install pm2@latest -g
 
 NODE_ENV=production pm2 start ~/regzer_api/dist/server.js --name regzer_api --node-args="--max_old_space_size=500 --optimize_for_size --gc_interval=100"
 
+Arquivo ~/.pm2/ecosystem.config.js :
 
 module.exports = {
   apps : [
@@ -154,6 +155,19 @@ jobs:
           key: ${{ secrets.KEY }}
           source: ".,!node_modules,!docs"
           target: "~/regzer_api"
+          
+      - name: "Update API: modules, migrations and app process"
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd ~/regzer_api
+            yarn
+            ./node_modules/typeorm/cli.js migration:run
+            pm2 restart regzer_api
 
 
 
