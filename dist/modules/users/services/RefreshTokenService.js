@@ -50,17 +50,26 @@ var RefreshTokenService = (function () {
     RefreshTokenService.prototype.execute = function (token) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var _b, tokenSecret, tokenExpiresIn, refreshTokenSecret, refreshTokenExpiresIn, userId, oldToken, emailAtualizado, refreshToken, addDays, newRefreshToken, newToken;
+            var _b, tokenSecret, tokenExpiresIn, refreshTokenSecret, refreshTokenExpiresIn, jwt, userId, oldToken, emailAtualizado, refreshToken, addDays, newRefreshToken, newToken;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         _b = auth_1.default.jwt, tokenSecret = _b.tokenSecret, tokenExpiresIn = _b.tokenExpiresIn, refreshTokenSecret = _b.refreshTokenSecret, refreshTokenExpiresIn = _b.refreshTokenExpiresIn;
                         try {
-                            userId = jsonwebtoken_1.verify(token, refreshTokenSecret).sub;
+                            jwt = jsonwebtoken_1.verify(token, refreshTokenSecret);
+                            if (jwt.exp === undefined || jwt.exp === null) {
+                                throw new AppError_1.default("JWT expired: " + jwt.exp, 401);
+                            }
                         }
-                        catch (_d) {
-                            throw new AppError_1.default("Invalid JWT Token.", 401);
+                        catch (err) {
+                            if (err instanceof jsonwebtoken_1.TokenExpiredError) {
+                                throw new AppError_1.default("JWT expired: " + err.message, 401);
+                            }
+                            else {
+                                throw new AppError_1.default("JWT invalid.", 401);
+                            }
                         }
+                        userId = jwt.sub;
                         return [4, this.repository.findByEncodedAndUserId(token, userId)];
                     case 1:
                         oldToken = _c.sent();

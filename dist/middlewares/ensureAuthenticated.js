@@ -44,22 +44,30 @@ var AppError_1 = __importDefault(require("../errors/AppError"));
 var auth_1 = __importDefault(require("../modules/users/config/auth"));
 function ensureAuthenticated(request, response, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var authorization, _a, token, userId;
+        var authorization, _a, token, jwt;
         return __generator(this, function (_b) {
             authorization = request.headers.authorization;
             if (!authorization) {
-                throw new AppError_1.default("JWT token is missing.", 401);
+                throw new AppError_1.default("JWT is missing.", 401);
             }
             _a = authorization.split(" "), token = _a[1];
             try {
-                userId = jsonwebtoken_1.verify(token, auth_1.default.jwt.tokenSecret).sub;
+                jwt = jsonwebtoken_1.verify(token, auth_1.default.jwt.tokenSecret);
+                if (jwt.exp === undefined || jwt.exp === null) {
+                    throw new AppError_1.default("JWT expired: " + jwt.exp, 401);
+                }
                 request.user = {
-                    id: userId,
+                    id: jwt.sub,
                 };
                 return [2, next()];
             }
-            catch (_c) {
-                throw new AppError_1.default("Invalid JWT Token.", 401);
+            catch (err) {
+                if (err instanceof jsonwebtoken_1.TokenExpiredError) {
+                    throw new AppError_1.default("JWT expired: " + err.message, 401);
+                }
+                else {
+                    throw new AppError_1.default("JWT invalid.", 401);
+                }
             }
             return [2];
         });

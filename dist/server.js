@@ -19,12 +19,13 @@ database_1.default();
 app.use(cors_1.default({}));
 app.use(routes_1.default);
 app.use(function (err, request, response, next) {
+    console.error(err);
     if (err instanceof AppError_1.default) {
         return response.status(err.statusCode).json({
+            status: "error",
             message: err.message,
         });
     }
-    console.error(err);
     return response.status(500).json({
         status: "error",
         message: "Internal Server Error: " + err.message,
