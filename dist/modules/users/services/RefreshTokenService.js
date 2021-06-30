@@ -63,7 +63,7 @@ var RefreshTokenService = (function () {
                         }
                         catch (err) {
                             if (err instanceof jsonwebtoken_1.TokenExpiredError) {
-                                throw new AppError_1.default("JWT expired: " + err.message, 401);
+                                throw new AppError_1.default("JWT expired at " + err.expiredAt, 401);
                             }
                             else {
                                 throw new AppError_1.default("JWT invalid.", 401);

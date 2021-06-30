@@ -36,7 +36,7 @@ export default async function ensureAuthenticated(
         return next();
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            throw new AppError(`JWT expired: ${err.message}`, 401);
+            throw new AppError(`JWT expired at ${err.expiredAt}`, 401);
         } else {
             throw new AppError("JWT invalid.", 401);
         }
