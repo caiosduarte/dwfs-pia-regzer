@@ -21,13 +21,14 @@ app.use(routes);
 // TODO: Aplicar inversão de dependência para errors vindos dos módulos
 app.use(
     (err: Error, request: Request, response: Response, next: NextFunction) => {
+        console.error(err);
+
         if (err instanceof AppError) {
             return response.status(err.statusCode).json({
+                status: "error",
                 message: err.message,
             });
         }
-
-        console.error(err);
 
         return response.status(500).json({
             status: "error",

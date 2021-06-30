@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verify } from "jsonwebtoken";
+import { TokenExpiredError, verify } from "jsonwebtoken";
 import AppError from "../errors/AppError";
 import authConfig from "../modules/users/config/auth";
 
@@ -17,23 +17,28 @@ export default async function ensureAuthenticated(
     const { authorization } = request.headers;
 
     if (!authorization) {
-        throw new AppError("JWT token is missing.", 401);
+        throw new AppError("JWT is missing.", 401);
     }
 
     const [, token] = authorization.split(" ");
 
     try {
-        const { sub: userId } = verify(
-            token,
-            authConfig.jwt.tokenSecret
-        ) as IPayload;
+        const jwt = verify(token, authConfig.jwt.tokenSecret) as IPayload;
+
+        if (jwt.exp === undefined || jwt.exp === null) {
+            throw new AppError(`JWT expired: ${jwt.exp}`, 401);
+        }
 
         request.user = {
-            id: userId,
+            id: jwt.sub,
         };
 
         return next();
-    } catch {
-        throw new AppError("Invalid JWT Token.", 401);
+    } catch (err) {
+        if (err instanceof TokenExpiredError) {
+            throw new AppError(`JWT expired: ${err.message}`, 401);
+        } else {
+            throw new AppError("JWT invalid.", 401);
+        }
     }
 }

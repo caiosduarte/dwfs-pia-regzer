@@ -1,4 +1,4 @@
-import { sign, verify } from "jsonwebtoken";
+import { sign, TokenExpiredError, verify } from "jsonwebtoken";
 import AppError from "../../../errors/AppError";
 import auth from "../config/auth";
 import ITokensRepository from "../repositories/ITokensRepository";
@@ -13,6 +13,7 @@ interface ITokenResponse {
 interface ITokenPayload {
     sub: string;
     email: string;
+    exp?: string;
 }
 
 export default class RefreshTokenService {
@@ -27,13 +28,20 @@ export default class RefreshTokenService {
         } = auth.jwt;
 
         try {
-            var { sub: userId } = verify(
-                token,
-                refreshTokenSecret
-            ) as ITokenPayload;
-        } catch {
-            throw new AppError("Invalid JWT Token.", 401);
+            var jwt = verify(token, refreshTokenSecret) as ITokenPayload;
+
+            if (jwt.exp === undefined || jwt.exp === null) {
+                throw new AppError(`JWT expired: ${jwt.exp}`, 401);
+            }
+        } catch (err) {
+            if (err instanceof TokenExpiredError) {
+                throw new AppError(`JWT expired: ${err.message}`, 401);
+            } else {
+                throw new AppError("JWT invalid.", 401);
+            }
         }
+
+        const { sub: userId } = jwt;
 
         const oldToken = await this.repository.findByEncodedAndUserId(
             token,
