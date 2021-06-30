@@ -45,7 +45,7 @@ jobs:
             cd ~/regzer_api
             yarn
             ./node_modules/typeorm/cli.js migration:run
-            pm2 restart regzer_api
+            pm2 --update-env restart regzer_api
           
           
   
