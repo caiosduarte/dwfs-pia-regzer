@@ -69,15 +69,18 @@ var AuthenticateUserService = (function () {
                         }
                         _b = auth_1.default.jwt, tokenSecret = _b.tokenSecret, tokenExpiresIn = _b.tokenExpiresIn, refreshTokenSecret = _b.refreshTokenSecret, refreshTokenExpiresIn = _b.refreshTokenExpiresIn;
                         tokenEncoded = createJsonWebTokenEncoded_1.default({
+                            payload: {
+                                isAdmin: user.isAdmin,
+                            },
                             secret: tokenSecret,
                             subject: user.id,
                             expiresIn: tokenExpiresIn,
                         });
                         refreshTokenEncoded = createJsonWebTokenEncoded_1.default({
+                            payload: { email: email },
                             secret: refreshTokenSecret,
                             subject: user.id,
                             expiresIn: refreshTokenExpiresIn,
-                            payload: email,
                         });
                         refreshToken = this.tokensRepository.create({
                             userId: user.id,
@@ -85,11 +88,13 @@ var AuthenticateUserService = (function () {
                             expiresAt: this.dateProvider.addDays(10),
                         });
                         return [2, {
-                                token: tokenEncoded,
-                                refreshToken: refreshTokenEncoded,
                                 user: {
                                     id: user.id,
+                                    email: user.email,
+                                    isAdmin: user.isAdmin,
                                 },
+                                token: tokenEncoded,
+                                refreshToken: refreshTokenEncoded,
                             }];
                 }
             });

@@ -48,13 +48,12 @@ var RefreshTokenService = (function () {
         this.repository = repository;
     }
     RefreshTokenService.prototype.execute = function (token) {
-        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var _b, tokenSecret, tokenExpiresIn, refreshTokenSecret, refreshTokenExpiresIn, jwt, userId, oldToken, emailAtualizado, refreshToken, addDays, newRefreshToken, newToken;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var _a, tokenSecret, tokenExpiresIn, refreshTokenSecret, refreshTokenExpiresIn, jwt, userId, oldToken, user, refreshToken, addDays, newRefreshToken, newToken;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _b = auth_1.default.jwt, tokenSecret = _b.tokenSecret, tokenExpiresIn = _b.tokenExpiresIn, refreshTokenSecret = _b.refreshTokenSecret, refreshTokenExpiresIn = _b.refreshTokenExpiresIn;
+                        _a = auth_1.default.jwt, tokenSecret = _a.tokenSecret, tokenExpiresIn = _a.tokenExpiresIn, refreshTokenSecret = _a.refreshTokenSecret, refreshTokenExpiresIn = _a.refreshTokenExpiresIn;
                         try {
                             jwt = jsonwebtoken_1.verify(token, refreshTokenSecret);
                             if (jwt.exp === undefined || jwt.exp === null) {
@@ -72,15 +71,17 @@ var RefreshTokenService = (function () {
                         userId = jwt.sub;
                         return [4, this.repository.findByEncodedAndUserId(token, userId)];
                     case 1:
-                        oldToken = _c.sent();
-                        if (!oldToken) {
+                        oldToken = _b.sent();
+                        user = oldToken === null || oldToken === void 0 ? void 0 : oldToken.user;
+                        if (!oldToken || !user) {
                             throw new AppError_1.default("Refresh Token does not exists!");
                         }
                         this.repository.deleteById(oldToken.id);
-                        emailAtualizado = (_a = oldToken.user) === null || _a === void 0 ? void 0 : _a.email;
-                        refreshToken = jsonwebtoken_1.sign({ emailAtualizado: emailAtualizado }, refreshTokenSecret, {
+                        refreshToken = createJsonWebTokenEncoded_1.default({
+                            payload: { email: user.email },
+                            secret: refreshTokenSecret,
                             subject: userId,
-                            expiresIn: "10d",
+                            expiresIn: refreshTokenExpiresIn,
                         });
                         addDays = function addDays(days, date) {
                             if (date === void 0) { date = new Date(); }
@@ -94,13 +95,14 @@ var RefreshTokenService = (function () {
                             expiresAt: addDays(10),
                         });
                         newToken = createJsonWebTokenEncoded_1.default({
+                            payload: { isAdmin: user.isAdmin },
                             secret: tokenSecret,
                             subject: userId,
                             expiresIn: tokenExpiresIn,
                         });
                         return [2, {
-                                token: newToken,
                                 userId: userId,
+                                token: newToken,
                                 refreshToken: refreshToken,
                             }];
                 }

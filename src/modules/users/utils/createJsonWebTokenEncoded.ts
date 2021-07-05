@@ -7,7 +7,7 @@ export default function createJsonWebTokenEncoded({
     subject,
     expiresIn,
 }: ICreateJsonWebTokenDTO): string {
-    return sign({ payload }, secret, {
+    return sign(payload, secret, {
         subject,
         expiresIn,
     });

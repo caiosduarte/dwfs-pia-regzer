@@ -10,6 +10,7 @@ var UserMap = (function () {
             name: name,
             email: email,
             document: document,
+            isAdmin: isAdmin,
             isConfirmed: isConfirmed,
         };
     };

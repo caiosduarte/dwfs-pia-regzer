@@ -3,5 +3,6 @@ export default interface IUserResponseDTO {
     name: string;
     document: string;
     email: string;
+    isAdmin: boolean;
     isConfirmed: boolean;
 }

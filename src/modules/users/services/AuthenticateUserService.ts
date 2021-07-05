@@ -15,6 +15,10 @@ interface IRequest {
 interface IResponse {
     user: {
         id: string;
+        email?: string;
+        isAdmin?: boolean;
+        roles?: string[];
+        permissions?: string[];
     };
     token: string;
     refreshToken: string;
@@ -48,16 +52,19 @@ class AuthenticateUserService {
         } = authConfig.jwt;
 
         const tokenEncoded = createJsonWebTokenEncoded({
+            payload: {
+                isAdmin: user.isAdmin,
+            },
             secret: tokenSecret,
             subject: user.id,
             expiresIn: tokenExpiresIn,
         });
 
         const refreshTokenEncoded = createJsonWebTokenEncoded({
+            payload: { email },
             secret: refreshTokenSecret,
             subject: user.id,
             expiresIn: refreshTokenExpiresIn,
-            payload: email,
         });
 
         const refreshToken = this.tokensRepository.create({
@@ -67,11 +74,13 @@ class AuthenticateUserService {
         } as ICreateTokenDTO);
 
         return {
-            token: tokenEncoded,
-            refreshToken: refreshTokenEncoded,
             user: {
                 id: user.id,
+                email: user.email,
+                isAdmin: user.isAdmin,
             },
+            token: tokenEncoded,
+            refreshToken: refreshTokenEncoded,
         } as IResponse;
     }
 }

@@ -15,6 +15,7 @@ export default class UserMap {
             name,
             email,
             document,
+            isAdmin,
             isConfirmed,
         };
     }

@@ -48,19 +48,21 @@ export default class RefreshTokenService {
             userId
         );
 
-        if (!oldToken) {
+        // obtém o usuário atualizado
+        const user = oldToken?.user;
+
+        if (!oldToken || !user) {
             throw new AppError("Refresh Token does not exists!");
         }
 
         // apaga o token antigo
         this.repository.deleteById(oldToken.id);
 
-        // obtém o usuário atualizado
-        const emailAtualizado = oldToken.user?.email;
-
-        const refreshToken = sign({ emailAtualizado }, refreshTokenSecret, {
+        const refreshToken = createJsonWebTokenEncoded({
+            payload: { email: user.email },
+            secret: refreshTokenSecret,
             subject: userId,
-            expiresIn: "10d",
+            expiresIn: refreshTokenExpiresIn,
         });
 
         // TODO: Fazer a implementação VanilaDateProvider com este método e outras funções em javascript puro
@@ -78,14 +80,15 @@ export default class RefreshTokenService {
         });
 
         const newToken = createJsonWebTokenEncoded({
+            payload: { isAdmin: user.isAdmin },
             secret: tokenSecret,
             subject: userId,
             expiresIn: tokenExpiresIn,
         });
 
         return {
-            token: newToken,
             userId,
+            token: newToken,
             refreshToken,
         };
     }
