@@ -10,29 +10,17 @@ interface IPayload {
     email?: string;
 }
 
-export function separateTokenFromHeader(request: Request): string {
-    const { authorization } = request.headers;
-
-    if (!authorization) {
-        throw new AppError("JWT is missing.", 401);
-    }
-
-    const [, token] = authorization.split(" ");
-
-    return token;
-}
-
 export function verifyToken(token: string, secret: string): IPayload {
     try {
         const jwt = verify(token, secret) as IPayload;
 
         if (jwt.exp === undefined || jwt.exp === null) {
-            throw new AppError(`JWT expired [${jwt.exp}]`, 401);
+            throw new AppError(`JWT expiration is not defined.`, 401);
         }
         return jwt;
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            throw new AppError(`JWT expired at ${err.expiredAt}`, 401);
+            throw new AppError(`JWT expired at ${err.expiredAt}.`, 401);
         }
         throw new AppError("JWT invalid.", 401);
     }
@@ -49,13 +37,17 @@ export async function ensureAuthenticated(
     response: Response,
     next: NextFunction
 ): Promise<void> {
-    const token = separateTokenFromHeader(request);
+    const { authorization } = request.headers;
+
+    if (!authorization) {
+        throw new AppError("JWT is missing.", 401);
+    }
+
+    const [, token] = authorization.split(" ");
 
     const id = getUserIdByToken(token);
 
-    request.user = {
-        id,
-    };
+    request.user = { id };
 
     return next();
 }
