@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var multer_1 = __importDefault(require("multer"));
 var upload_1 = __importDefault(require("../config/upload"));
-var ensureAuthenticated_1 = __importDefault(require("../middlewares/ensureAuthenticated"));
+var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
 var ensureConfirmed_1 = __importDefault(require("../middlewares/ensureConfirmed"));
 var CreateDocumentController_1 = __importDefault(require("../modules/people/controllers/CreateDocumentController"));
 var CreateDocumentService_1 = __importDefault(require("../modules/people/services/CreateDocumentService"));
@@ -52,7 +52,7 @@ var DocumentsRepository_1 = __importDefault(require("../repositories/DocumentsRe
 var PeopleRepository_1 = __importDefault(require("../repositories/PeopleRepository"));
 var peopleRoutes = express_1.Router();
 var uploadDocuments = multer_1.default(upload_1.default);
-peopleRoutes.use(ensureAuthenticated_1.default);
+peopleRoutes.use(ensureAuthenticated_1.ensureAuthenticated);
 peopleRoutes.use(ensureConfirmed_1.default);
 function diskStorage() {
     switch (process.env.STORAGE) {

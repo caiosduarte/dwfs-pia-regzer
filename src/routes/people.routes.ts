@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import upload from "../config/upload";
-import ensureAuthenticated from "../middlewares/ensureAuthenticated";
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import ensureConfirmed from "../middlewares/ensureConfirmed";
 import CreateDocumentController from "../modules/people/controllers/CreateDocumentController";
 import CreateDocumentService from "../modules/people/services/CreateDocumentService";

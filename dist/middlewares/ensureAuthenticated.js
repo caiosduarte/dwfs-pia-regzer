@@ -39,38 +39,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ensureAuthenticated = exports.getUserIdByToken = exports.verifyToken = exports.separateTokenFromHeader = void 0;
 var jsonwebtoken_1 = require("jsonwebtoken");
 var AppError_1 = __importDefault(require("../errors/AppError"));
 var auth_1 = __importDefault(require("../modules/users/config/auth"));
+function separateTokenFromHeader(request) {
+    var authorization = request.headers.authorization;
+    if (!authorization) {
+        throw new AppError_1.default("JWT is missing.", 401);
+    }
+    var _a = authorization.split(" "), token = _a[1];
+    return token;
+}
+exports.separateTokenFromHeader = separateTokenFromHeader;
+function verifyToken(token, secret) {
+    try {
+        var jwt = jsonwebtoken_1.verify(token, secret);
+        if (jwt.exp === undefined || jwt.exp === null) {
+            throw new AppError_1.default("JWT expired [" + jwt.exp + "]", 401);
+        }
+        return jwt;
+    }
+    catch (err) {
+        if (err instanceof jsonwebtoken_1.TokenExpiredError) {
+            throw new AppError_1.default("JWT expired at " + err.expiredAt, 401);
+        }
+        throw new AppError_1.default("JWT invalid.", 401);
+    }
+}
+exports.verifyToken = verifyToken;
+function getUserIdByToken(token) {
+    var jwt = verifyToken(token, auth_1.default.jwt.tokenSecret);
+    return jwt.sub;
+}
+exports.getUserIdByToken = getUserIdByToken;
 function ensureAuthenticated(request, response, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var authorization, _a, token, jwt;
-        return __generator(this, function (_b) {
-            authorization = request.headers.authorization;
-            if (!authorization) {
-                throw new AppError_1.default("JWT is missing.", 401);
-            }
-            _a = authorization.split(" "), token = _a[1];
-            try {
-                jwt = jsonwebtoken_1.verify(token, auth_1.default.jwt.tokenSecret);
-                if (jwt.exp === undefined || jwt.exp === null) {
-                    throw new AppError_1.default("JWT expired: " + jwt.exp, 401);
-                }
-                request.user = {
-                    id: jwt.sub,
-                };
-                return [2, next()];
-            }
-            catch (err) {
-                if (err instanceof jsonwebtoken_1.TokenExpiredError) {
-                    throw new AppError_1.default("JWT expired at " + err.expiredAt, 401);
-                }
-                else {
-                    throw new AppError_1.default("JWT invalid.", 401);
-                }
-            }
-            return [2];
+        var token, id;
+        return __generator(this, function (_a) {
+            token = separateTokenFromHeader(request);
+            id = getUserIdByToken(token);
+            request.user = {
+                id: id,
+            };
+            return [2, next()];
         });
     });
 }
-exports.default = ensureAuthenticated;
+exports.ensureAuthenticated = ensureAuthenticated;

@@ -1,8 +1,9 @@
-import { Router } from "express";
+import { Router, Request } from "express";
 import AppError from "../errors/AppError";
-import ensureAuthenticated from "../middlewares/ensureAuthenticated";
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
 import UserMap from "../modules/users/mappers/UserMap";
+import IUser from "../modules/users/models/IUser";
 import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
 import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
@@ -17,8 +18,8 @@ usersRouter.post("/", (request, response) => {
     return createUserController(repository).handle(request, response);
 });
 
-usersRouter.get("/", ensureAuthenticated, async (request, response) => {
-    const { id } = request.user;
+usersRouter.get("/:id", ensureAuthenticated, async (request, response) => {
+    const { id } = request.params;
 
     const usersRepository = UsersRepository.getInstance();
     const user = await usersRepository.findById(id);
@@ -30,16 +31,60 @@ usersRouter.get("/", ensureAuthenticated, async (request, response) => {
     return response.json(UserMap.toDTO(user));
 });
 
-usersRouter.get("/email", async (request, response) => {
-    const { email } = request.body;
+function getTokenFromRequest(request: Request) {
+    const valueInBody = () => {
+        return (
+            request.body.token ||
+            request.headers["x-access-token"] ||
+            request.query.token
+        );
+    };
+
+    const valueInAuthorization = () => {
+        const authorization = request.headers.authorization;
+        if (!authorization) return authorization;
+        const [, token] = authorization.split(" ");
+        return token;
+    };
+
+    return valueInBody() || valueInAuthorization();
+}
+
+usersRouter.get("/", async (request, response) => {
+    const token = getTokenFromRequest(request);
+
+    if (token) {
+        await ensureAuthenticated(request, response, () => {});
+    }
+    const userAuthenticated = request.user;
+    const { email, document, cellphone } = request.query;
+
+    const isQueryParam = !!email || !!document || !!cellphone;
+    const isAuthenticated = !!userAuthenticated;
+
+    if (!isQueryParam && !isAuthenticated) {
+        throw new AppError(
+            "No query params or authorization header found!",
+            403
+        );
+    }
 
     const usersRepository = UsersRepository.getInstance();
-    const user = await usersRepository.findByEmail(email);
+
+    let user;
+
+    if (isQueryParam) {
+        // TODO: Fazer um método que obtenha o usuário com os 03 parâmetros: email, document e cellphone
+        user = await usersRepository.findByEmail(String(email));
+    } else {
+        user = await usersRepository.findById(userAuthenticated.id);
+    }
 
     if (!user) {
         throw new AppError("User not found!", 404);
     }
 
+    // TODO: Se tiver o token válido (isAuthenticated), retorna os dados completos, senão apenas o id e as permissões
     return response.json(UserMap.toDTO(user));
 });
 

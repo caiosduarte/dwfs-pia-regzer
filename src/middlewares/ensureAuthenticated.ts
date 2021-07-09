@@ -5,15 +5,12 @@ import authConfig from "../modules/users/config/auth";
 
 interface IPayload {
     iat: number;
-    exp: number;
+    exp?: number;
     sub: string;
+    email?: string;
 }
 
-export default async function ensureAuthenticated(
-    request: Request,
-    response: Response,
-    next: NextFunction
-): Promise<void> {
+export function separateTokenFromHeader(request: Request): string {
     const { authorization } = request.headers;
 
     if (!authorization) {
@@ -22,23 +19,43 @@ export default async function ensureAuthenticated(
 
     const [, token] = authorization.split(" ");
 
+    return token;
+}
+
+export function verifyToken(token: string, secret: string): IPayload {
     try {
-        const jwt = verify(token, authConfig.jwt.tokenSecret) as IPayload;
+        const jwt = verify(token, secret) as IPayload;
 
         if (jwt.exp === undefined || jwt.exp === null) {
-            throw new AppError(`JWT expired: ${jwt.exp}`, 401);
+            throw new AppError(`JWT expired [${jwt.exp}]`, 401);
         }
-
-        request.user = {
-            id: jwt.sub,
-        };
-
-        return next();
+        return jwt;
     } catch (err) {
         if (err instanceof TokenExpiredError) {
             throw new AppError(`JWT expired at ${err.expiredAt}`, 401);
-        } else {
-            throw new AppError("JWT invalid.", 401);
         }
+        throw new AppError("JWT invalid.", 401);
     }
+}
+
+export function getUserIdByToken(token: string): string {
+    const jwt = verifyToken(token, authConfig.jwt.tokenSecret);
+
+    return jwt.sub;
+}
+
+export async function ensureAuthenticated(
+    request: Request,
+    response: Response,
+    next: NextFunction
+): Promise<void> {
+    const token = separateTokenFromHeader(request);
+
+    const id = getUserIdByToken(token);
+
+    request.user = {
+        id,
+    };
+
+    return next();
 }

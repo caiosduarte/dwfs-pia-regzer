@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var AppError_1 = __importDefault(require("../errors/AppError"));
-var ensureAuthenticated_1 = __importDefault(require("../middlewares/ensureAuthenticated"));
+var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
 var controllers_1 = require("../modules/users/controllers");
 var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
 var ConfirmRegistrationService_1 = __importDefault(require("../modules/users/services/ConfirmRegistrationService"));
@@ -55,12 +55,12 @@ usersRouter.post("/", function (request, response) {
     var repository = UsersRepository_1.default.getInstance();
     return controllers_1.createUserController(repository).handle(request, response);
 });
-usersRouter.get("/", ensureAuthenticated_1.default, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+usersRouter.get("/:id", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
     var id, usersRepository, user;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                id = request.user.id;
+                id = request.params.id;
                 usersRepository = UsersRepository_1.default.getInstance();
                 return [4, usersRepository.findById(id)];
             case 1:
@@ -72,16 +72,51 @@ usersRouter.get("/", ensureAuthenticated_1.default, function (request, response)
         }
     });
 }); });
-usersRouter.get("/email", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, usersRepository, user;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+function getTokenFromRequest(request) {
+    var valueInBody = function () {
+        return (request.body.token ||
+            request.headers["x-access-token"] ||
+            request.query.token);
+    };
+    var valueInAuthorization = function () {
+        var authorization = request.headers.authorization;
+        if (!authorization)
+            return authorization;
+        var _a = authorization.split(" "), token = _a[1];
+        return token;
+    };
+    return valueInBody() || valueInAuthorization();
+}
+usersRouter.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, userAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, user;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                email = request.body.email;
-                usersRepository = UsersRepository_1.default.getInstance();
-                return [4, usersRepository.findByEmail(email)];
+                token = getTokenFromRequest(request);
+                if (!token) return [3, 2];
+                return [4, ensureAuthenticated_1.ensureAuthenticated(request, response, function () { })];
             case 1:
-                user = _a.sent();
+                _b.sent();
+                _b.label = 2;
+            case 2:
+                userAuthenticated = request.user;
+                _a = request.query, email = _a.email, document = _a.document, cellphone = _a.cellphone;
+                isQueryParam = !!email || !!document || !!cellphone;
+                isAuthenticated = !!userAuthenticated;
+                if (!isQueryParam && !isAuthenticated) {
+                    throw new AppError_1.default("No query params or authorization header found!", 403);
+                }
+                usersRepository = UsersRepository_1.default.getInstance();
+                if (!isQueryParam) return [3, 4];
+                return [4, usersRepository.findByEmail(String(email))];
+            case 3:
+                user = _b.sent();
+                return [3, 6];
+            case 4: return [4, usersRepository.findById(userAuthenticated.id)];
+            case 5:
+                user = _b.sent();
+                _b.label = 6;
+            case 6:
                 if (!user) {
                     throw new AppError_1.default("User not found!", 404);
                 }
@@ -89,7 +124,7 @@ usersRouter.get("/email", function (request, response) { return __awaiter(void 0
         }
     });
 }); });
-usersRouter.post("/confirmation", ensureAuthenticated_1.default, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+usersRouter.post("/confirmation", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
     var id, usersRepository, tokensRepository, mailProvider, dateProvider, service;
     return __generator(this, function (_a) {
         switch (_a.label) {
