@@ -1,7 +1,7 @@
 import IDateProvider from "../providers/IDateProvider";
 import IMailProvider from "../providers/IMailProvider";
 import ITokensRepository from "../repositories/ITokensRepository";
-import IUsersRepository from "../repositories/IUsersRepository";
+import { IUsersRepository } from "../repositories/IUsersRepository";
 import AuthenticateUserService from "../services/AuthenticateUserService";
 import CreateUserService from "../services/CreateUserService";
 import RefreshTokenService from "../services/RefreshTokenService";

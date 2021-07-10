@@ -1,9 +1,13 @@
 import { Router, Request } from "express";
 import AppError from "../errors/AppError";
-import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
+import {
+    ensureAuthenticated,
+    getUserIdByToken,
+} from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
 import UserMap from "../modules/users/mappers/UserMap";
 import IUser from "../modules/users/models/IUser";
+import { IUserQueryParams } from "../modules/users/repositories/IUsersRepository";
 import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
 import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
@@ -53,14 +57,12 @@ function getTokenFromRequest(request: Request) {
 usersRouter.get("/", async (request, response) => {
     const token = getTokenFromRequest(request);
 
-    if (token) {
-        await ensureAuthenticated(request, response, () => {});
-    }
-    const userAuthenticated = request.user;
-    const { email, document, cellphone } = request.query;
+    const userIdAuthenticated = token && getUserIdByToken(token);
+
+    const { email, document, cellphone } = request.query as IUserQueryParams;
 
     const isQueryParam = !!email || !!document || !!cellphone;
-    const isAuthenticated = !!userAuthenticated;
+    const isAuthenticated = !!userIdAuthenticated;
 
     if (!isQueryParam && !isAuthenticated) {
         throw new AppError(
@@ -72,12 +74,16 @@ usersRouter.get("/", async (request, response) => {
     const usersRepository = UsersRepository.getInstance();
 
     let user;
-
     if (isQueryParam) {
-        // TODO: Fazer um método que obtenha o usuário com os 03 parâmetros: email, document e cellphone
-        user = await usersRepository.findByEmail(String(email));
+        // TODO: Checar se parâmetro está null antes de fazer a query
+        const users = await usersRepository.findBy({
+            email,
+            document,
+            cellphone,
+        });
+        user = users?.length == 1 ? users[0] : undefined;
     } else {
-        user = await usersRepository.findById(userAuthenticated.id);
+        user = await usersRepository.findById(userIdAuthenticated);
     }
 
     if (!user) {

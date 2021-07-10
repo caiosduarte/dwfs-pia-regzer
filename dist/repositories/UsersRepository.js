@@ -125,6 +125,20 @@ var UsersRepository = (function () {
             });
         });
     };
+    UsersRepository.prototype.findBy = function (_a) {
+        var email = _a.email, document = _a.document, cellphone = _a.cellphone;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.repository.find({
+                            where: { email: email },
+                            relations: ["tokens"],
+                        })];
+                    case 1: return [2, _b.sent()];
+                }
+            });
+        });
+    };
     return UsersRepository;
 }());
 exports.default = UsersRepository;

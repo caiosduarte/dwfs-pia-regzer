@@ -1,5 +1,6 @@
 import { sign, TokenExpiredError, verify } from "jsonwebtoken";
 import AppError from "../../../errors/AppError";
+import { verifyToken } from "../../../middlewares/ensureAuthenticated";
 import auth from "../config/auth";
 import ITokensRepository from "../repositories/ITokensRepository";
 import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
@@ -27,19 +28,7 @@ export default class RefreshTokenService {
             refreshTokenExpiresIn,
         } = auth.jwt;
 
-        try {
-            var jwt = verify(token, refreshTokenSecret) as ITokenPayload;
-
-            if (jwt.exp === undefined || jwt.exp === null) {
-                throw new AppError(`JWT expired: ${jwt.exp}`, 401);
-            }
-        } catch (err) {
-            if (err instanceof TokenExpiredError) {
-                throw new AppError(`JWT expired at ${err.expiredAt}`, 401);
-            } else {
-                throw new AppError("JWT invalid.", 401);
-            }
-        }
+        const jwt = verifyToken(token, refreshTokenSecret);
 
         const { sub: userId } = jwt;
 

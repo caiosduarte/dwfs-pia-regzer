@@ -5,6 +5,7 @@ interface IUser {
     name: string;
     document: string;
     email: string;
+    cellphone?: string;
     password: string;
     isAdmin: boolean;
     isConfirmed: boolean;

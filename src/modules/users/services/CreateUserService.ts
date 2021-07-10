@@ -3,7 +3,7 @@ import AppError from "../../../errors/AppError";
 import ICreateUserDTO from "../dtos/ICreateUserDTO";
 import IUserResponseDTO from "../dtos/IUserResponseDTO";
 import UserMap from "../mappers/UserMap";
-import IUsersRepository from "../repositories/IUsersRepository";
+import { IUsersRepository } from "../repositories/IUsersRepository";
 
 class CreateUserService {
     constructor(private repository: IUsersRepository) {}

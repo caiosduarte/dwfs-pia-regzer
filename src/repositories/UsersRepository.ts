@@ -1,7 +1,11 @@
 import { getRepository, Repository } from "typeorm";
 import ICreateUserDTO from "../modules/users/dtos/ICreateUserDTO";
 import User from "../entities/User";
-import IUsersRepository from "../modules/users/repositories/IUsersRepository";
+import {
+    IUsersRepository,
+    IUserQueryParams,
+} from "../modules/users/repositories/IUsersRepository";
+import IUser from "../modules/users/models/IUser";
 
 export default class UsersRepository implements IUsersRepository {
     readonly INSTANCE: IUsersRepository;
@@ -53,5 +57,17 @@ export default class UsersRepository implements IUsersRepository {
             .innerJoinAndSelect("user.tokens", "token")
             .where("token.token = :token", { token })
             .getOne();
+    }
+
+    // TODO: Acrescentar os demais parâmetros se não forem nulos
+    async findBy({
+        email,
+        document,
+        cellphone,
+    }: IUserQueryParams): Promise<IUser[] | undefined> {
+        return await this.repository.find({
+            where: { email },
+            relations: ["tokens"],
+        });
     }
 }

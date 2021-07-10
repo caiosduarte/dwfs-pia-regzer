@@ -4,7 +4,7 @@ import authConfig from "../config/auth";
 import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
 import IDateProvider from "../providers/IDateProvider";
 import ITokensRepository from "../repositories/ITokensRepository";
-import IUsersRepository from "../repositories/IUsersRepository";
+import { IUsersRepository } from "../repositories/IUsersRepository";
 import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
 
 interface IRequest {

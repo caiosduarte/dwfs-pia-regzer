@@ -88,35 +88,34 @@ function getTokenFromRequest(request) {
     return valueInBody() || valueInAuthorization();
 }
 usersRouter.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, userAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, user;
+    var token, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, user, users;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 token = getTokenFromRequest(request);
-                if (!token) return [3, 2];
-                return [4, ensureAuthenticated_1.ensureAuthenticated(request, response, function () { })];
-            case 1:
-                _b.sent();
-                _b.label = 2;
-            case 2:
-                userAuthenticated = request.user;
+                userIdAuthenticated = token && ensureAuthenticated_1.getUserIdByToken(token);
                 _a = request.query, email = _a.email, document = _a.document, cellphone = _a.cellphone;
                 isQueryParam = !!email || !!document || !!cellphone;
-                isAuthenticated = !!userAuthenticated;
+                isAuthenticated = !!userIdAuthenticated;
                 if (!isQueryParam && !isAuthenticated) {
                     throw new AppError_1.default("No query params or authorization header found!", 403);
                 }
                 usersRepository = UsersRepository_1.default.getInstance();
-                if (!isQueryParam) return [3, 4];
-                return [4, usersRepository.findByEmail(String(email))];
+                if (!isQueryParam) return [3, 2];
+                return [4, usersRepository.findBy({
+                        email: email,
+                        document: document,
+                        cellphone: cellphone,
+                    })];
+            case 1:
+                users = _b.sent();
+                user = (users === null || users === void 0 ? void 0 : users.length) == 1 ? users[0] : undefined;
+                return [3, 4];
+            case 2: return [4, usersRepository.findById(userIdAuthenticated)];
             case 3:
                 user = _b.sent();
-                return [3, 6];
-            case 4: return [4, usersRepository.findById(userAuthenticated.id)];
-            case 5:
-                user = _b.sent();
-                _b.label = 6;
-            case 6:
+                _b.label = 4;
+            case 4:
                 if (!user) {
                     throw new AppError_1.default("User not found!", 404);
                 }

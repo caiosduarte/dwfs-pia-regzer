@@ -39,8 +39,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var jsonwebtoken_1 = require("jsonwebtoken");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
+var ensureAuthenticated_1 = require("../../../middlewares/ensureAuthenticated");
 var auth_1 = __importDefault(require("../config/auth"));
 var createJsonWebTokenEncoded_1 = __importDefault(require("../utils/createJsonWebTokenEncoded"));
 var RefreshTokenService = (function () {
@@ -54,20 +54,7 @@ var RefreshTokenService = (function () {
                 switch (_b.label) {
                     case 0:
                         _a = auth_1.default.jwt, tokenSecret = _a.tokenSecret, tokenExpiresIn = _a.tokenExpiresIn, refreshTokenSecret = _a.refreshTokenSecret, refreshTokenExpiresIn = _a.refreshTokenExpiresIn;
-                        try {
-                            jwt = jsonwebtoken_1.verify(token, refreshTokenSecret);
-                            if (jwt.exp === undefined || jwt.exp === null) {
-                                throw new AppError_1.default("JWT expired: " + jwt.exp, 401);
-                            }
-                        }
-                        catch (err) {
-                            if (err instanceof jsonwebtoken_1.TokenExpiredError) {
-                                throw new AppError_1.default("JWT expired at " + err.expiredAt, 401);
-                            }
-                            else {
-                                throw new AppError_1.default("JWT invalid.", 401);
-                            }
-                        }
+                        jwt = ensureAuthenticated_1.verifyToken(token, refreshTokenSecret);
                         userId = jwt.sub;
                         return [4, this.repository.findByEncodedAndUserId(token, userId)];
                     case 1:
