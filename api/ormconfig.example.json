@@ -1,0 +1,10 @@
+{
+    "name": "default",
+    "type": "sqlite",
+    "database": "./database/db.sqlite",
+    "autoSchemaSync": true,
+    "entities": ["./dist/entities/*.js"],
+    "migrations": ["./dist/database/migrations/*.js"],
+    "cli": { "migrationsDir": "./dist/database/migrations" },
+    "logging": ["error"]
+}

@@ -1,0 +1,10 @@
+node_modules
+.vscode
+coverage
+.env
+ormconfig.json
+tmp/*
+!tmp/.gitkeep
+yarn-error.log
+*.bak
+*.~lock*
