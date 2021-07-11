@@ -1,31 +1,50 @@
 import { AuthError } from "../errors/AuthError";
-import { cookieProvider } from "../providers";
-import { validateUserPermissions } from "./validateUserPermissions";
-import jwt_decode, { InvalidTokenError } from "jwt-decode";
+import { cookieProvider, jwtProvider } from "../providers";
+import { IJwtProviderPayload } from "../providers/IJwtProvider";
+import {
+    IUserPermissions,
+    validateUserPermissions,
+} from "./validateUserPermissions";
 
-function decodeTokenToUserPermissions() {
-    return jwt_decode<{
-        isAdmin: boolean;
-        permissions?: string[];
-        roles?: string[];
-    }>(cookieProvider.token);
-}
+const isAuthPresent = (): boolean => {
+    return cookieProvider.isAuthPresent();
+};
 
-export function isAuthPresent(): boolean {
+const isTokenValid = (): boolean => {
     try {
-        return (
-            cookieProvider.isAuthPresent() && !!decodeTokenToUserPermissions()
-        );
-    } catch (err) {
-        if (err instanceof InvalidTokenError) {
-            return false;
-        }
-    }
+        //return !!jwtProvider.verify(cookieProvider.token);
+        return false;
+    } catch {}
+
     return false;
-}
+};
+
+type Credentials = {
+    email?: string;
+    document?: string;
+    cellphone?: string;
+};
+
+export const credentialsFromRefreshToken = (): Credentials | undefined => {
+    try {
+        const refreshToken = jwtProvider.verify(
+            cookieProvider.refreshToken
+        ) as Credentials;
+
+        console.log(refreshToken);
+
+        const { email, document, cellphone } = refreshToken;
+
+        if (email || document || cellphone) {
+            return { email, document, cellphone };
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 export function withGuest(toAuthorized: () => void) {
-    if (isAuthPresent()) {
+    if (isTokenValid()) {
         toAuthorized();
     }
 }
@@ -56,7 +75,9 @@ export async function withAuth(
     if (options) {
         try {
             // TODO: Testar se o decode do token está carregando as permissões
-            const user = options.user || decodeTokenToUserPermissions();
+            const user =
+                options.user ||
+                (jwtProvider.decode(cookieProvider.token) as IUserPermissions);
 
             const { permissions, roles } = options;
 
@@ -64,19 +85,11 @@ export async function withAuth(
                 !user ||
                 !validateUserPermissions({ user, permissions, roles })
             ) {
-                // console.log(
-                //     "withAuth => entrou no método validateUserPermissions"
-                // );
                 toAuthorized();
                 return await Promise.resolve(false);
             }
         } catch (error) {
-            if (error instanceof InvalidTokenError) {
-                signOut();
-                return await Promise.resolve(false);
-            } else {
-                return Promise.reject(error);
-            }
+            return await Promise.reject(error);
         }
     }
 

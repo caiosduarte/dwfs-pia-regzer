@@ -10,7 +10,9 @@ export const GlobalStyle = createGlobalStyle`
 
     --red: #e52e4d;
 
-    --green: green;
+    --green: "#4caf50";
+
+    --strong-green: "#388e3c";
 
     --text-title: #363F5F;
 
@@ -59,7 +61,7 @@ button {
 
 [disabled] {
     cursor: not-allowed;
-    opacity: 0.6;
+    /* opacity: 0.6; */
 }
 
 .react-modal-overlay {

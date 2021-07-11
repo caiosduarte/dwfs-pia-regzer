@@ -1,10 +1,25 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-    position: "relative";
+    margin: 0.7em 0 1.2em;
+    border: 0;
+    padding: 0;
+
+    min-width: 0;
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: top;
 
     button[submit] {
-        margin: 24px 0px 16px;
+        margin-bottom: 0.3em;
+    }
+
+    .wrapper {
+        position: relative;
+    }
+
+    .messageContainer {
+        margin: 0.375em 1.75em 0;
     }
 
     .buttonSuccess {

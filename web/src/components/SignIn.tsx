@@ -12,18 +12,16 @@ import {
     FormHelperText,
     CircularProgress,
     Button,
-    Checkbox,
-    FormControlLabel,
 } from "@material-ui/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { green } from "@material-ui/core/colors";
-
-import clsx from "clsx";
 
 import { SubmitHandler, useForm, FieldError } from "react-hook-form";
 import { Copyright } from "./Copyright";
 import { SubmitButton } from "./SubmitButton";
+
+import { credentialsFromRefreshToken } from "../utils";
 
 // import { LockOutlinedIcon } from "@material-ui/icons";
 
@@ -123,6 +121,25 @@ export default function SignIn({
 
     const [submitError, setSubmitError] = useState<string>();
 
+    const [credentialsLabel, setCredentialsLabel] = useState("Email Address");
+
+    useEffect(() => {
+        const credentials = credentialsFromRefreshToken();
+        if (credentials) {
+            const { email, document, cellphone } = credentials;
+
+            const exists = (value: string | undefined, label: string) =>
+                value ? label : "";
+
+            const label =
+                exists(email, "Email Address ") +
+                exists(document, "Document ") +
+                exists(cellphone, "Cellphone ");
+
+            setCredentialsLabel(label);
+        }
+    }, []);
+
     const handleSignIn: SubmitHandler<IFormData> = async (values, event) => {
         try {
             setSubmitError(undefined);
@@ -189,7 +206,7 @@ export default function SignIn({
                             fullWidth
                             id="email"
                             type="email"
-                            label="Email Address"
+                            label={credentialsLabel}
                             autoComplete="email"
                             autoFocus
                             error={hasError(errors.email)}
@@ -220,14 +237,15 @@ export default function SignIn({
                                 />
                             </>
                         )}
-                        {/* 
+
                         <SubmitButton
-                            name={isSignIn ? "Sign In" : "Next"}
+                            name={isSignIn ? "Sign in" : "Next"}
                             isSubmitting={formState.isSubmitting}
                             isSubmitted={formState.isSubmitted}
                             isInvalid={!!errors}
-                        /> */}
-                        <div className={classes.buttonPanel}>
+                            error={submitError}
+                        />
+                        {/* <div className={classes.buttonPanel}>
                             <div className={classes.wrapper}>
                                 <Button
                                     type="submit"
@@ -254,7 +272,7 @@ export default function SignIn({
                             >
                                 {submitError}
                             </FormHelperText>
-                        </div>
+                        </div> */}
                     </FormControl>
 
                     {isSignIn && (
