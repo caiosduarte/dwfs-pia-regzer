@@ -2,14 +2,13 @@ import { Router, Request } from "express";
 import AppError from "../errors/AppError";
 import {
     ensureAuthenticated,
-    getUserIdByToken,
 } from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
 import UserMap from "../modules/users/mappers/UserMap";
-import IUser from "../modules/users/models/IUser";
 import { IUserQueryParams } from "../modules/users/repositories/IUsersRepository";
 import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
 import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
+import { decodeToken } from "../modules/users/utils/verifyJwt";
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
 import EtherealMailProvider from "../providers/MailProvider/implementations/EtherealMailProvider";
 import TokensRepository from "../repositories/TokensRepository";
@@ -40,24 +39,27 @@ function getTokenFromRequest(request: Request) {
         return (
             request.body.token ||
             request.headers["x-access-token"] ||
+            request.headers["x-access"] ||
             request.query.token
         );
     };
 
-    const valueInAuthorization = () => {
+    const valueInAuthorizationBeared = () => {
         const authorization = request.headers.authorization;
         if (!authorization) return authorization;
         const [, token] = authorization.split(" ");
         return token;
     };
 
-    return valueInBody() || valueInAuthorization();
+    return valueInAuthorizationBeared() || valueInBody();
 }
 
 usersRouter.get("/", async (request, response) => {
     const token = getTokenFromRequest(request);
 
-    const userIdAuthenticated = token && getUserIdByToken(token);
+    const decoded = token && decodeToken(token);
+
+    const userIdAuthenticated = decoded && decoded.sub;
 
     const { email, document, cellphone } = request.query as IUserQueryParams;
 

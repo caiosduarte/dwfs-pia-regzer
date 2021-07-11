@@ -40,55 +40,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var ensureAuthenticated_1 = require("../../../middlewares/ensureAuthenticated");
-var auth_1 = __importDefault(require("../config/auth"));
-var createJsonWebTokenEncoded_1 = __importDefault(require("../utils/createJsonWebTokenEncoded"));
+var createJwt_1 = require("../utils/createJwt");
+var verifyJwt_1 = require("../utils/verifyJwt");
+var addDays = function (days, date) {
+    if (date === void 0) { date = new Date(); }
+    var result = !date ? new Date() : date;
+    result.setDate(result.getDate() + days);
+    return result;
+};
 var RefreshTokenService = (function () {
     function RefreshTokenService(repository) {
         this.repository = repository;
     }
     RefreshTokenService.prototype.execute = function (token) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, tokenSecret, tokenExpiresIn, refreshTokenSecret, refreshTokenExpiresIn, jwt, userId, oldToken, user, refreshToken, addDays, newRefreshToken, newToken;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var jwt, userId, oldRefreshToken, user, newToken, refreshToken, newRefreshToken;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = auth_1.default.jwt, tokenSecret = _a.tokenSecret, tokenExpiresIn = _a.tokenExpiresIn, refreshTokenSecret = _a.refreshTokenSecret, refreshTokenExpiresIn = _a.refreshTokenExpiresIn;
-                        jwt = ensureAuthenticated_1.verifyToken(token, refreshTokenSecret);
+                        jwt = verifyJwt_1.verifyRefreshToken(token);
                         userId = jwt.sub;
                         return [4, this.repository.findByEncodedAndUserId(token, userId)];
                     case 1:
-                        oldToken = _b.sent();
-                        user = oldToken === null || oldToken === void 0 ? void 0 : oldToken.user;
-                        if (!oldToken || !user) {
+                        oldRefreshToken = _a.sent();
+                        user = oldRefreshToken === null || oldRefreshToken === void 0 ? void 0 : oldRefreshToken.user;
+                        if (!oldRefreshToken || !user) {
                             throw new AppError_1.default("Refresh Token does not exists!");
                         }
-                        this.repository.deleteById(oldToken.id);
-                        refreshToken = createJsonWebTokenEncoded_1.default({
-                            payload: { email: user.email },
-                            secret: refreshTokenSecret,
-                            subject: userId,
-                            expiresIn: refreshTokenExpiresIn,
-                        });
-                        addDays = function addDays(days, date) {
-                            if (date === void 0) { date = new Date(); }
-                            var result = new Date(date);
-                            result.setDate(result.getDate() + days);
-                            return result;
-                        };
+                        newToken = createJwt_1.createToken(user);
+                        this.repository.deleteById(oldRefreshToken.id);
+                        refreshToken = createJwt_1.createRefreshToken(user);
                         newRefreshToken = this.repository.create({
                             userId: userId,
                             token: refreshToken,
                             expiresAt: addDays(10),
                         });
-                        newToken = createJsonWebTokenEncoded_1.default({
-                            payload: { isAdmin: user.isAdmin },
-                            secret: tokenSecret,
-                            subject: userId,
-                            expiresIn: tokenExpiresIn,
-                        });
                         return [2, {
-                                userId: userId,
+                                user: {
+                                    id: user.id,
+                                    email: user.email,
+                                    document: user.document,
+                                    cellphone: user.cellphone,
+                                    isAdmin: user.isAdmin,
+                                    roles: user.roles,
+                                    permissions: user.permissions,
+                                },
                                 token: newToken,
                                 refreshToken: refreshToken,
                             }];

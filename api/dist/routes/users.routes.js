@@ -46,6 +46,7 @@ var controllers_1 = require("../modules/users/controllers");
 var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
 var ConfirmRegistrationService_1 = __importDefault(require("../modules/users/services/ConfirmRegistrationService"));
 var SendConfirmationMailService_1 = __importDefault(require("../modules/users/services/SendConfirmationMailService"));
+var verifyJwt_1 = require("../modules/users/utils/verifyJwt");
 var DayjsProvider_1 = __importDefault(require("../providers/DateProvider/implementations/DayjsProvider"));
 var EtherealMailProvider_1 = __importDefault(require("../providers/MailProvider/implementations/EtherealMailProvider"));
 var TokensRepository_1 = __importDefault(require("../repositories/TokensRepository"));
@@ -76,24 +77,26 @@ function getTokenFromRequest(request) {
     var valueInBody = function () {
         return (request.body.token ||
             request.headers["x-access-token"] ||
+            request.headers["x-access"] ||
             request.query.token);
     };
-    var valueInAuthorization = function () {
+    var valueInAuthorizationBeared = function () {
         var authorization = request.headers.authorization;
         if (!authorization)
             return authorization;
         var _a = authorization.split(" "), token = _a[1];
         return token;
     };
-    return valueInBody() || valueInAuthorization();
+    return valueInAuthorizationBeared() || valueInBody();
 }
 usersRouter.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, user, users;
+    var token, decoded, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, user, users;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 token = getTokenFromRequest(request);
-                userIdAuthenticated = token && ensureAuthenticated_1.getUserIdByToken(token);
+                decoded = token && verifyJwt_1.decodeToken(token);
+                userIdAuthenticated = decoded && decoded.sub;
                 _a = request.query, email = _a.email, document = _a.document, cellphone = _a.cellphone;
                 isQueryParam = !!email || !!document || !!cellphone;
                 isAuthenticated = !!userIdAuthenticated;

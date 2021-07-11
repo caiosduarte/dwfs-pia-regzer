@@ -1,28 +1,17 @@
 import { compare } from "bcrypt";
 import AppError from "../../../errors/AppError";
-import authConfig from "../config/auth";
 import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
+import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
+import IUserResponseDTO from "../dtos/IUserResponseDTO";
+import IUser from "../models/IUser";
 import IDateProvider from "../providers/IDateProvider";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { IUsersRepository } from "../repositories/IUsersRepository";
-import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
+import { createRefreshToken, createToken } from "../utils/createJwt";
 
-interface IRequest {
-    email: string;
-    password: string;
-}
+type Credentials = Pick<IUser, "email" | "document" | "cellphone" | "password">
 
-interface IResponse {
-    user: {
-        id: string;
-        email?: string;
-        isAdmin?: boolean;
-        roles?: string[];
-        permissions?: string[];
-    };
-    token: string;
-    refreshToken: string;
-}
+type UserResponse = Omit<IUser, "password" | "tokens">;
 
 class AuthenticateUserService {
     constructor(
@@ -31,7 +20,7 @@ class AuthenticateUserService {
         private dateProvider: IDateProvider
     ) {}
 
-    public async execute({ email, password }: IRequest): Promise<IResponse> {
+    public async execute({ email, password }: Credentials): Promise<ITokenResponseDTO> {
         const user = await this.usersRepository.findByEmail(email);
 
         if (!user) {
@@ -44,45 +33,34 @@ class AuthenticateUserService {
             throw new AppError("Email/password don't match.", 401);
         }
 
-        const {
-            tokenSecret,
-            tokenExpiresIn,
-            refreshTokenSecret,
-            refreshTokenExpiresIn,
-        } = authConfig.jwt;
+        const token = createToken(user);
 
-        const tokenEncoded = createJsonWebTokenEncoded({
-            payload: {
-                isAdmin: user.isAdmin,
-            },
-            secret: tokenSecret,
-            subject: user.id,
-            expiresIn: tokenExpiresIn,
-        });
+        const refreshToken = createRefreshToken(user);
 
-        const refreshTokenEncoded = createJsonWebTokenEncoded({
-            payload: { email },
-            secret: refreshTokenSecret,
-            subject: user.id,
-            expiresIn: refreshTokenExpiresIn,
-        });
-
-        const refreshToken = this.tokensRepository.create({
+        this.tokensRepository.create({
             userId: user.id,
-            token: refreshTokenEncoded,
+            token: refreshToken,
             expiresAt: this.dateProvider.addDays(10),
         } as ICreateTokenDTO);
 
         return {
             user: {
                 id: user.id,
+
                 email: user.email,
+                document: user.document,
+                cellphone: user.cellphone,
+
                 isAdmin: user.isAdmin,
+                roles: user.roles,
+                permissions: user.permissions,
             },
-            token: tokenEncoded,
-            refreshToken: refreshTokenEncoded,
-        } as IResponse;
+            token,
+            refreshToken,
+        };
     }
 }
+
+
 
 export default AuthenticateUserService;

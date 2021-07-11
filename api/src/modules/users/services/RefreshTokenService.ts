@@ -1,65 +1,45 @@
-import { sign, TokenExpiredError, verify } from "jsonwebtoken";
 import AppError from "../../../errors/AppError";
-import { verifyToken } from "../../../middlewares/ensureAuthenticated";
-import auth from "../config/auth";
+import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
 import ITokensRepository from "../repositories/ITokensRepository";
-import createJsonWebTokenEncoded from "../utils/createJsonWebTokenEncoded";
+import { createRefreshToken, createToken } from "../utils/createJwt";
+import { verifyRefreshToken } from "../utils/verifyJwt";
 
-interface ITokenResponse {
-    token: string;
-    userId: string;
-    refreshToken: string;
-}
+ 
+// TODO: Fazer a implementação VanilaDateProvider com este método e outras funções em javascript puro
 
-interface ITokenPayload {
-    sub: string;
-    email: string;
-    exp?: string;
-}
+const addDays = (days: number, date: Date| undefined = new Date()) => {
+    const result = !date ? new Date(): date;
+    result.setDate(result.getDate() + days);
+    return result;
+};
 
 export default class RefreshTokenService {
     constructor(private repository: ITokensRepository) {}
 
-    async execute(token: string): Promise<ITokenResponse> {
-        const {
-            tokenSecret,
-            tokenExpiresIn,
-            refreshTokenSecret,
-            refreshTokenExpiresIn,
-        } = auth.jwt;
+    async execute(token: string): Promise<ITokenResponseDTO> {
 
-        const jwt = verifyToken(token, refreshTokenSecret);
+        const jwt = verifyRefreshToken(token);
 
         const { sub: userId } = jwt;
 
-        const oldToken = await this.repository.findByEncodedAndUserId(
+        const oldRefreshToken = await this.repository.findByEncodedAndUserId(
             token,
             userId
         );
 
         // obtém o usuário atualizado
-        const user = oldToken?.user;
+        const user = oldRefreshToken?.user;
 
-        if (!oldToken || !user) {
+        if (!oldRefreshToken || !user) {
             throw new AppError("Refresh Token does not exists!");
         }
 
-        // apaga o token antigo
-        this.repository.deleteById(oldToken.id);
+        const newToken = createToken(user);
 
-        const refreshToken = createJsonWebTokenEncoded({
-            payload: { email: user.email },
-            secret: refreshTokenSecret,
-            subject: userId,
-            expiresIn: refreshTokenExpiresIn,
-        });
+        // apaga o refreshToken antigo
+        this.repository.deleteById(oldRefreshToken.id);
 
-        // TODO: Fazer a implementação VanilaDateProvider com este método e outras funções em javascript puro
-        const addDays = function addDays(days: number, date = new Date()) {
-            const result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result;
-        };
+        const refreshToken = createRefreshToken(user);
 
         const newRefreshToken = this.repository.create({
             userId,
@@ -68,15 +48,18 @@ export default class RefreshTokenService {
             expiresAt: addDays(10),
         });
 
-        const newToken = createJsonWebTokenEncoded({
-            payload: { isAdmin: user.isAdmin },
-            secret: tokenSecret,
-            subject: userId,
-            expiresIn: tokenExpiresIn,
-        });
-
         return {
-            userId,
+            user: {
+                id: user.id,
+
+                email: user.email,
+                document: user.document,
+                cellphone: user.cellphone,
+
+                isAdmin: user.isAdmin,
+                roles: user.roles,
+                permissions: user.permissions,
+            },
             token: newToken,
             refreshToken,
         };

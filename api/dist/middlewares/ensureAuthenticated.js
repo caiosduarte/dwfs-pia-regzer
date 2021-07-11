@@ -39,31 +39,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ensureAuthenticated = exports.getUserIdByToken = exports.verifyToken = void 0;
-var jsonwebtoken_1 = require("jsonwebtoken");
+exports.ensureAuthenticated = void 0;
 var AppError_1 = __importDefault(require("../errors/AppError"));
-var auth_1 = __importDefault(require("../modules/users/config/auth"));
-function verifyToken(token, secret) {
-    try {
-        var jwt = jsonwebtoken_1.verify(token, secret);
-        if (jwt.exp === undefined || jwt.exp === null) {
-            throw new AppError_1.default("JWT expiration is not defined.", 401);
-        }
-        return jwt;
-    }
-    catch (err) {
-        if (err instanceof jsonwebtoken_1.TokenExpiredError) {
-            throw new AppError_1.default("JWT expired at " + err.expiredAt + ".", 401);
-        }
-        throw new AppError_1.default("JWT invalid.", 401);
-    }
-}
-exports.verifyToken = verifyToken;
-function getUserIdByToken(token) {
-    var jwt = verifyToken(token, auth_1.default.jwt.tokenSecret);
-    return jwt.sub;
-}
-exports.getUserIdByToken = getUserIdByToken;
+var verifyJwt_1 = require("../modules/users/utils/verifyJwt");
 function ensureAuthenticated(request, response, next) {
     return __awaiter(this, void 0, void 0, function () {
         var authorization, _a, token, id;
@@ -73,7 +51,7 @@ function ensureAuthenticated(request, response, next) {
                 throw new AppError_1.default("JWT is missing.", 401);
             }
             _a = authorization.split(" "), token = _a[1];
-            id = getUserIdByToken(token);
+            id = verifyJwt_1.verifyToken(token).sub;
             request.user = { id: id };
             return [2, next()];
         });

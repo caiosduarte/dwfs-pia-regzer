@@ -41,8 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var auth_1 = __importDefault(require("../config/auth"));
-var createJsonWebTokenEncoded_1 = __importDefault(require("../utils/createJsonWebTokenEncoded"));
+var createJwt_1 = require("../utils/createJwt");
 var AuthenticateUserService = (function () {
     function AuthenticateUserService(usersRepository, tokensRepository, dateProvider) {
         this.usersRepository = usersRepository;
@@ -52,49 +51,40 @@ var AuthenticateUserService = (function () {
     AuthenticateUserService.prototype.execute = function (_a) {
         var email = _a.email, password = _a.password;
         return __awaiter(this, void 0, void 0, function () {
-            var user, passwordValid, _b, tokenSecret, tokenExpiresIn, refreshTokenSecret, refreshTokenExpiresIn, tokenEncoded, refreshTokenEncoded, refreshToken;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var user, passwordValid, token, refreshToken;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4, this.usersRepository.findByEmail(email)];
                     case 1:
-                        user = _c.sent();
+                        user = _b.sent();
                         if (!user) {
                             throw new AppError_1.default("Email/password don't match.", 401);
                         }
                         return [4, bcrypt_1.compare(password, user.password)];
                     case 2:
-                        passwordValid = _c.sent();
+                        passwordValid = _b.sent();
                         if (!passwordValid) {
                             throw new AppError_1.default("Email/password don't match.", 401);
                         }
-                        _b = auth_1.default.jwt, tokenSecret = _b.tokenSecret, tokenExpiresIn = _b.tokenExpiresIn, refreshTokenSecret = _b.refreshTokenSecret, refreshTokenExpiresIn = _b.refreshTokenExpiresIn;
-                        tokenEncoded = createJsonWebTokenEncoded_1.default({
-                            payload: {
-                                isAdmin: user.isAdmin,
-                            },
-                            secret: tokenSecret,
-                            subject: user.id,
-                            expiresIn: tokenExpiresIn,
-                        });
-                        refreshTokenEncoded = createJsonWebTokenEncoded_1.default({
-                            payload: { email: email },
-                            secret: refreshTokenSecret,
-                            subject: user.id,
-                            expiresIn: refreshTokenExpiresIn,
-                        });
-                        refreshToken = this.tokensRepository.create({
+                        token = createJwt_1.createToken(user);
+                        refreshToken = createJwt_1.createRefreshToken(user);
+                        this.tokensRepository.create({
                             userId: user.id,
-                            token: refreshTokenEncoded,
+                            token: refreshToken,
                             expiresAt: this.dateProvider.addDays(10),
                         });
                         return [2, {
                                 user: {
                                     id: user.id,
                                     email: user.email,
+                                    document: user.document,
+                                    cellphone: user.cellphone,
                                     isAdmin: user.isAdmin,
+                                    roles: user.roles,
+                                    permissions: user.permissions,
                                 },
-                                token: tokenEncoded,
-                                refreshToken: refreshTokenEncoded,
+                                token: token,
+                                refreshToken: refreshToken,
                             }];
                 }
             });
