@@ -12,7 +12,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        run: cd api
+      
+      - name: On API..
+        run: cd api  
       
       - name: Setup Nodejs 14.x
         uses: actions/setup-node@v2
