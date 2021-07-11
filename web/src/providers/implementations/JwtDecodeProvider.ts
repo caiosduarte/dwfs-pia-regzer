@@ -9,16 +9,15 @@ import {
 import jwt_decode, { InvalidTokenError, JwtPayload } from "jwt-decode";
 
 export class JwtDecodeProvider implements IJwtProvider {
-    decode(token: string): Object | null {
+    decode<T>(token: string): T | undefined {
         try {
-            const decoded = jwt_decode<IJwtProviderPayload>(token);
+            return jwt_decode<T>(token);
         } catch {}
-        return null;
     }
 
-    verify(token: string): Object | null {
+    verify<T>(token: string): T {
         try {
-            const jwt = jwt_decode<IJwtProviderPayload>(token);
+            const jwt = jwt_decode<T & IJwtProviderPayload>(token);
             if (jwt.exp && jwt.exp * 1000 >= Date.now()) {
                 return jwt;
             } else {

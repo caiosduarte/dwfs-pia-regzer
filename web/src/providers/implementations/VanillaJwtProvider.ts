@@ -6,22 +6,18 @@ import {
 } from "../IJwtProvider";
 
 export class VanillaJwtProvider implements IJwtProvider {
-    decode(token: string): Object | null {
-        if (token) {
-            try {
-                const [, payload] = token.split(".");
-                const decodedPayload = JSON.parse(window.atob(payload));
-                return decodedPayload;
-            } catch {}
-        }
-        return null;
+    decode<T>(token: string): T {
+        try {
+            const [, payload] = token.split(".");
+            return JSON.parse(window.atob(payload)) as T;
+        } catch {}
     }
 
-    verify(token: string): Object | null {
-        const decoded = this.decode(token);
+    verify<T>(token: string): T {
+        const decoded = this.decode<T & IJwtProviderPayload>(token);
 
         if (decoded) {
-            const { exp } = decoded as IJwtProviderPayload;
+            const { exp } = decoded;
             if (typeof exp === "number") {
                 if (exp * 1000 >= Date.now()) {
                     return decoded;

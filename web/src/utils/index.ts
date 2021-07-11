@@ -6,17 +6,16 @@ import {
     validateUserPermissions,
 } from "./validateUserPermissions";
 
-const isAuthPresent = (): boolean => {
-    return cookieProvider.isAuthPresent();
-};
-
 const isTokenValid = (): boolean => {
     try {
-        //return !!jwtProvider.verify(cookieProvider.token);
-        return false;
+        return !!jwtProvider.verify(cookieProvider.token);
     } catch {}
 
     return false;
+};
+
+const isAuthPresent = (): boolean => {
+    return cookieProvider.isAuthPresent() && isTokenValid();
 };
 
 type Credentials = {
@@ -27,9 +26,9 @@ type Credentials = {
 
 export const credentialsFromRefreshToken = (): Credentials | undefined => {
     try {
-        const refreshToken = jwtProvider.verify(
+        const refreshToken = jwtProvider.verify<Credentials>(
             cookieProvider.refreshToken
-        ) as Credentials;
+        );
 
         console.log(refreshToken);
 
@@ -44,7 +43,7 @@ export const credentialsFromRefreshToken = (): Credentials | undefined => {
 };
 
 export function withGuest(toAuthorized: () => void) {
-    if (isTokenValid()) {
+    if (isAuthPresent()) {
         toAuthorized();
     }
 }
@@ -66,8 +65,7 @@ export async function withAuth(
     options?: IAuthPermissions,
     fn?: Promise<any>
 ): Promise<any> {
-    if (!isAuthPresent()) {
-        // console.log("withAuth => entrou no método isAuthPresent()");
+    if (!isTokenValid()) {
         signOut();
         return await Promise.resolve(false);
     }

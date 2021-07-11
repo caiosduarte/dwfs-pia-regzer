@@ -43,7 +43,7 @@ export class JwtProviderExpiredError extends JwtProviderError {
 }
 
 export interface IJwtProvider {
-    decode: (token: string) => Object | null;
+    decode: <T>(token: string) => T | undefined;
 
-    verify: (token: string) => Object | null;
+    verify: <T>(token: string) => T;
 }
