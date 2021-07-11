@@ -16,6 +16,9 @@ jobs:
       run:
         shell: bash
         working-directory: api
+
+    env:
+      NODE_ENV: production
         
     steps:
       - uses: actions/checkout@v2
@@ -25,9 +28,7 @@ jobs:
         with:
           node-version: 14.x
           
-      - name: Setup environment
-        env:
-          NODE_ENV: production
+
 
       - name: Install dependencies
         run: yarn
