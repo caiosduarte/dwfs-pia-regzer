@@ -34,11 +34,15 @@ export class JwtProviderInvalidError extends JwtProviderError {
 }
 
 export class JwtProviderExpiredError extends JwtProviderError {
-    readonly expires?: number;
+    readonly expiresInSec?: number;
 
-    constructor(rawToken?: string, expires?: number) {
+    constructor(rawToken?: string, expiresInSec?: number) {
         super(JwtProviderErrorType.expired, rawToken);
-        this.expires = expires;
+        this.expiresInSec = expiresInSec;
+        const messageDate = expiresInSec
+            ? ` in ${new Date(expiresInSec * 1000)}`
+            : "";
+        this.message = `JWT expired in${messageDate}.`;
     }
 }
 
