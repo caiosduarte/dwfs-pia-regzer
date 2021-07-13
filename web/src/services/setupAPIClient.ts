@@ -10,7 +10,7 @@ interface IRequest {
     onFailure: (err: AxiosError) => void;
 }
 
-export function authorizationHeader(token: string) {
+function authorizationHeader(token: string) {
     return token ? { Authorization: `Beared ${token}` } : {};
 }
 
@@ -19,9 +19,7 @@ export function setupAPIClient(context = undefined) {
 
     const api = axios.create({
         baseURL: "https://api.regzer.com.br",
-        headers: !!cookieProvider.token
-            ? { Authorization: `Beared ${cookieProvider.token}` }
-            : {},
+        headers: authorizationHeader(cookieProvider.token),
     });
 
     api.interceptors.response.use(
