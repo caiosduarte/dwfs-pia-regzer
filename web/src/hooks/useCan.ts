@@ -11,7 +11,7 @@ interface IUseCanParams {
 export function useCan({ permissions, roles }: IUseCanParams) {
     const { user, isAuthenticated } = useContext(AuthContext);
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
         return false;
     }
 

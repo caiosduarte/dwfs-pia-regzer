@@ -159,11 +159,18 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         authChannel.current.postMessage("signIn");
     }
 
+    function authorizationHeader(token: string) {
+        return token ? { Authorization: `Beared ${token}` } : {};
+    }
+
     async function canCheckIn({
         email,
     }: ICheckInCredentials): Promise<boolean> {
+        api.defaults.headers = {};
         return api
-            .get("users", { params: { email } })
+            .get("users", {
+                params: { email },
+            })
             .then((response) => {
                 const user = response.data as IUser;
 
