@@ -6,7 +6,7 @@ import {
 } from "../IJwtProvider";
 
 export class VanillaJwtProvider implements IJwtProvider {
-    decode<T>(token: string): T {
+    decode<T>(token: string): T | undefined {
         try {
             const [, payload] = token.split(".");
             return JSON.parse(window.atob(payload)) as T;
