@@ -64,7 +64,7 @@ export default class UsersRepository implements IUsersRepository {
         email,
         document,
         cellphone,
-    }: IUserQueryParams): Promise<IUser[] | undefined> {
+    }: IUserQueryParams): Promise<User[] | undefined> {
         return await this.repository.find({
             where: { email },
             relations: ["tokens"],

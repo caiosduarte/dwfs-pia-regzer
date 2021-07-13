@@ -40,8 +40,8 @@ export function verifyRefreshToken(token: string): IPayload {
     return verifyJwt(token, auth.jwt.refreshTokenSecret);
 }
 
-export function decodeToken(token: string): IPayload {
-    return decode(token) as IPayload;
+export function decodeJwt(token: string): IPayload | undefined {
+    try {
+        return decode(token) as IPayload;
+    } catch {}
 }
-
-

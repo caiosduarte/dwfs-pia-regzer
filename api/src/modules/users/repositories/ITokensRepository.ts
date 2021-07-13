@@ -1,4 +1,3 @@
-import { VoiceId } from "aws-sdk/clients/polly";
 import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
 import IToken from "../models/IToken";
 

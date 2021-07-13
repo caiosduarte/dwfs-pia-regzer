@@ -1,10 +1,9 @@
 import { Router, Request } from "express";
 import AppError from "../errors/AppError";
-import {
-    ensureAuthenticated,
-} from "../middlewares/ensureAuthenticated";
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
 import UserMap from "../modules/users/mappers/UserMap";
+import IUser from "../modules/users/models/IUser";
 import { IUserQueryParams } from "../modules/users/repositories/IUsersRepository";
 import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
 import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
@@ -34,21 +33,24 @@ usersRouter.get("/:id", ensureAuthenticated, async (request, response) => {
     return response.json(UserMap.toDTO(user));
 });
 
-function getTokenFromRequest(request: Request) {
+function getTokenFromRequest(request: Request): string | undefined {
     const valueInBody = () => {
-        return (
+        const token =
             request.body.token ||
+            request.query.token ||
             request.headers["x-access-token"] ||
-            request.headers["x-access"] ||
-            request.query.token
-        );
+            request.headers["x-access"];
+        if (token) {
+            return String(token);
+        }
     };
 
     const valueInAuthorizationBeared = () => {
         const authorization = request.headers.authorization;
-        if (!authorization) return authorization;
-        const [, token] = authorization.split(" ");
-        return token;
+        if (authorization) {
+            const [, token] = authorization.split(" ");
+            return token;
+        }
     };
 
     return valueInAuthorizationBeared() || valueInBody();
@@ -75,18 +77,21 @@ usersRouter.get("/", async (request, response) => {
 
     const usersRepository = UsersRepository.getInstance();
 
-    let user;
-    if (isQueryParam) {
-        // TODO: Checar se parâmetro está null antes de fazer a query
-        const users = await usersRepository.findBy({
-            email,
-            document,
-            cellphone,
-        });
-        user = users?.length == 1 ? users[0] : undefined;
-    } else {
-        user = await usersRepository.findById(userIdAuthenticated);
-    }
+    const findUser = async () => {
+        if (isQueryParam) {
+            // TODO: Checar se parâmetro está null antes de fazer a query
+            const users = await usersRepository.findBy({
+                email,
+                document,
+                cellphone,
+            });
+            return users && users[0];
+        } else if (userIdAuthenticated) {
+            return await usersRepository.findById(userIdAuthenticated);
+        }
+    };
+
+    const user = await findUser();
 
     if (!user) {
         throw new AppError("User not found!", 404);

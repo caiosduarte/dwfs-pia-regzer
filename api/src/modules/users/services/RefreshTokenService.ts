@@ -2,13 +2,13 @@ import AppError from "../../../errors/AppError";
 import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { createRefreshToken, createToken } from "../utils/createJwt";
-import { verifyRefreshToken } from "../utils/verifyJwt";
+import { isTokenExpired } from "../utils/token";
+import { decodeJwt, verifyRefreshToken } from "../utils/verifyJwt";
 
- 
 // TODO: Fazer a implementação VanilaDateProvider com este método e outras funções em javascript puro
 
-const addDays = (days: number, date: Date| undefined = new Date()) => {
-    const result = !date ? new Date(): date;
+const addDays = (days: number, date: Date | undefined = new Date()) => {
+    const result = !date ? new Date() : date;
     result.setDate(result.getDate() + days);
     return result;
 };
@@ -17,27 +17,30 @@ export default class RefreshTokenService {
     constructor(private repository: ITokensRepository) {}
 
     async execute(token: string): Promise<ITokenResponseDTO> {
+        const jwt = decodeJwt(token);
 
-        const jwt = verifyRefreshToken(token);
+        const userId = jwt?.sub;
 
-        const { sub: userId } = jwt;
-
-        const oldRefreshToken = await this.repository.findByEncodedAndUserId(
-            token,
-            userId
-        );
+        const oldRefreshToken = await this.repository.findByEncoded(token);
 
         // obtém o usuário atualizado
         const user = oldRefreshToken?.user;
 
-        if (!oldRefreshToken || !user) {
-            throw new AppError("Refresh Token does not exists!");
+        if (!oldRefreshToken || !user || user?.id !== userId) {
+            throw new AppError("Refresh Token does not exists!", 401);
+        }
+
+        const { expiresAt } = oldRefreshToken;
+        // apaga o refreshToken antigo
+        this.repository.deleteById(oldRefreshToken.id);
+
+        const isRefreshTokenValid = () => !!verifyRefreshToken(token);
+
+        if (isTokenExpired(expiresAt) || !isRefreshTokenValid()) {
+            throw new AppError("Refresh Token invalid.", 401);
         }
 
         const newToken = createToken(user);
-
-        // apaga o refreshToken antigo
-        this.repository.deleteById(oldRefreshToken.id);
 
         const refreshToken = createRefreshToken(user);
 
