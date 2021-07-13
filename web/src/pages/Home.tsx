@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import SignIn from "../components/SignIn";
 import { AuthContext } from "../context/AuthContext";
-import { withGuest } from "../utils";
+import { withGuest } from "../utils/withGuest";
 
 export const Home = () => {
     const [isCheckIn, setIsCheckIn] = useState(true);
@@ -24,13 +24,19 @@ export const Home = () => {
             } else if (isSignUp) {
                 //await signUp({ email, password });
             } else if (isCheckIn) {
-                const { email } = data;
-                const isUserExists = await canCheckIn({
-                    email,
-                });
-                setIsSignIn(isUserExists);
-                setIsSignUp(!isUserExists);
-                setIsCheckIn(!isUserExists);
+                try {
+                    const { email } = data;
+                    const isUserExists = await canCheckIn({
+                        email,
+                    });
+                    setIsSignIn(isUserExists);
+                    setIsSignUp(!isUserExists);
+                    setIsCheckIn(!isUserExists);
+                } catch {
+                    setIsSignIn(true);
+                    setIsSignUp(false);
+                    setIsCheckIn(false);
+                }
             }
         } catch (error) {
             console.log("/ => ", error);

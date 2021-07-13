@@ -52,3 +52,32 @@ export function SubmitButton({
         </Container>
     );
 }
+
+/* <div className={classes.buttonPanel}>
+                            <div className={classes.wrapper}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                    disabled={formState.isSubmitting}
+                                    fullWidth
+                                >
+                                    {isSignIn ? "Sign In" : "Next"}
+                                </Button>
+
+                                {formState.isSubmitting && (
+                                    <CircularProgress
+                                        size={24}
+                                        className={classes.buttonProgress}
+                                    />
+                                )}
+                            </div>
+                            <FormHelperText
+                                className={classes.helpText}
+                                id="helper-text"
+                                error={hasErrors}
+                            >
+                                {submitError}
+                            </FormHelperText>
+                        </div> */

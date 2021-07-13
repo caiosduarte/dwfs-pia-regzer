@@ -12,6 +12,8 @@ import {
     FormHelperText,
     CircularProgress,
     Button,
+    FormControlLabel,
+    Checkbox,
 } from "@material-ui/core";
 import { useState, useEffect } from "react";
 
@@ -21,7 +23,7 @@ import { SubmitHandler, useForm, FieldError } from "react-hook-form";
 import { Copyright } from "./Copyright";
 import { SubmitButton } from "./SubmitButton";
 
-import { credentialsFromRefreshToken } from "../utils";
+import { IStorageID, storage } from "../utils/storage";
 
 // import { LockOutlinedIcon } from "@material-ui/icons";
 
@@ -121,23 +123,14 @@ export default function SignIn({
 
     const [submitError, setSubmitError] = useState<string>();
 
-    const [credentialsLabel, setCredentialsLabel] = useState("Email Address");
+    const [ids, setIds] = useState<Array<IStorageID>>();
 
     useEffect(() => {
-        const credentials = credentialsFromRefreshToken();
-        if (credentials) {
-            const { email, document, cellphone } = credentials;
+        storage.loadLocalData();
 
-            const exists = (value: string | undefined, label: string) =>
-                value ? label : "";
+        setIds(storage.ids);
 
-            const label =
-                exists(email, "Email Address ") +
-                exists(document, "Document ") +
-                exists(cellphone, "Cellphone ");
-
-            setCredentialsLabel(label);
-        }
+        console.log("Storage => ", storage.ids);
     }, []);
 
     const handleSignIn: SubmitHandler<IFormData> = async (values, event) => {
@@ -172,9 +165,21 @@ export default function SignIn({
             );
         }
     };
-    const hasErrors = !!errors || !!submitError;
+    const hasErrors = !!submitError;
 
     const hasError = (field: FieldError): boolean => {
+        const isDirty = formState.dirtyFields;
+        const isTouched = formState.touchedFields;
+        const isSubmitted = formState.isSubmitSuccessful;
+        console.log(
+            "isDirty ",
+            isDirty,
+            " - isTouched ",
+            isTouched,
+            " - isSubmitted ",
+            isSubmitted
+        );
+
         return !!field || !!submitError;
     };
 
@@ -206,7 +211,7 @@ export default function SignIn({
                             fullWidth
                             id="email"
                             type="email"
-                            label={credentialsLabel}
+                            label={storage.joinLabels() || "Email Address"}
                             autoComplete="email"
                             autoFocus
                             error={hasError(errors.email)}
@@ -235,6 +240,15 @@ export default function SignIn({
                                             "Senha é um campo obrigatório.",
                                     })}
                                 />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            value="remember"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Remember me"
+                                />
                             </>
                         )}
 
@@ -245,34 +259,6 @@ export default function SignIn({
                             isInvalid={!!errors}
                             error={submitError}
                         />
-                        {/* <div className={classes.buttonPanel}>
-                            <div className={classes.wrapper}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.submit}
-                                    disabled={formState.isSubmitting}
-                                    fullWidth
-                                >
-                                    {isSignIn ? "Sign In" : "Next"}
-                                </Button>
-
-                                {formState.isSubmitting && (
-                                    <CircularProgress
-                                        size={24}
-                                        className={classes.buttonProgress}
-                                    />
-                                )}
-                            </div>
-                            <FormHelperText
-                                className={classes.helpText}
-                                id="helper-text"
-                                error={hasErrors}
-                            >
-                                {submitError}
-                            </FormHelperText>
-                        </div> */}
                     </FormControl>
 
                     {isSignIn && (

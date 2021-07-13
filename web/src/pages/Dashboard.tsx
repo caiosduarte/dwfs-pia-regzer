@@ -3,7 +3,7 @@ import { Can } from "../components/Can";
 import { AuthContext } from "../context/AuthContext";
 import { useCan } from "../hooks/useCan";
 import { api } from "../services/api";
-import { withAuth } from "../utils";
+import { withAuth } from "../utils/withAuth";
 
 export function Dashboard() {
     const { user, signOut, toAuthorized } = useContext(AuthContext);
@@ -21,7 +21,7 @@ export function Dashboard() {
         )
             .then((response) => console.log("dash => ", response))
             .catch((error) => console.log("dash error => ", error));
-    }, [signOut, toAuthorized]);
+    }, []);
 
     return (
         <>

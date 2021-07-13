@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { withAuth } from "../utils";
+import { withAuth } from "../utils/withAuth";
 
 export function Register() {
     const { user, signOut, toAuthorized } = useContext(AuthContext);
