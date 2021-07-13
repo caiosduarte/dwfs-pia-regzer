@@ -7,7 +7,7 @@ import IUser from "../modules/users/models/IUser";
 import { IUserQueryParams } from "../modules/users/repositories/IUsersRepository";
 import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
 import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
-import { decodeToken } from "../modules/users/utils/verifyJwt";
+import { decodeJwt } from "../modules/users/utils/verifyJwt";
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
 import EtherealMailProvider from "../providers/MailProvider/implementations/EtherealMailProvider";
 import TokensRepository from "../repositories/TokensRepository";
@@ -59,7 +59,7 @@ function getTokenFromRequest(request: Request): string | undefined {
 usersRouter.get("/", async (request, response) => {
     const token = getTokenFromRequest(request);
 
-    const decoded = token && decodeToken(token);
+    const decoded = token && decodeJwt(token);
 
     const userIdAuthenticated = decoded && decoded.sub;
 

@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var createJwt_1 = require("../utils/createJwt");
+var token_1 = require("../utils/token");
 var verifyJwt_1 = require("../utils/verifyJwt");
 var addDays = function (days, date) {
     if (date === void 0) { date = new Date(); }
@@ -54,21 +55,26 @@ var RefreshTokenService = (function () {
     }
     RefreshTokenService.prototype.execute = function (token) {
         return __awaiter(this, void 0, void 0, function () {
-            var jwt, userId, oldRefreshToken, user, newToken, refreshToken, newRefreshToken;
+            var jwt, userId, oldRefreshToken, user, expiresAt, isRefreshTokenValid, newToken, refreshToken, newRefreshToken;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        jwt = verifyJwt_1.verifyRefreshToken(token);
-                        userId = jwt.sub;
-                        return [4, this.repository.findByEncodedAndUserId(token, userId)];
+                        jwt = verifyJwt_1.decodeJwt(token);
+                        userId = jwt === null || jwt === void 0 ? void 0 : jwt.sub;
+                        return [4, this.repository.findByEncoded(token)];
                     case 1:
                         oldRefreshToken = _a.sent();
                         user = oldRefreshToken === null || oldRefreshToken === void 0 ? void 0 : oldRefreshToken.user;
-                        if (!oldRefreshToken || !user) {
-                            throw new AppError_1.default("Refresh Token does not exists!");
+                        if (!oldRefreshToken || !user || (user === null || user === void 0 ? void 0 : user.id) !== userId) {
+                            throw new AppError_1.default("Refresh Token does not exists!", 401);
+                        }
+                        expiresAt = oldRefreshToken.expiresAt;
+                        this.repository.deleteById(oldRefreshToken.id);
+                        isRefreshTokenValid = function () { return !!verifyJwt_1.verifyRefreshToken(token); };
+                        if (token_1.isTokenExpired(expiresAt) || !isRefreshTokenValid()) {
+                            throw new AppError_1.default("Refresh Token invalid.", 401);
                         }
                         newToken = createJwt_1.createToken(user);
-                        this.repository.deleteById(oldRefreshToken.id);
                         refreshToken = createJwt_1.createRefreshToken(user);
                         newRefreshToken = this.repository.create({
                             userId: userId,

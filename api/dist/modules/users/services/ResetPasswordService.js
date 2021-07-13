@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
+var token_1 = require("../utils/token");
 var ResetPasswordService = (function () {
     function ResetPasswordService(repository) {
         this.repository = repository;
@@ -48,33 +49,31 @@ var ResetPasswordService = (function () {
     ResetPasswordService.prototype.execute = function (_a) {
         var tokenEncoded = _a.tokenEncoded, password = _a.password;
         return __awaiter(this, void 0, void 0, function () {
-            var token, user, currentDate, expiresDate, _b, tokenId;
+            var token, expiresAt, user, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0: return [4, this.repository.findByEncoded(tokenEncoded)];
                     case 1:
                         token = _c.sent();
+                        if (!token) {
+                            throw new AppError_1.default("Token invalid!", 403);
+                        }
+                        expiresAt = token.expiresAt;
+                        return [4, this.repository.deleteById(token.id)];
+                    case 2:
+                        _c.sent();
+                        if (token_1.isTokenExpired(expiresAt)) {
+                            throw new AppError_1.default("Token expired!", 403);
+                        }
                         user = token === null || token === void 0 ? void 0 : token.user;
-                        if (!token || !user) {
-                            throw new AppError_1.default("Token invalid!");
-                        }
-                        currentDate = new Date();
-                        expiresDate = token.expiresAt;
-                        if (!expiresDate || currentDate.getTime() > expiresDate.getTime()) {
-                            throw new AppError_1.default("Token expired!");
-                        }
                         _b = user;
                         return [4, bcrypt_1.hash(password, 8)];
-                    case 2:
+                    case 3:
                         _b.password = _c.sent();
                         if (!user.isConfirmed) {
                             user.isConfirmed = true;
                         }
-                        tokenId = token.id;
                         return [4, this.repository.save(token)];
-                    case 3:
-                        _c.sent();
-                        return [4, this.repository.deleteById(tokenId)];
                     case 4:
                         _c.sent();
                         return [2];

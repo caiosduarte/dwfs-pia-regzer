@@ -75,27 +75,30 @@ usersRouter.get("/:id", ensureAuthenticated_1.ensureAuthenticated, function (req
 }); });
 function getTokenFromRequest(request) {
     var valueInBody = function () {
-        return (request.body.token ||
+        var token = request.body.token ||
+            request.query.token ||
             request.headers["x-access-token"] ||
-            request.headers["x-access"] ||
-            request.query.token);
+            request.headers["x-access"];
+        if (token) {
+            return String(token);
+        }
     };
     var valueInAuthorizationBeared = function () {
         var authorization = request.headers.authorization;
-        if (!authorization)
-            return authorization;
-        var _a = authorization.split(" "), token = _a[1];
-        return token;
+        if (authorization) {
+            var _a = authorization.split(" "), token = _a[1];
+            return token;
+        }
     };
     return valueInAuthorizationBeared() || valueInBody();
 }
 usersRouter.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, decoded, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, user, users;
+    var token, decoded, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, findUser, user;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 token = getTokenFromRequest(request);
-                decoded = token && verifyJwt_1.decodeToken(token);
+                decoded = token && verifyJwt_1.decodeJwt(token);
                 userIdAuthenticated = decoded && decoded.sub;
                 _a = request.query, email = _a.email, document = _a.document, cellphone = _a.cellphone;
                 isQueryParam = !!email || !!document || !!cellphone;
@@ -104,21 +107,31 @@ usersRouter.get("/", function (request, response) { return __awaiter(void 0, voi
                     throw new AppError_1.default("No query params or authorization header found!", 403);
                 }
                 usersRepository = UsersRepository_1.default.getInstance();
-                if (!isQueryParam) return [3, 2];
-                return [4, usersRepository.findBy({
-                        email: email,
-                        document: document,
-                        cellphone: cellphone,
-                    })];
+                findUser = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var users;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!isQueryParam) return [3, 2];
+                                return [4, usersRepository.findBy({
+                                        email: email,
+                                        document: document,
+                                        cellphone: cellphone,
+                                    })];
+                            case 1:
+                                users = _a.sent();
+                                return [2, users && users[0]];
+                            case 2:
+                                if (!userIdAuthenticated) return [3, 4];
+                                return [4, usersRepository.findById(userIdAuthenticated)];
+                            case 3: return [2, _a.sent()];
+                            case 4: return [2];
+                        }
+                    });
+                }); };
+                return [4, findUser()];
             case 1:
-                users = _b.sent();
-                user = (users === null || users === void 0 ? void 0 : users.length) == 1 ? users[0] : undefined;
-                return [3, 4];
-            case 2: return [4, usersRepository.findById(userIdAuthenticated)];
-            case 3:
                 user = _b.sent();
-                _b.label = 4;
-            case 4:
                 if (!user) {
                     throw new AppError_1.default("User not found!", 404);
                 }

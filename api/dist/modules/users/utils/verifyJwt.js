@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decodeToken = exports.verifyRefreshToken = exports.verifyToken = void 0;
+exports.decodeJwt = exports.verifyRefreshToken = exports.verifyToken = void 0;
 var jsonwebtoken_1 = require("jsonwebtoken");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var auth_1 = __importDefault(require("../config/auth"));
@@ -30,7 +30,10 @@ function verifyRefreshToken(token) {
     return verifyJwt(token, auth_1.default.jwt.refreshTokenSecret);
 }
 exports.verifyRefreshToken = verifyRefreshToken;
-function decodeToken(token) {
-    return jsonwebtoken_1.decode(token);
+function decodeJwt(token) {
+    try {
+        return jsonwebtoken_1.decode(token);
+    }
+    catch (_a) { }
 }
-exports.decodeToken = decodeToken;
+exports.decodeJwt = decodeJwt;
