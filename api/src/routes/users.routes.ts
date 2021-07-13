@@ -7,7 +7,11 @@ import IUser from "../modules/users/models/IUser";
 import { IUserQueryParams } from "../modules/users/repositories/IUsersRepository";
 import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
 import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
-import { decodeJwt } from "../modules/users/utils/verifyJwt";
+import { isTokenExpired } from "../modules/users/utils/token";
+import {
+    decodeJwt,
+    verifyRefreshToken,
+} from "../modules/users/utils/verifyJwt";
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
 import EtherealMailProvider from "../providers/MailProvider/implementations/EtherealMailProvider";
 import TokensRepository from "../repositories/TokensRepository";
@@ -97,7 +101,21 @@ usersRouter.get("/", async (request, response) => {
         throw new AppError("User not found!", 404);
     }
 
-    // TODO: Se tiver o token válido (isAuthenticated), retorna os dados completos, senão apenas o id e as permissões
+    const hasRefreshTokenValid = () =>
+        !!user.tokens?.find((refreshToken) => {
+            if (!isTokenExpired(refreshToken.expiresAt)) {
+                try {
+                    if (!!verifyRefreshToken(refreshToken.token)) {
+                        return refreshToken;
+                    }
+                } catch {}
+            }
+        });
+
+    if (!hasRefreshTokenValid()) {
+        throw new AppError("Last entrance is too long or not found.", 401);
+    }
+
     return response.json(UserMap.toDTO(user));
 });
 
