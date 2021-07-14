@@ -16,9 +16,9 @@ interface IPayload {
     cellphone?: string;
 }
 
-function verifyJwt(token: string, secret: string): IPayload {
+function verifyJwt<T>(token: string, secret: string): T & IPayload {
     try {
-        const jwt = verify(token, secret) as IPayload;
+        const jwt = verify(token, secret) as T & IPayload;
 
         if (!jwt.exp || typeof jwt.exp !== "number") {
             throw new AppError(`JWT expiration is not defined.`, 401);
@@ -32,16 +32,16 @@ function verifyJwt(token: string, secret: string): IPayload {
     }
 }
 
-export function verifyToken(token: string): IPayload {
-    return verifyJwt(token, auth.jwt.tokenSecret);
+export function verifyToken<T>(token: string): T {
+    return verifyJwt<T>(token, auth.jwt.tokenSecret);
 }
 
-export function verifyRefreshToken(token: string): IPayload {
-    return verifyJwt(token, auth.jwt.refreshTokenSecret);
+export function verifyRefreshToken<T>(token: string): T {
+    return verifyJwt<T>(token, auth.jwt.refreshTokenSecret);
 }
 
-export function decodeJwt(token: string): IPayload | undefined {
+export function decodeJwt<T>(token: string): (T & IPayload) | undefined {
     try {
-        return decode(token) as IPayload;
+        return decode(token) as T & IPayload;
     } catch {}
 }

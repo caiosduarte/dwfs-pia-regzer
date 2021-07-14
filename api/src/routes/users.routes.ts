@@ -101,21 +101,6 @@ usersRouter.get("/", async (request, response) => {
         throw new AppError("User not found!", 404);
     }
 
-    const hasRefreshTokenValid = () =>
-        !!user.tokens?.find((refreshToken) => {
-            if (!isTokenExpired(refreshToken.expiresAt)) {
-                try {
-                    if (!!verifyRefreshToken(refreshToken.token)) {
-                        return refreshToken;
-                    }
-                } catch {}
-            }
-        });
-
-    if (!hasRefreshTokenValid()) {
-        throw new AppError("Last entrance is too long or not found.", 401);
-    }
-
     return response.json(UserMap.toDTO(user));
 });
 

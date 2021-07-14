@@ -1,8 +1,15 @@
 export default interface IUserResponseDTO {
     id: string;
     name: string;
+
+    email?: string;
     document?: string;
-    email: string;
-    isAdmin: boolean;
-    isConfirmed: boolean;
+    cellphone?: string;
+
+    isAdmin?: boolean;
+    roles?: string[];
+    permissions?: string[];
+
+    isConfirmed?: boolean;
+    isValid?: boolean;
 }

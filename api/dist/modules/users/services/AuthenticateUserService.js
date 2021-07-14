@@ -42,6 +42,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var createJwt_1 = require("../utils/createJwt");
+var token_1 = require("../utils/token");
+var verifyJwt_1 = require("../utils/verifyJwt");
+var hasRefreshTokenValid = function (_a, tokens) {
+    var email = _a.email, document = _a.document, cellphone = _a.cellphone;
+    return !!(tokens === null || tokens === void 0 ? void 0 : tokens.find(function (refreshToken) {
+        if (!token_1.isTokenExpired(refreshToken.expiresAt)) {
+            try {
+                var _a = verifyJwt_1.verifyRefreshToken(refreshToken.token), emailToken = _a.email, documentToken = _a.document, cellphoneToken = _a.cellphone;
+                console.log({ email: email, document: document, cellphoneToken: cellphoneToken });
+                console.log({ emailToken: emailToken, documentToken: documentToken, cellphoneToken: cellphoneToken });
+                if (emailToken === email ||
+                    documentToken === document ||
+                    cellphoneToken === cellphone) {
+                    return refreshToken;
+                }
+            }
+            catch (_b) {
+                console.error(refreshToken);
+            }
+        }
+    }));
+};
 var AuthenticateUserService = (function () {
     function AuthenticateUserService(usersRepository, tokensRepository, dateProvider) {
         this.usersRepository = usersRepository;
@@ -49,29 +71,40 @@ var AuthenticateUserService = (function () {
         this.dateProvider = dateProvider;
     }
     AuthenticateUserService.prototype.execute = function (_a) {
-        var email = _a.email, password = _a.password;
+        var email = _a.email, cellphone = _a.cellphone, document = _a.document, password = _a.password, remember = _a.remember;
         return __awaiter(this, void 0, void 0, function () {
-            var user, passwordValid, token, refreshToken;
+            var user, passwordValid, token, refreshTokenDays, refreshToken;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4, this.usersRepository.findByEmail(email)];
+                    case 0: return [4, this.usersRepository
+                            .findBy({ email: email, cellphone: cellphone, document: document })
+                            .then(function (result) { return result && result[0]; })];
                     case 1:
                         user = _b.sent();
                         if (!user) {
-                            throw new AppError_1.default("Email/password don't match.", 401);
+                            throw new AppError_1.default("Email/password don't match.", 404);
                         }
+                        if (!password) return [3, 3];
                         return [4, bcrypt_1.compare(password, user.password)];
                     case 2:
                         passwordValid = _b.sent();
                         if (!passwordValid) {
                             throw new AppError_1.default("Email/password don't match.", 401);
                         }
+                        return [3, 4];
+                    case 3:
+                        if (!hasRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, user.tokens)) {
+                            throw new AppError_1.default("Last entrance is too long or not found.", 401);
+                        }
+                        _b.label = 4;
+                    case 4:
                         token = createJwt_1.createToken(user);
-                        refreshToken = createJwt_1.createRefreshToken(user);
+                        refreshTokenDays = remember ? 30 : 10;
+                        refreshToken = createJwt_1.createRefreshToken(user, refreshTokenDays);
                         this.tokensRepository.create({
                             userId: user.id,
                             token: refreshToken,
-                            expiresAt: this.dateProvider.addDays(10),
+                            expiresAt: this.dateProvider.addDays(refreshTokenDays),
                         });
                         return [2, {
                                 user: {
@@ -82,6 +115,7 @@ var AuthenticateUserService = (function () {
                                     isAdmin: user.isAdmin,
                                     roles: user.roles,
                                     permissions: user.permissions,
+                                    isConfirmed: user.isConfirmed,
                                 },
                                 token: token,
                                 refreshToken: refreshToken,

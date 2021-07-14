@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 import IToken from "../modules/users/models/IToken";
+import IUser from "../modules/users/models/IUser";
 import { CreatedTimestamp } from "./Embedded";
 import User from "./User";
 
@@ -13,7 +14,7 @@ export default class Token implements IToken {
         cascade: ["update"],
     })
     @JoinColumn({ name: "user_id" })
-    user: User;
+    user: IUser;
 
     @Column({ name: "user_id" })
     userId: string;

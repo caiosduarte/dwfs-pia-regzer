@@ -46,7 +46,6 @@ var controllers_1 = require("../modules/users/controllers");
 var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
 var ConfirmRegistrationService_1 = __importDefault(require("../modules/users/services/ConfirmRegistrationService"));
 var SendConfirmationMailService_1 = __importDefault(require("../modules/users/services/SendConfirmationMailService"));
-var token_1 = require("../modules/users/utils/token");
 var verifyJwt_1 = require("../modules/users/utils/verifyJwt");
 var DayjsProvider_1 = __importDefault(require("../providers/DateProvider/implementations/DayjsProvider"));
 var EtherealMailProvider_1 = __importDefault(require("../providers/MailProvider/implementations/EtherealMailProvider"));
@@ -94,7 +93,7 @@ function getTokenFromRequest(request) {
     return valueInAuthorizationBeared() || valueInBody();
 }
 usersRouter.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, decoded, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, findUser, user, hasRefreshTokenValid;
+    var token, decoded, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, findUser, user;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -135,22 +134,6 @@ usersRouter.get("/", function (request, response) { return __awaiter(void 0, voi
                 user = _b.sent();
                 if (!user) {
                     throw new AppError_1.default("User not found!", 404);
-                }
-                hasRefreshTokenValid = function () {
-                    var _a;
-                    return !!((_a = user.tokens) === null || _a === void 0 ? void 0 : _a.find(function (refreshToken) {
-                        if (!token_1.isTokenExpired(refreshToken.expiresAt)) {
-                            try {
-                                if (!!verifyJwt_1.verifyRefreshToken(refreshToken.token)) {
-                                    return refreshToken;
-                                }
-                            }
-                            catch (_a) { }
-                        }
-                    }));
-                };
-                if (!hasRefreshTokenValid()) {
-                    throw new AppError_1.default("Last entrance is too long or not found.", 401);
                 }
                 return [2, response.json(UserMap_1.default.toDTO(user))];
         }

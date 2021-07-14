@@ -2,17 +2,21 @@ import IToken from "./IToken";
 
 interface IUser {
     id: string;
-    name: string;    
-    email: string;
+
+    name: string;
+
+    email?: string;
     document?: string;
     cellphone?: string;
     password: string;
 
-    isAdmin: boolean;
+    isAdmin?: boolean;
     roles?: string[];
     permissions?: string[];
 
-    isConfirmed: boolean;
+    isConfirmed?: boolean;
+    isValid?: boolean;
+
     tokens?: IToken[];
 }
 

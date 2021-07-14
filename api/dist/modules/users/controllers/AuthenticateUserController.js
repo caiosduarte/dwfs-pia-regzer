@@ -42,14 +42,17 @@ var AuthenticateUserController = (function () {
     }
     AuthenticateUserController.prototype.handle = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, email, password, _b, user, token, refreshToken;
+            var _a, email, document, cellphone, password, remember, _b, user, token, refreshToken;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _a = request.body, email = _a.email, password = _a.password;
+                        _a = request.body, email = _a.email, document = _a.document, cellphone = _a.cellphone, password = _a.password, remember = _a.remember;
                         return [4, this.service.execute({
                                 email: email,
+                                document: document,
+                                cellphone: cellphone,
                                 password: password,
+                                remember: remember,
                             })];
                     case 1:
                         _b = _c.sent(), user = _b.user, token = _b.token, refreshToken = _b.refreshToken;

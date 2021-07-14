@@ -31,7 +31,7 @@ var Token = (function () {
             cascade: ["update"],
         }),
         typeorm_1.JoinColumn({ name: "user_id" }),
-        __metadata("design:type", User_1.default)
+        __metadata("design:type", Object)
     ], Token.prototype, "user", void 0);
     __decorate([
         typeorm_1.Column({ name: "user_id" }),

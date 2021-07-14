@@ -13,23 +13,27 @@ function createJwt(_a) {
         expiresIn: expiresIn,
     });
 }
-var createToken = function (_a) {
+var createToken = function (_a, minutes) {
     var id = _a.id, isAdmin = _a.isAdmin, roles = _a.roles, permissions = _a.permissions;
     return createJwt({
         payload: { isAdmin: isAdmin, roles: roles, permissions: permissions },
         secret: auth_1.default.jwt.tokenSecret,
         subject: id,
-        expiresIn: auth_1.default.jwt.tokenExpiresIn,
+        expiresIn: typeof minutes === "number"
+            ? minutes + "m"
+            : minutes || auth_1.default.jwt.tokenExpiresIn,
     });
 };
 exports.createToken = createToken;
-var createRefreshToken = function (_a) {
+var createRefreshToken = function (_a, days) {
     var id = _a.id, email = _a.email, document = _a.document, cellphone = _a.cellphone;
     return createJwt({
         payload: { email: email, document: document, cellphone: cellphone },
         secret: auth_1.default.jwt.refreshTokenSecret,
         subject: id,
-        expiresIn: auth_1.default.jwt.refreshTokenExpiresIn,
+        expiresIn: typeof days === "number"
+            ? days + "d"
+            : days || auth_1.default.jwt.refreshTokenExpiresIn,
     });
 };
 exports.createRefreshToken = createRefreshToken;

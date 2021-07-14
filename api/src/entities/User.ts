@@ -11,14 +11,12 @@ import { v4 as uuidV4 } from "uuid";
 import IUser from "../modules/users/models/IUser";
 import { Dated } from "./Embedded";
 import Token from "./Token";
+import IToken from "../modules/users/models/IToken";
 
 @Entity()
 class User implements IUser {
     @PrimaryColumn({ name: "user_id" })
     id: string;
-
-    /*     @Column({ primary: true })
-    user_id: string; */
 
     @Column()
     name: string;
@@ -36,11 +34,11 @@ class User implements IUser {
     @Column({ name: "is_admin", default: false })
     isAdmin: boolean;
 
-    @Column({ name: "is_valid", default: false })
-    isValid: boolean;
-
     @Column({ name: "is_confirmed", default: false })
     isConfirmed: boolean;
+
+    @Column({ name: "is_valid", default: false })
+    isValid: boolean;
 
     @Column((type) => Dated, { prefix: false })
     dated: Dated;
@@ -50,7 +48,7 @@ class User implements IUser {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })
-    tokens?: Token[];
+    tokens?: IToken[];
 
     constructor() {
         if (!this.id) {

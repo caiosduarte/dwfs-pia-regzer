@@ -49,13 +49,13 @@ var User = (function () {
         __metadata("design:type", Boolean)
     ], User.prototype, "isAdmin", void 0);
     __decorate([
-        typeorm_1.Column({ name: "is_valid", default: false }),
-        __metadata("design:type", Boolean)
-    ], User.prototype, "isValid", void 0);
-    __decorate([
         typeorm_1.Column({ name: "is_confirmed", default: false }),
         __metadata("design:type", Boolean)
     ], User.prototype, "isConfirmed", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "is_valid", default: false }),
+        __metadata("design:type", Boolean)
+    ], User.prototype, "isValid", void 0);
     __decorate([
         typeorm_1.Column(function (type) { return Embedded_1.Dated; }, { prefix: false }),
         __metadata("design:type", Embedded_1.Dated)
