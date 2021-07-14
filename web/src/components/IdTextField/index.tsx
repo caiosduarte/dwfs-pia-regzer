@@ -5,33 +5,39 @@ interface IdTextFieldProps {
     isFullWidth?: boolean;
     type?: string;
     label?: string;
-    autocomplete?: string;
+    autoComplete?: string;
     isRequired: boolean;
     isError?: boolean;
     errorMessage?: string;
+    isAutoFocus?: true;
+    variantName?: string;
+    marginName?: string;
 }
 
 export function IdTextField({
-    id,
+    id = "ids",
     isFullWidth = true,
     type = "text",
     label,
-    autocomplete = id,
     isRequired = true,
     isError = false,
     errorMessage = undefined,
+    isAutoFocus = true,
+    variantName,
+    marginName,
+    autoComplete,
 }: IdTextFieldProps) {
     return (
         <TextField
             variant="outlined"
             margin="normal"
-            required={isRequired}
+            required={isRequired || true}
             fullWidth={isFullWidth}
             id={id}
             type={type}
             label={label}
-            autoComplete={autocomplete}
-            autoFocus
+            autoComplete={autoComplete}
+            autoFocus={isAutoFocus || true}
             error={isError}
             helperText={errorMessage}
         />

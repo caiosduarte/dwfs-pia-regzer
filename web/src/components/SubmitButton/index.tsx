@@ -9,6 +9,7 @@ interface SubmitButtonProps {
     isSubmitted?: boolean;
     error?: string;
     warning?: string;
+    className?: string;
 }
 
 export function SubmitButton({
@@ -19,8 +20,29 @@ export function SubmitButton({
     isSubmitted = false,
     error,
     warning,
+    className,
 }: SubmitButtonProps) {
     return (
+        <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}
+            fullWidth={isFullWidth}
+            className={
+                className ||
+                (!isInvalid && !error && isSubmitted
+                    ? "buttonSuccess"
+                    : "defaultSubmit")
+            }
+        >
+            {name}
+        </Button>
+    );
+}
+
+/* 
+
         <Container>
             <div className="wrapper">
                 <Button
@@ -50,34 +72,5 @@ export function SubmitButton({
                 {!!error ? error : warning}
             </FormHelperText>
         </Container>
-    );
-}
 
-/* <div className={classes.buttonPanel}>
-                            <div className={classes.wrapper}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.submit}
-                                    disabled={formState.isSubmitting}
-                                    fullWidth
-                                >
-                                    {isSignIn ? "Sign In" : "Next"}
-                                </Button>
-
-                                {formState.isSubmitting && (
-                                    <CircularProgress
-                                        size={24}
-                                        className={classes.buttonProgress}
-                                    />
-                                )}
-                            </div>
-                            <FormHelperText
-                                className={classes.helpText}
-                                id="helper-text"
-                                error={hasErrors}
-                            >
-                                {submitError}
-                            </FormHelperText>
-                        </div> */
+*/

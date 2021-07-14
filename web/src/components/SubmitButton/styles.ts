@@ -10,8 +10,10 @@ export const Container = styled.div`
     flex-direction: column;
     vertical-align: top;
 
-    button[submit] {
-        margin-bottom: 0.3em;
+    .defaultSubmit {
+        button[submit] {
+            margin-bottom: 0.3em;
+        }
     }
 
     .wrapper {

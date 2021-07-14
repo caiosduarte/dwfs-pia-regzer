@@ -42,7 +42,7 @@ body {
     -webkit-font-smoothing: antialiased;    
 }
 
-body, input, textarea, button {
+/* body, input, textarea, button {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
 }
@@ -53,7 +53,7 @@ h1, h2, h3, h4, h5 {
 
 h6, strong {
     font-weight: 500;
-}
+} */
 
 button {
     cursor: pointer;
@@ -61,10 +61,10 @@ button {
 
 [disabled] {
     cursor: not-allowed;
-    /* opacity: 0.6; */
+    opacity: 0.6;
 }
 
-.react-modal-overlay {
+/* .react-modal-overlay {
     background: rgba(0,0,0,0.5);
 
     position: fixed;
@@ -99,6 +99,6 @@ button {
     &:hover {
         filter: brightness(0.9);
     }
-}
+} */
 
 `;

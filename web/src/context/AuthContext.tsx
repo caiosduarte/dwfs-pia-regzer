@@ -1,31 +1,27 @@
-import {
-    createContext,
-    ReactNode,
-    useState,
-    useEffect,
-    useRef,
-    useCallback,
-} from "react";
+import { createContext, ReactNode, useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { AxiosError } from "axios";
 
 import { api } from "../services/api";
 import { cookieProvider } from "../providers";
 
+interface IIds {
+    email: string;
+    document?: string;
+    cellphone?: string;
+}
+
 interface ISignInCredentials {
     email: string;
+    document?: string;
+    cellphone?: string;
+
     password: string;
+    remember?: string;
 }
 
 interface ISignUpData {
     email: string;
     password: string;
-}
-
-interface ICheckInCredentials {
-    email: string;
-    document?: string;
-    cellphone?: string;
 }
 
 interface IUser {
@@ -46,13 +42,13 @@ interface IAuthContextData {
     signIn: (credentials: ISignInCredentials) => Promise<void>;
     signUp: (data: ISignUpData) => Promise<void>;
     signOut: () => void;
-    canCheckIn: (credentials: ICheckInCredentials) => Promise<boolean>;
+    checkIn: (ids: IIds) => Promise<void>;
     isAuthenticated: boolean;
     isValid: boolean;
     isConfirmed: boolean;
-    canAceptPassword: () => boolean;
     toAuthorized: () => void;
     user?: IUser;
+    isNewUser: boolean;
 }
 
 interface IAuthProviderProps {
@@ -63,6 +59,9 @@ export const AuthContext = createContext({} as IAuthContextData);
 
 export function AuthProvider({ children }: IAuthProviderProps) {
     const [user, setUser] = useState<IUser>();
+    const [isNewUser, setIsNewUser] = useState(true);
+    const history = useHistory();
+    const authChannel = useRef<BroadcastChannel>(new BroadcastChannel("auth"));
 
     let isAuthenticated = !!user;
 
@@ -76,32 +75,35 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     };
 
     const canSignIn = () => {
-        return isValid && isConfirmed && canAceptPassword();
+        return !isNewUser && isValid && isConfirmed && canAceptPassword();
     };
 
-    const history = useHistory();
-
-    const authChannel = useRef<BroadcastChannel>(new BroadcastChannel("auth"));
-
-    const reset = useCallback(() => {
+    const reset = () => {
         cookieProvider.deleteAll();
         setUser(undefined);
-        history.push("/");
-    }, [history]);
+        setIsNewUser(true);
+        history.push("/sign-in");
+    };
 
-    const signOut = useCallback(() => {
+    const signOut = () => {
         reset();
         authChannel.current?.postMessage("signOut");
-    }, [reset]);
+    };
 
-    const toAuthorized = useCallback(() => {
+    const toAuthorized = () => {
         // TODO: Redirecionamento para o /dashboard (ou a página requisitada antes de autorizar) com as Rotas
-        if (!user?.isAdmin) {
-            history.push("/register");
-        } else {
+        console.log("---toAuthorized---");
+        console.log("User", user);
+        console.log("isNewUser", isNewUser);
+        console.log("isAuthenticated", isAuthenticated);
+        console.log("------------");
+
+        if (isAuthenticated) {
             history.push("/dashboard");
+        } else {
+            history.push("/sign-in");
         }
-    }, [user, history]);
+    };
 
     useEffect(() => {
         authChannel.current.onmessage = (message) => {
@@ -116,7 +118,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                     break;
             }
         };
-    }, [reset]);
+    }, []);
 
     useEffect(() => {
         const token = cookieProvider.token;
@@ -125,7 +127,13 @@ export function AuthProvider({ children }: IAuthProviderProps) {
             // mantém a parte de permissões e roles o mais atualizadas possível
             api.get("/users", { headers: { Authorization: `Beared ${token}` } })
                 .then((response) => {
-                    setUser(response.data as IUser);
+                    const { user } = response.data;
+                    setUser(user);
+                    console.log("---AuthContext---");
+                    console.log("User", user);
+                    console.log("isNewUser", isNewUser);
+                    console.log("isAuthenticated", isAuthenticated);
+                    console.log("------------");
                 })
                 .catch((err) => {
                     console.log(
@@ -135,18 +143,12 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                     signOut();
                 });
         }
-    }, [signOut]);
+    }, []);
 
-    async function signIn({ email, password }: ISignInCredentials) {
-        const response = await api.post("sessions", { email, password });
-
-        const { token, refreshToken, user } = response.data;
-
+    async function enter({ token, refreshToken, user }: any) {
         setUser(user);
 
-        if (!canSignIn()) {
-            throw new Error("User can not sign in!");
-        }
+        setIsNewUser(false);
 
         cookieProvider.token = token;
 
@@ -154,39 +156,35 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
         api.defaults.headers["Authorization"] = `Beared ${token}`;
 
-        toAuthorized();
+        history.push("/dashboard");
 
         authChannel.current.postMessage("signIn");
     }
 
-    function authorizationHeader(token: string) {
-        return token ? { Authorization: `Beared ${token}` } : {};
+    async function signIn(data: ISignInCredentials) {
+        const response = await api.post("sessions", data);
+
+        await enter(response.data);
     }
 
-    async function canCheckIn({
-        email,
-    }: ICheckInCredentials): Promise<boolean> {
-        api.defaults.headers = {};
-        return api
-            .get("users", {
-                params: { email },
-            })
-            .then((response) => {
-                const user = response.data as IUser;
-
-                setUser(user);
-
-                return true;
-            })
-            .catch((err: AxiosError) => {
-                console.log("canCheckIn() => ", err);
+    async function checkIn(params: IIds) {
+        try {
+            const response = await api.post("sessions", params);
+            await enter(response.data);
+        } catch (err) {
+            const { status } = err.response;
+            if (status === 401) {
+                setIsNewUser(false);
                 setUser(undefined);
-                if (err.response?.status === 404) {
-                    return false;
-                } else {
-                    throw err;
-                }
-            });
+            } else if (status === 404) {
+                // 404 - user não existe
+                setIsNewUser(true);
+                setUser(undefined);
+                history.push("/sign-up");
+            } else {
+                throw err;
+            }
+        }
     }
 
     async function signUp({ email, password }: ISignUpData) {}
@@ -198,13 +196,13 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 signIn,
                 signUp,
                 signOut,
-                canCheckIn,
+                checkIn,
                 isAuthenticated,
                 isValid,
                 isConfirmed,
-                canAceptPassword,
                 toAuthorized,
                 user,
+                isNewUser,
             }}
         >
             {children}

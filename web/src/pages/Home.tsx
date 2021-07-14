@@ -8,7 +8,7 @@ export const Home = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [isSignIn, setIsSignIn] = useState(false);
 
-    const { canCheckIn, canSignIn, signIn, signUp, toAuthorized } =
+    const { checkIn, canSignIn, signIn, signUp, toAuthorized } =
         useContext(AuthContext);
 
     useEffect(() => {
@@ -26,12 +26,12 @@ export const Home = () => {
             } else if (isCheckIn) {
                 try {
                     const { email } = data;
-                    const isUserExists = await canCheckIn({
+                    await checkIn({
                         email,
                     });
-                    setIsSignIn(isUserExists);
-                    setIsSignUp(!isUserExists);
-                    setIsCheckIn(!isUserExists);
+                    setIsSignIn(true);
+                    setIsSignUp(false);
+                    setIsCheckIn(false);
                 } catch {
                     setIsSignIn(true);
                     setIsSignUp(false);

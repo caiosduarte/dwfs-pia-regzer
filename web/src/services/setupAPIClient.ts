@@ -18,7 +18,8 @@ export function setupAPIClient(context = undefined) {
     const cookieProvider = new CookieProvider(context);
 
     const api = axios.create({
-        baseURL: "https://api.regzer.com.br",
+        // baseURL: "https://api.regzer.com.br",
+        baseURL: "http://localhost:3333",
         headers: authorizationHeader(cookieProvider.token),
     });
 

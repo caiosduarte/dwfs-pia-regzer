@@ -9,25 +9,24 @@ import {
     Typography,
     Box,
     FormControl,
-    FormHelperText,
-    CircularProgress,
-    Button,
     FormControlLabel,
     Checkbox,
 } from "@material-ui/core";
 import { useState, useEffect } from "react";
 
+import { LockOutlined } from "@material-ui/icons";
 import { green } from "@material-ui/core/colors";
-
-import { SubmitHandler, useForm, FieldError } from "react-hook-form";
 import { Copyright } from "./Copyright";
 import { SubmitButton } from "./SubmitButton";
 
+import { SubmitHandler, useForm, FieldError } from "react-hook-form";
+
 import { IStorageID, storage } from "../utils/storage";
+import { NavLink } from "react-router-dom";
 
 // import { LockOutlinedIcon } from "@material-ui/icons";
 
-//     --primary-500: #3D4AFF;
+// --primary-500: #3D4AFF;
 
 // --secondary-500: #522CE8;
 
@@ -47,8 +46,12 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
     },
 
+    // submit: {
+    //     margin: theme.spacing(0, 0, 0.3),
+    // },
+
     submit: {
-        margin: theme.spacing(0, 0, 0.3),
+        margin: theme.spacing(3, 0, 2),
     },
 
     buttonPanel: {
@@ -168,18 +171,6 @@ export default function SignIn({
     const hasErrors = !!submitError;
 
     const hasError = (field: FieldError): boolean => {
-        const isDirty = formState.dirtyFields;
-        const isTouched = formState.touchedFields;
-        const isSubmitted = formState.isSubmitSuccessful;
-        console.log(
-            "isDirty ",
-            isDirty,
-            " - isTouched ",
-            isTouched,
-            " - isSubmitted ",
-            isSubmitted
-        );
-
         return !!field || !!submitError;
     };
 
@@ -192,7 +183,7 @@ export default function SignIn({
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    {/* <LockOutlinedIcon /> */}
+                    <LockOutlined />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign in
@@ -258,29 +249,36 @@ export default function SignIn({
                             isSubmitted={formState.isSubmitted}
                             isInvalid={!!errors}
                             error={submitError}
+                            className={classes.submit}
                         />
                     </FormControl>
 
                     {isSignIn && (
                         <Grid container>
                             <Grid item xs>
-                                <Link
+                                <NavLink to="/forgot-password">
+                                    Forgot password?
+                                </NavLink>
+                                {/* <Link
                                     href="#"
                                     variant="body2"
                                     onClick={handleForgotPassword}
                                 >
                                     Forgot password?
-                                </Link>
+                                </Link> */}
                             </Grid>
 
                             <Grid item>
-                                <Link
-                                    href="#"
-                                    variant="body2"
-                                    onClick={handleSignUp}
-                                >
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
+                                <NavLink to="/sign-up">
+                                    Don't have an account? Sign Up
+                                    {/* <Link
+                                        href="#"
+                                        variant="body2"
+                                        onClick={handleSignUp}
+                                    >
+                                        {"Don't have an account? Sign Up"}
+                                    </Link> */}
+                                </NavLink>
                             </Grid>
                         </Grid>
                     )}
