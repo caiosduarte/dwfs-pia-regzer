@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ensureAuthenticated = void 0;
 var AppError_1 = __importDefault(require("../errors/AppError"));
-var verifyJwt_1 = require("../modules/users/utils/verifyJwt");
+var token_1 = require("../modules/users/utils/token");
 function ensureAuthenticated(request, response, next) {
     return __awaiter(this, void 0, void 0, function () {
         var authorization, _a, token, id;
@@ -51,7 +51,7 @@ function ensureAuthenticated(request, response, next) {
                 throw new AppError_1.default("JWT is missing.", 401);
             }
             _a = authorization.split(" "), token = _a[1];
-            id = verifyJwt_1.verifyToken(token).sub;
+            id = token_1.verifyToken(token).sub;
             request.user = { id: id };
             return [2, next()];
         });

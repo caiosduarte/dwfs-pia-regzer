@@ -8,10 +8,7 @@ import { IUserQueryParams } from "../modules/users/repositories/IUsersRepository
 import ConfirmRegistrationService from "../modules/users/services/ConfirmRegistrationService";
 import SendConfirmationMailService from "../modules/users/services/SendConfirmationMailService";
 import { isTokenExpired } from "../modules/users/utils/token";
-import {
-    decodeJwt,
-    verifyRefreshToken,
-} from "../modules/users/utils/verifyJwt";
+import { decodeJwt } from "../modules/users/utils/verifyJwt";
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
 import EtherealMailProvider from "../providers/MailProvider/implementations/EtherealMailProvider";
 import TokensRepository from "../repositories/TokensRepository";

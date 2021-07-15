@@ -43,25 +43,9 @@ var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var createJwt_1 = require("../utils/createJwt");
 var token_1 = require("../utils/token");
-var verifyJwt_1 = require("../utils/verifyJwt");
-var hasRefreshTokenValid = function (_a, tokens) {
-    var email = _a.email, document = _a.document, cellphone = _a.cellphone;
+var hasRefreshTokenValid = function (ids, tokens) {
     return !!(tokens === null || tokens === void 0 ? void 0 : tokens.find(function (refreshToken) {
-        if (!token_1.isTokenExpired(refreshToken.expiresAt)) {
-            try {
-                var _a = verifyJwt_1.verifyRefreshToken(refreshToken.token), emailToken = _a.email, documentToken = _a.document, cellphoneToken = _a.cellphone;
-                console.log({ email: email, document: document, cellphoneToken: cellphoneToken });
-                console.log({ emailToken: emailToken, documentToken: documentToken, cellphoneToken: cellphoneToken });
-                if (emailToken === email ||
-                    documentToken === document ||
-                    cellphoneToken === cellphone) {
-                    return refreshToken;
-                }
-            }
-            catch (_b) {
-                console.error(refreshToken);
-            }
-        }
+        return token_1.isRefreshTokenValid(ids, refreshToken);
     }));
 };
 var AuthenticateUserService = (function () {

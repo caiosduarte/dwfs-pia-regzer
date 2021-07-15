@@ -3,10 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decodeJwt = exports.verifyRefreshToken = exports.verifyToken = void 0;
+exports.decodeJwt = exports.verifyJwt = void 0;
 var jsonwebtoken_1 = require("jsonwebtoken");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var auth_1 = __importDefault(require("../config/auth"));
 function verifyJwt(token, secret) {
     try {
         var jwt = jsonwebtoken_1.verify(token, secret);
@@ -22,14 +21,7 @@ function verifyJwt(token, secret) {
         throw new AppError_1.default("JWT invalid.", 401);
     }
 }
-function verifyToken(token) {
-    return verifyJwt(token, auth_1.default.jwt.tokenSecret);
-}
-exports.verifyToken = verifyToken;
-function verifyRefreshToken(token) {
-    return verifyJwt(token, auth_1.default.jwt.refreshTokenSecret);
-}
-exports.verifyRefreshToken = verifyRefreshToken;
+exports.verifyJwt = verifyJwt;
 function decodeJwt(token) {
     try {
         return jsonwebtoken_1.decode(token);

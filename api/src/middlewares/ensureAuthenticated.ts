@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import AppError from "../errors/AppError";
-import { verifyToken } from "../modules/users/utils/verifyJwt";
+import { verifyToken } from "../modules/users/utils/token";
 
 export async function ensureAuthenticated(
     request: Request,
@@ -15,7 +15,7 @@ export async function ensureAuthenticated(
 
     const [, token] = authorization.split(" ");
 
-    const {sub: id} = verifyToken(token);
+    const { sub: id } = verifyToken(token);
 
     request.user = { id };
 

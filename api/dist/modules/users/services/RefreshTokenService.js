@@ -70,12 +70,12 @@ var RefreshTokenService = (function () {
                         }
                         expiresAt = oldRefreshToken.expiresAt;
                         this.repository.deleteById(oldRefreshToken.id);
-                        isRefreshTokenValid = function () { return !!verifyJwt_1.verifyRefreshToken(token); };
+                        isRefreshTokenValid = function () { return !!token_1.verifyRefreshToken(token); };
                         if (token_1.isTokenExpired(expiresAt) || !isRefreshTokenValid()) {
                             throw new AppError_1.default("Refresh Token invalid.", 401);
                         }
                         newToken = createJwt_1.createToken(user);
-                        refreshToken = createJwt_1.createRefreshToken(user);
+                        refreshToken = createJwt_1.createRefreshToken(user, 10);
                         newRefreshToken = this.repository.create({
                             userId: userId,
                             token: refreshToken,

@@ -2,8 +2,8 @@ import AppError from "../../../errors/AppError";
 import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { createRefreshToken, createToken } from "../utils/createJwt";
-import { isTokenExpired } from "../utils/token";
-import { decodeJwt, verifyRefreshToken } from "../utils/verifyJwt";
+import { isTokenExpired, verifyRefreshToken } from "../utils/token";
+import { decodeJwt } from "../utils/verifyJwt";
 
 // TODO: Fazer a implementação VanilaDateProvider com este método e outras funções em javascript puro
 
@@ -42,7 +42,7 @@ export default class RefreshTokenService {
 
         const newToken = createToken(user);
 
-        const refreshToken = createRefreshToken(user);
+        const refreshToken = createRefreshToken(user, 10);
 
         const newRefreshToken = this.repository.create({
             userId,

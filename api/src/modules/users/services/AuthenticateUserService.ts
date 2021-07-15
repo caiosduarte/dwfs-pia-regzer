@@ -1,17 +1,17 @@
 import { compare } from "bcrypt";
+import { IsDivisibleBy } from "class-validator";
 import { response } from "express";
 import AppError from "../../../errors/AppError";
 import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
 import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
-import IUserResponseDTO from "../dtos/IUserResponseDTO";
+
 import IToken from "../models/IToken";
-import IUser from "../models/IUser";
+
 import IDateProvider from "../providers/IDateProvider";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 import { createRefreshToken, createToken } from "../utils/createJwt";
-import { isTokenExpired } from "../utils/token";
-import { verifyRefreshToken } from "../utils/verifyJwt";
+import { isRefreshTokenValid, isTokenExpired } from "../utils/token";
 
 interface ICredentials {
     email?: string;
@@ -20,33 +20,11 @@ interface ICredentials {
     password?: string;
 }
 
-type UserResponse = Omit<IUser, "password" | "tokens">;
+type IIDs = Omit<ICredentials, "password">;
 
-const hasRefreshTokenValid = (
-    { email, document, cellphone }: ICredentials,
-    tokens: IToken[] | undefined
-) =>
+const hasRefreshTokenValid = (ids: IIDs, tokens: IToken[] | undefined) =>
     !!tokens?.find((refreshToken) => {
-        if (!isTokenExpired(refreshToken.expiresAt)) {
-            try {
-                const {
-                    email: emailToken,
-                    document: documentToken,
-                    cellphone: cellphoneToken,
-                } = verifyRefreshToken<ICredentials>(refreshToken.token);
-                console.log({ email, document, cellphoneToken });
-                console.log({ emailToken, documentToken, cellphoneToken });
-                if (
-                    emailToken === email ||
-                    documentToken === document ||
-                    cellphoneToken === cellphone
-                ) {
-                    return refreshToken;
-                }
-            } catch {
-                console.error(refreshToken);
-            }
-        }
+        return isRefreshTokenValid(ids, refreshToken);
     });
 
 class AuthenticateUserService {
