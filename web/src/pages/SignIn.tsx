@@ -75,7 +75,7 @@ export default function SignIn() {
             setSubmitError(undefined);
             if (isSignIn) {
                 const { password, remember } = values;
-                //await signIn({ email: ids, password, remember });
+                await signIn({ email: ids, password, remember });
             } else {
                 await checkIn({ email: ids });
             }
