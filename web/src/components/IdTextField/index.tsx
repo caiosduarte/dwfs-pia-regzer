@@ -1,17 +1,18 @@
 import { TextField } from "@material-ui/core";
 
 interface IdTextFieldProps {
-    id?: string;
+    id: string;
     isFullWidth?: boolean;
     type?: string;
     label?: string;
     autoComplete?: string;
-    isRequired: boolean;
+    isRequired?: boolean;
     isError?: boolean;
     errorMessage?: string;
     isAutoFocus?: true;
-    variantName?: string;
-    marginName?: string;
+    variant?: "standard" | "filled" | "outlined";
+    margin?: "normal";
+    value?: string;
 }
 
 export function IdTextField({
@@ -23,21 +24,21 @@ export function IdTextField({
     isError = false,
     errorMessage = undefined,
     isAutoFocus = true,
-    variantName,
-    marginName,
-    autoComplete,
+    variant = "outlined",
+    margin = "normal",
+    value = "",
 }: IdTextFieldProps) {
     return (
         <TextField
-            variant="outlined"
-            margin="normal"
-            required={isRequired || true}
+            variant={variant}
+            margin={margin}
+            required={isRequired}
             fullWidth={isFullWidth}
             id={id}
             type={type}
             label={label}
-            autoComplete={autoComplete}
-            autoFocus={isAutoFocus || true}
+            defaultValue={value}
+            autoFocus={isAutoFocus}
             error={isError}
             helperText={errorMessage}
         />

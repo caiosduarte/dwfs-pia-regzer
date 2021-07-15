@@ -5,28 +5,23 @@ import { api } from "../services/api";
 import { cookieProvider } from "../providers";
 
 interface IIds {
-    email: string;
+    email?: string;
     document?: string;
     cellphone?: string;
 }
 
-interface ISignInCredentials {
-    email: string;
-    document?: string;
-    cellphone?: string;
-
+interface ISignInCredentials extends IIds {
     password: string;
     remember?: string;
 }
 
-interface ISignUpData {
-    email: string;
+interface ISignUpData extends IIds {
+    name: string;
     password: string;
 }
 
-interface IUser {
+interface IUser extends IIds {
     id: string;
-    email?: string;
 
     isAdmin?: boolean;
     roles?: string[];
@@ -38,7 +33,7 @@ interface IUser {
 }
 
 interface IAuthContextData {
-    canSignIn: () => boolean | undefined;
+    canSignIn: (tmpUser: IUser | undefined) => boolean;
     signIn: (credentials: ISignInCredentials) => Promise<void>;
     signUp: (data: ISignUpData) => Promise<void>;
     signOut: () => void;
@@ -65,17 +60,14 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
     let isAuthenticated = !!user;
 
-    let isValid = !user?.isValid || user?.isValid ? true : false;
+    let isValid = !!user?.isValid;
 
     let isConfirmed = !user?.isConfirmed || user?.isConfirmed ? true : false;
 
-    const canAceptPassword = () => {
-        const expiresAt = user?.expiresAt;
-        return !expiresAt || new Date().getTime() < expiresAt.getTime();
-    };
-
-    const canSignIn = () => {
-        return !isNewUser && isValid && isConfirmed && canAceptPassword();
+    const canSignIn = (newUser: IUser | undefined) => {
+        return !newUser
+            ? !isNewUser && isValid && isConfirmed
+            : isNewUser && !!newUser?.isValid && !!newUser?.isConfirmed;
     };
 
     const reset = () => {
@@ -91,13 +83,6 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     };
 
     const toAuthorized = () => {
-        // TODO: Redirecionamento para o /dashboard (ou a página requisitada antes de autorizar) com as Rotas
-        console.log("---toAuthorized---");
-        console.log("User", user);
-        console.log("isNewUser", isNewUser);
-        console.log("isAuthenticated", isAuthenticated);
-        console.log("------------");
-
         if (isAuthenticated) {
             history.push("/dashboard");
         } else {
@@ -129,11 +114,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 .then((response) => {
                     const { user } = response.data;
                     setUser(user);
-                    console.log("---AuthContext---");
-                    console.log("User", user);
-                    console.log("isNewUser", isNewUser);
-                    console.log("isAuthenticated", isAuthenticated);
-                    console.log("------------");
+                    setIsNewUser(false);
                 })
                 .catch((err) => {
                     console.log(
@@ -161,16 +142,16 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         authChannel.current.postMessage("signIn");
     }
 
-    async function signIn(data: ISignInCredentials) {
-        const response = await api.post("sessions", data);
+    async function signIn(params: ISignInCredentials) {
+        const { data } = await api.post("sessions", params);
 
-        await enter(response.data);
+        await enter(data);
     }
 
     async function checkIn(params: IIds) {
         try {
-            const response = await api.post("sessions", params);
-            await enter(response.data);
+            const { data } = await api.post("sessions", params);
+            await enter(data);
         } catch (err) {
             const { status } = err.response;
             if (status === 401) {
@@ -180,14 +161,36 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 // 404 - user não existe
                 setIsNewUser(true);
                 setUser(undefined);
-                history.push("/sign-up");
+                history.push("/sign-up", { emailCheckIn: params.email });
             } else {
                 throw err;
             }
         }
     }
 
-    async function signUp({ email, password }: ISignUpData) {}
+    async function signUp({
+        name,
+        email,
+        document,
+        cellphone,
+        password,
+    }: ISignUpData) {
+        const { data } = await api.post("users", {
+            name,
+            email,
+            password,
+            document,
+            cellphone,
+        });
+
+        const { user } = data;
+
+        if (canSignIn(user)) {
+            await signIn(user as ISignInCredentials);
+        } else {
+            history.push("/sign-in");
+        }
+    }
 
     return (
         <AuthContext.Provider

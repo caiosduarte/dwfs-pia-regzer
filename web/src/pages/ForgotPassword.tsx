@@ -57,13 +57,18 @@ export function ForgotPassword() {
             setSubmitError(undefined);
             await api.post("password/forgot", { email }, { headers: {} });
 
-            await new Promise((resolve, reject) => {
+            await new Promise((resolve) => {
                 setTimeout(resolve, 1500);
                 reset();
                 clearErrors();
-            });
-        } catch (err) {
+            }).catch();
+        } catch (error) {
             setSubmitError("Email não enviado");
+            console.error(
+                "/ForgorPassword.handleSend => status %d, %o",
+                error.response?.status,
+                error.response?.data
+            );
         }
     };
 

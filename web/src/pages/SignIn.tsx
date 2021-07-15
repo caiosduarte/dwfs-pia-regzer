@@ -8,17 +8,24 @@ import {
     FormControl,
     FormControlLabel,
     FormHelperText,
+    FormLabel,
     Grid,
+    Link,
     makeStyles,
     TextField,
     Typography,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
 import { useState, useContext } from "react";
-import { SubmitHandler, useForm, FieldError } from "react-hook-form";
+import {
+    SubmitHandler,
+    useForm,
+    FieldError,
+    Controller,
+} from "react-hook-form";
 import { NavLink } from "react-router-dom";
 import { Copyright } from "../components/Copyright";
-import { IdTextField } from "../components/IdTextField";
+import LinkWrapper from "../components/LinkWrapper";
 import { SubmitButton } from "../components/SubmitButton";
 import { AuthContext } from "../context/AuthContext";
 
@@ -51,7 +58,7 @@ interface IFormData {
 export default function SignIn() {
     const { signIn, checkIn, isNewUser } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
-    const { formState, handleSubmit, register } = useForm();
+    const { formState, handleSubmit, register, control } = useForm();
 
     const isSignIn = !isNewUser;
 
@@ -63,38 +70,39 @@ export default function SignIn() {
 
     const handleSignIn: SubmitHandler<IFormData> = async (values) => {
         try {
+            alert(JSON.stringify(values));
             const { ids } = values;
             setSubmitError(undefined);
             if (isSignIn) {
                 const { password, remember } = values;
-                await signIn({ email: ids, password, remember });
+                //await signIn({ email: ids, password, remember });
             } else {
                 await checkIn({ email: ids });
             }
         } catch (error) {
-            const errorResponse = error.response;
-            if (errorResponse) {
-                switch (errorResponse.status) {
-                    case 401:
-                        setSubmitError("Usuário e senha inválidos.");
-                        break;
-                    case 403:
-                        setSubmitError("Parâmetros incorretos.");
-                        break;
-                    case 500:
-                        setSubmitError("Erro na aplicação.");
-                        break;
-                }
-            } else {
-                setSubmitError("Erro ao enviar os dados.");
+            const status = error.response?.status;
+            switch (status) {
+                case 401:
+                    setSubmitError("Usuário e senha inválidos.");
+                    break;
+                case 403:
+                    setSubmitError("Parâmetros incorretos.");
+                    break;
+                case 404:
+                    setSubmitError("Parâmetros incorretos.");
+                    break;
+                case 500:
+                    setSubmitError("Erro na aplicação.");
+                    break;
+                default:
+                    setSubmitError("Erro ao enviar os dados.");
             }
-            console.log(
-                "sign-in => ",
-                errorResponse.data?.message || error.message,
-                " submit error",
-                submitError
+
+            console.error(
+                "/SignIn.handleSignIn => status %d, %o",
+                status,
+                error.response?.data
             );
-            setSubmitError("Usuário e senha inválidos.");
         }
     };
 
@@ -128,9 +136,27 @@ export default function SignIn() {
                             {...register("ids", {
                                 required:
                                     "O endereço de email é um campo obrigatório.",
-                                shouldUnregister: true,
+                                shouldUnregister: false,
                             })}
                         />
+                        {/* {                            {
+                                <IdTextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    label="Email Address"
+                                    id="ids"
+                                    type="text"
+                                    isError={isError(formState.errors.ids)}
+                                    errorMessage={errorMessage(
+                                        formState.errors.ids
+                                    )}
+                                    {...register("ids", {
+                                        required:
+                                            "O endereço de email é um campo obrigatório.",
+                                             shouldUnregister: true,
+                                    })}
+                                />
+                            }} */}
                         {isSignIn && (
                             <>
                                 <TextField
@@ -149,35 +175,64 @@ export default function SignIn() {
                                     {...register("password", {
                                         required:
                                             "Senha é um campo obrigatório.",
-                                        shouldUnregister: true,
                                     })}
                                 />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            value="true"
-                                            color="primary"
-                                            {...register("remember", {
-                                                shouldUnregister: true,
-                                            })}
+                                {/* 
+
+                                <FormControl>
+                                    <Controller
+                                        name="remember"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Checkbox
+                                                color="primary"
+                                                {...field}
+                                            />
+                                        )}
+                                    />
+                                    <FormLabel>Remember me</FormLabel>
+                                </FormControl>
+
+                                                              <Controller
+                                    name="remember"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <>
+                                            <FormControl>
+                                                <Checkbox
+                                                    color="primary"
+                                                    {...field}
+                                                />
+                                                <FormLabel>
+                                                    Remember me
+                                                </FormLabel>
+                                            </FormControl>
+                                        </>
+                                    )}
+                                />
+                                
+                                */}
+
+                                <Controller
+                                    name="remember"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    color="primary"
+                                                    {...field}
+                                                />
+                                            }
+                                            label="Remember me"
                                         />
-                                    }
-                                    label="Remember me"
+                                    )}
                                 />
                             </>
                         )}
-                        {/* <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign In
-                    </Button> */}
 
                         <FormHelperText id="helper-text">
-                            {submitError || "We'll never share your email."}
+                            {submitError}
                         </FormHelperText>
                         <SubmitButton
                             name={isSignIn ? "Sign in" : "Next"}
@@ -193,20 +248,17 @@ export default function SignIn() {
                         {isSignIn && (
                             <>
                                 <Grid item xs>
-                                    <NavLink to="/forgot-password">
+                                    <LinkWrapper
+                                        to="/forgot-password"
+                                        variant="body2"
+                                    >
                                         Forgot password?
-                                    </NavLink>
-                                    {/* <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link> */}
+                                    </LinkWrapper>
                                 </Grid>
                                 <Grid item>
-                                    <NavLink to="/sign-up">
+                                    <LinkWrapper to="/sign-up" variant="body2">
                                         Don't have an account? Sign Up
-                                    </NavLink>
-                                    {/* <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link> */}
+                                    </LinkWrapper>
                                 </Grid>
                             </>
                         )}

@@ -17,8 +17,6 @@ export const Home = () => {
 
     const handleSubmit = async (data: any) => {
         try {
-            console.log("canSignIn() =>", canSignIn());
-
             if (isSignIn) {
                 //await signIn({ email, password });
             } else if (isSignUp) {
