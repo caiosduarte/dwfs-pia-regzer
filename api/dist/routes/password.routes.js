@@ -30,7 +30,7 @@ passwordRoutes.post("/forgot", function (request, response) {
     var dateProvider = DayjsProvider_1.default.getInstance();
     return controllers_1.sendForgotPasswordMailController(usersRepository, tokensRepository, mail, dateProvider).handle(request, response);
 });
-passwordRoutes.post("/reset", function (request, response) {
+passwordRoutes.patch("/reset", function (request, response) {
     var repository = TokensRepository_1.default.getInstance();
     return controllers_1.resetPasswordController(repository).handle(request, response);
 });

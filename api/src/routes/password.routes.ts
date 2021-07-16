@@ -39,7 +39,7 @@ passwordRoutes.post("/forgot", (request, response) => {
     ).handle(request, response);
 });
 
-passwordRoutes.post("/reset", (request, response) => {
+passwordRoutes.patch("/reset", (request, response) => {
     const repository = TokensRepository.getInstance();
 
     return resetPasswordController(repository).handle(request, response);

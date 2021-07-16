@@ -3,8 +3,15 @@ coverage
 .env
 ormconfig.json
 
+database/*
+!database/.gitkeep
+
 tmp/*
 !tmp/.gitkeep
+
+tmp/documents/*
+!tmp/documents/.gitkeep
+
 *.bak
 *.~lock*
 

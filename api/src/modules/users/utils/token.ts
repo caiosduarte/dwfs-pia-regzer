@@ -26,29 +26,31 @@ interface IIDs {
     email?: string;
 }
 
+const hasIdValid = (ids: IIDs, token: string) => {
+    try {
+        const {
+            email: emailToken,
+            document: documentToken,
+            cellphone: cellphoneToken,
+        } = verifyRefreshToken<IIDs>(token);
+        const { email, document, cellphone } = ids;
+        if (
+            emailToken === email ||
+            documentToken === document ||
+            cellphoneToken === cellphone
+        ) {
+            return true;
+        }
+    } catch {}
+    return false;
+};
+
 export const isRefreshTokenValid = (
-    ids: IIDs | undefined,
+    ids: IIDs,
     refreshToken: IToken
 ): boolean => {
-    if (!isTokenExpired(refreshToken.expiresAt)) {
-        if (ids) {
-            try {
-                const {
-                    email: emailToken,
-                    document: documentToken,
-                    cellphone: cellphoneToken,
-                } = verifyRefreshToken<IIDs>(refreshToken.token);
-                const { email, document, cellphone } = ids;
-                if (
-                    emailToken === email ||
-                    documentToken === document ||
-                    cellphoneToken === cellphone
-                ) {
-                    return true;
-                }
-            } catch {}
-        }
-        return true;
-    }
-    return false;
+    return (
+        !isTokenExpired(refreshToken.expiresAt) &&
+        hasIdValid(ids, refreshToken.token)
+    );
 };

@@ -56,14 +56,14 @@ var ResetPasswordService = (function () {
                     case 1:
                         token = _c.sent();
                         if (!token) {
-                            throw new AppError_1.default("Token invalid!", 403);
+                            throw new AppError_1.default("Token invalid.", 403);
                         }
                         expiresAt = token.expiresAt;
                         return [4, this.repository.deleteById(token.id)];
                     case 2:
                         _c.sent();
                         if (token_1.isTokenExpired(expiresAt)) {
-                            throw new AppError_1.default("Token expired!", 403);
+                            throw new AppError_1.default("Token expired at " + expiresAt + ".", 403);
                         }
                         user = token === null || token === void 0 ? void 0 : token.user;
                         _b = user;

@@ -1,5 +1,7 @@
 import { hash } from "bcrypt";
 import AppError from "../../../errors/AppError";
+import IUserResponseDTO from "../dtos/IUserResponseDTO";
+import UserMap from "../mappers/UserMap";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { isTokenExpired } from "../utils/token";
 
@@ -15,7 +17,7 @@ export default class ResetPasswordService {
         const token = await this.repository.findByEncoded(tokenEncoded);
 
         if (!token) {
-            throw new AppError("Token invalid!", 403);
+            throw new AppError("Token invalid.", 403);
         }
 
         const expiresAt = token.expiresAt;
@@ -26,7 +28,7 @@ export default class ResetPasswordService {
         // verifica se token expirado
 
         if (isTokenExpired(expiresAt)) {
-            throw new AppError("Token expired!", 403);
+            throw new AppError(`Token expired at ${expiresAt}.`, 403);
         }
 
         const user = token?.user;

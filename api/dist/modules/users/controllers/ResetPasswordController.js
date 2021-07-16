@@ -51,7 +51,7 @@ var ResetPasswordController = (function () {
                         return [4, this.service.execute({ tokenEncoded: String(token), password: password })];
                     case 1:
                         _a.sent();
-                        return [2, response.status(201).send()];
+                        return [2, response.status(204).send()];
                 }
             });
         });

@@ -20,22 +20,21 @@ var isTokenExpired = function (expiredAt) {
     return !expiresInMilis || currentMilis > expiresInMilis;
 };
 exports.isTokenExpired = isTokenExpired;
-var isRefreshTokenValid = function (ids, refreshToken) {
-    if (!exports.isTokenExpired(refreshToken.expiresAt)) {
-        if (ids) {
-            try {
-                var _a = verifyRefreshToken(refreshToken.token), emailToken = _a.email, documentToken = _a.document, cellphoneToken = _a.cellphone;
-                var email = ids.email, document_1 = ids.document, cellphone = ids.cellphone;
-                if (emailToken === email ||
-                    documentToken === document_1 ||
-                    cellphoneToken === cellphone) {
-                    return true;
-                }
-            }
-            catch (_b) { }
+var hasIdValid = function (ids, token) {
+    try {
+        var _a = verifyRefreshToken(token), emailToken = _a.email, documentToken = _a.document, cellphoneToken = _a.cellphone;
+        var email = ids.email, document_1 = ids.document, cellphone = ids.cellphone;
+        if (emailToken === email ||
+            documentToken === document_1 ||
+            cellphoneToken === cellphone) {
+            return true;
         }
-        return true;
     }
+    catch (_b) { }
     return false;
+};
+var isRefreshTokenValid = function (ids, refreshToken) {
+    return (!exports.isTokenExpired(refreshToken.expiresAt) &&
+        hasIdValid(ids, refreshToken.token));
 };
 exports.isRefreshTokenValid = isRefreshTokenValid;

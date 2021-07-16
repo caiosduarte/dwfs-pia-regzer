@@ -26,6 +26,7 @@ export default class ConfirmRegistrationService {
 
         // salva e remove o token
         user.isConfirmed = true;
+
         const tokenId = token.id;
 
         // salva a confimação do usuário
