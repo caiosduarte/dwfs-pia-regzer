@@ -33,14 +33,14 @@ interface IUser extends IIds {
 }
 
 interface IAuthContextData {
-    canSignIn: (tmpUser: IUser | undefined) => boolean;
+    // canSignIn: (tmpUser: IUser | undefined) => boolean;
     signIn: (credentials: ISignInCredentials) => Promise<void>;
     signUp: (data: ISignUpData) => Promise<void>;
     signOut: () => void;
     checkIn: (ids: IIds) => Promise<void>;
     isAuthenticated: boolean;
-    isValid: boolean;
-    isConfirmed: boolean;
+    // isValid: boolean;
+    // isConfirmed: boolean;
     toAuthorized: () => void;
     user?: IUser;
     isNewUser: boolean;
@@ -64,10 +64,10 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
     let isConfirmed = !user?.isConfirmed || user?.isConfirmed ? true : false;
 
-    const canSignIn = (newUser: IUser | undefined) => {
-        return !newUser
+    const canSignIn = (guestUser: IUser | undefined) => {
+        return !guestUser
             ? !isNewUser && isValid && isConfirmed
-            : isNewUser && !!newUser?.isValid && !!newUser?.isConfirmed;
+            : isNewUser && !!guestUser?.isValid && !!guestUser?.isConfirmed;
     };
 
     const reset = () => {
@@ -195,14 +195,11 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     return (
         <AuthContext.Provider
             value={{
-                canSignIn,
                 signIn,
                 signUp,
                 signOut,
                 checkIn,
                 isAuthenticated,
-                isValid,
-                isConfirmed,
                 toAuthorized,
                 user,
                 isNewUser,

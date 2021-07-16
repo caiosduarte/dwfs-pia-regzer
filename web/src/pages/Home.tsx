@@ -8,8 +8,7 @@ export const Home = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [isSignIn, setIsSignIn] = useState(false);
 
-    const { checkIn, canSignIn, signIn, signUp, toAuthorized } =
-        useContext(AuthContext);
+    const { checkIn, signIn, toAuthorized } = useContext(AuthContext);
 
     useEffect(() => {
         withGuest(toAuthorized);

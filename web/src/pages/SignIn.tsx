@@ -60,6 +60,7 @@ export default function SignIn() {
     const [submitError, setSubmitError] = useState<string>();
     const { formState, handleSubmit, register, control } = useForm();
 
+    // TODO: Não precisa ser um isNewUser vindo do contexto?
     const isSignIn = !isNewUser;
 
     const hasErrors = !!submitError;
@@ -70,7 +71,6 @@ export default function SignIn() {
 
     const handleSignIn: SubmitHandler<IFormData> = async (values) => {
         try {
-            alert(JSON.stringify(values));
             const { ids } = values;
             setSubmitError(undefined);
             if (isSignIn) {
@@ -177,41 +177,6 @@ export default function SignIn() {
                                             "Senha é um campo obrigatório.",
                                     })}
                                 />
-                                {/* 
-
-                                <FormControl>
-                                    <Controller
-                                        name="remember"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Checkbox
-                                                color="primary"
-                                                {...field}
-                                            />
-                                        )}
-                                    />
-                                    <FormLabel>Remember me</FormLabel>
-                                </FormControl>
-
-                                                              <Controller
-                                    name="remember"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <>
-                                            <FormControl>
-                                                <Checkbox
-                                                    color="primary"
-                                                    {...field}
-                                                />
-                                                <FormLabel>
-                                                    Remember me
-                                                </FormLabel>
-                                            </FormControl>
-                                        </>
-                                    )}
-                                />
-                                
-                                */}
 
                                 <Controller
                                     name="remember"
@@ -249,7 +214,7 @@ export default function SignIn() {
                             <>
                                 <Grid item xs>
                                     <LinkWrapper
-                                        to="/forgot-password"
+                                        to="/password-forgot"
                                         variant="body2"
                                     >
                                         Forgot password?

@@ -256,7 +256,7 @@ export default function SignIn({
                     {isSignIn && (
                         <Grid container>
                             <Grid item xs>
-                                <NavLink to="/forgot-password">
+                                <NavLink to="/password-forgot">
                                     Forgot password?
                                 </NavLink>
                                 {/* <Link

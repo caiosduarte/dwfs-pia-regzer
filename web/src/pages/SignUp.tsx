@@ -167,7 +167,7 @@ export function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                label="Passwd Confirmation"
+                                label="Confirm passwd"
                                 type="password"
                                 id="confirmation"
                                 error={isError("confirmation")}

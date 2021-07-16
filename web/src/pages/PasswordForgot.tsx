@@ -19,6 +19,7 @@ import { FieldError, SubmitHandler, useForm } from "react-hook-form";
 import { IdTextField } from "../components/IdTextField";
 import { useState } from "react";
 import { api } from "../services/api";
+import LinkWrapper from "../components/LinkWrapper";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -40,9 +41,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function ForgotPassword() {
+export function PasswordForgot() {
     const [submitError, setSubmitError] = useState<string>();
     const { formState, handleSubmit, register, reset, clearErrors } = useForm();
+
+    const [confirmation, setConfirmation] = useState<string>();
 
     const errorMessage = (field: FieldError) => field?.message;
     const isError = (field: FieldError) => !!field;
@@ -61,6 +64,9 @@ export function ForgotPassword() {
                 setTimeout(resolve, 1500);
                 reset();
                 clearErrors();
+                setConfirmation(
+                    "Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder."
+                );
             }).catch();
         } catch (error) {
             setSubmitError("Email não enviado");
@@ -70,6 +76,17 @@ export function ForgotPassword() {
                 error.response?.data
             );
         }
+    };
+
+    const getConfirmation = () => {
+        return (
+            !!confirmation && (
+                <>
+                    {confirmation}{" "}
+                    <LinkWrapper to="/sign-in">Return to sign in</LinkWrapper>
+                </>
+            )
+        );
     };
 
     return (
@@ -119,6 +136,7 @@ export function ForgotPassword() {
 
                                 <FormHelperText id="helper-text">
                                     {submitError ||
+                                        getConfirmation() ||
                                         "We'll never share your email."}
                                 </FormHelperText>
                             </FormControl>

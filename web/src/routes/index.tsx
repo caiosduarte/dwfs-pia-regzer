@@ -2,8 +2,9 @@ import { Switch, Route } from "react-router-dom";
 import { Dashboard } from "../pages/Dashboard";
 import { NotFound } from "../pages/NotFound";
 import { SignUp } from "../pages/SignUp";
-import { ForgotPassword } from "../pages/ForgotPassword";
+import { PasswordForgot } from "../pages/PasswordForgot";
 import SignIn from "../pages/SignIn";
+import { PasswordReset } from "../pages/PasswordReset";
 
 export function Routes() {
     return (
@@ -12,9 +13,14 @@ export function Routes() {
             <Route path="/sign-in" exact={true} component={SignIn} />
             <Route path="/sign-up" exact={true} component={SignUp} />
             <Route
-                path="/forgot-password"
+                path="/password-forgot"
                 exact={true}
-                component={ForgotPassword}
+                component={PasswordForgot}
+            />
+            <Route
+                path="/password-reset/:hash"
+                exact={true}
+                component={PasswordReset}
             />
             <Route path="/dashboard" exact={true} component={Dashboard} />
             <Route component={NotFound} />
