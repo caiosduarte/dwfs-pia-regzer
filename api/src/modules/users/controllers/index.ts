@@ -6,6 +6,7 @@ import AuthenticateUserService from "../services/AuthenticateUserService";
 import CreateUserService from "../services/CreateUserService";
 import RefreshTokenService from "../services/RefreshTokenService";
 import ResetPasswordService from "../services/ResetPasswordService";
+import SendConfirmMailService from "../services/SendConfirmMailService";
 import SendForgotPasswordMailService from "../services/SendForgotPasswordMailService";
 import AuthenticateUserController from "./AuthenticateUserController";
 import CreateUserController from "./CreateUserController";
@@ -14,10 +15,19 @@ import ResetPasswordController from "./ResetPasswordController";
 import SendForgotPasswordMailController from "./SendForgotPasswordMailController";
 
 const createUserController = (
-    repository: IUsersRepository
+    usersRepo: IUsersRepository,
+    tokensRepo: ITokensRepository,
+    mailProvider: IMailProvider,
+    dateProvider: IDateProvider
 ): CreateUserController => {
-    const service = new CreateUserService(repository);
-    return new CreateUserController(service);
+    const createService = new CreateUserService(usersRepo);
+    const sendConfirmService = new SendConfirmMailService(
+        usersRepo,
+        tokensRepo,
+        mailProvider,
+        dateProvider
+    );
+    return new CreateUserController(createService, sendConfirmService);
 };
 
 function authenticateUserController(

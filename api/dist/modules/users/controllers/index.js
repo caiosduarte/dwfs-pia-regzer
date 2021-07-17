@@ -8,15 +8,17 @@ var AuthenticateUserService_1 = __importDefault(require("../services/Authenticat
 var CreateUserService_1 = __importDefault(require("../services/CreateUserService"));
 var RefreshTokenService_1 = __importDefault(require("../services/RefreshTokenService"));
 var ResetPasswordService_1 = __importDefault(require("../services/ResetPasswordService"));
+var SendConfirmMailService_1 = __importDefault(require("../services/SendConfirmMailService"));
 var SendForgotPasswordMailService_1 = __importDefault(require("../services/SendForgotPasswordMailService"));
 var AuthenticateUserController_1 = __importDefault(require("./AuthenticateUserController"));
 var CreateUserController_1 = __importDefault(require("./CreateUserController"));
 var RefreshTokenController_1 = __importDefault(require("./RefreshTokenController"));
 var ResetPasswordController_1 = __importDefault(require("./ResetPasswordController"));
 var SendForgotPasswordMailController_1 = __importDefault(require("./SendForgotPasswordMailController"));
-var createUserController = function (repository) {
-    var service = new CreateUserService_1.default(repository);
-    return new CreateUserController_1.default(service);
+var createUserController = function (usersRepo, tokensRepo, mailProvider, dateProvider) {
+    var createService = new CreateUserService_1.default(usersRepo);
+    var sendConfirmService = new SendConfirmMailService_1.default(usersRepo, tokensRepo, mailProvider, dateProvider);
+    return new CreateUserController_1.default(createService, sendConfirmService);
 };
 exports.createUserController = createUserController;
 function authenticateUserController(repository, tokensRepository, dateProvider) {

@@ -40,36 +40,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var ConfirmRegistrationService = (function () {
-    function ConfirmRegistrationService(repository) {
+var token_1 = require("../utils/token");
+var ConfirmUserService = (function () {
+    function ConfirmUserService(repository) {
         this.repository = repository;
     }
-    ConfirmRegistrationService.prototype.execute = function (tokenEncoded) {
+    ConfirmUserService.prototype.execute = function (tokenEncoded) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, user, currentDate, expiresDate, tokenId;
+            var token, user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.repository.findByEncoded(tokenEncoded)];
                     case 1:
                         token = _a.sent();
-                        user = token === null || token === void 0 ? void 0 : token.user;
-                        if (!token || !user) {
-                            throw new AppError_1.default("Token invalid!");
+                        console.log("Token [%o] encoded [%s]", token, tokenEncoded);
+                        if (!token) {
+                            throw new AppError_1.default("Token invalid.", 401);
                         }
-                        else if (user.isConfirmed) {
-                            throw new AppError_1.default("User already confirmed!");
-                        }
-                        currentDate = new Date();
-                        expiresDate = token.expiresAt;
-                        if (!expiresDate || currentDate.getTime() > expiresDate.getTime()) {
-                            throw new AppError_1.default("Token expired!");
-                        }
-                        user.isConfirmed = true;
-                        tokenId = token.id;
-                        return [4, this.repository.save(token)];
+                        user = token.user;
+                        return [4, this.repository.deleteById(token.id)];
                     case 2:
                         _a.sent();
-                        return [4, this.repository.deleteById(tokenId)];
+                        if (!user) {
+                            throw new AppError_1.default("Token invalid.", 401);
+                        }
+                        if (user.isConfirmed) {
+                            throw new AppError_1.default("User already confirmed.", 403);
+                        }
+                        if (token_1.isTokenExpired(token.expiresAt)) {
+                            throw new AppError_1.default("Token expired.", 401);
+                        }
+                        user.isConfirmed = true;
+                        return [4, this.repository.save(token)];
                     case 3:
                         _a.sent();
                         return [2];
@@ -77,6 +79,6 @@ var ConfirmRegistrationService = (function () {
             });
         });
     };
-    return ConfirmRegistrationService;
+    return ConfirmUserService;
 }());
-exports.default = ConfirmRegistrationService;
+exports.default = ConfirmUserService;

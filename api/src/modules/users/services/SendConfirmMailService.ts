@@ -7,7 +7,7 @@ import IMailProvider from "../providers/IMailProvider";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 
-export default class SendConfirmationMailService {
+export default class SendConfirmMailService {
     constructor(
         private usersRepository: IUsersRepository,
         private tokensRepository: ITokensRepository,
@@ -15,8 +15,8 @@ export default class SendConfirmationMailService {
         private dateProvider: IDateProvider
     ) {}
 
-    async execute(userId: string): Promise<void> {
-        const user = await this.usersRepository.findById(userId);
+    async execute(email: string): Promise<void> {
+        const user = await this.usersRepository.findByEmail(email);
 
         if (!user || !user.email) {
             throw new AppError("User/email does not exists!");
@@ -28,7 +28,7 @@ export default class SendConfirmationMailService {
 
         const variables = {
             name: user.name,
-            link: `${process.env.CONFIRMATION_MAIL_URL}${token}`,
+            link: `${process.env.CONFIRM_MAIL_URL}${token}?email=${user.email}`,
         };
 
         const templatePath = resolve(

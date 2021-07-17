@@ -44,17 +44,20 @@ var AppError_1 = __importDefault(require("../errors/AppError"));
 var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
 var controllers_1 = require("../modules/users/controllers");
 var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
-var ConfirmRegistrationService_1 = __importDefault(require("../modules/users/services/ConfirmRegistrationService"));
-var SendConfirmationMailService_1 = __importDefault(require("../modules/users/services/SendConfirmationMailService"));
+var ConfirmUserService_1 = __importDefault(require("../modules/users/services/ConfirmUserService"));
+var SendConfirmMailService_1 = __importDefault(require("../modules/users/services/SendConfirmMailService"));
 var verifyJwt_1 = require("../modules/users/utils/verifyJwt");
 var DayjsProvider_1 = __importDefault(require("../providers/DateProvider/implementations/DayjsProvider"));
 var EtherealMailProvider_1 = __importDefault(require("../providers/MailProvider/implementations/EtherealMailProvider"));
 var TokensRepository_1 = __importDefault(require("../repositories/TokensRepository"));
 var UsersRepository_1 = __importDefault(require("../repositories/UsersRepository"));
+var mailProvider_1 = __importDefault(require("../utils/mailProvider"));
 var usersRouter = express_1.Router();
 usersRouter.post("/", function (request, response) {
-    var repository = UsersRepository_1.default.getInstance();
-    return controllers_1.createUserController(repository).handle(request, response);
+    var usersRepo = UsersRepository_1.default.getInstance();
+    var tokensRepo = TokensRepository_1.default.getInstance();
+    var dateProvider = DayjsProvider_1.default.getInstance();
+    return controllers_1.createUserController(usersRepo, tokensRepo, mailProvider_1.default(), dateProvider).handle(request, response);
 });
 usersRouter.get("/:id", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
     var id, usersRepository, user;
@@ -92,83 +95,88 @@ function getTokenFromRequest(request) {
     };
     return valueInAuthorizationBeared() || valueInBody();
 }
+var hasAnyId = function (_a) {
+    var email = _a.email, document = _a.document, cellphone = _a.cellphone, id = _a.id;
+    return !!email || !!document || !!cellphone || !!id;
+};
+var findUser = function (ids, repository) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, email, document_1, cellphone;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!hasAnyId(ids)) return [3, 4];
+                id = ids.id, email = ids.email, document_1 = ids.document, cellphone = ids.cellphone;
+                if (!id) return [3, 2];
+                return [4, repository.findById(id)];
+            case 1: return [2, _a.sent()];
+            case 2: return [4, repository
+                    .findBy({
+                    email: email,
+                    document: document_1,
+                    cellphone: cellphone,
+                })
+                    .then(function (result) { return result && result[0]; })];
+            case 3: return [2, _a.sent()];
+            case 4: return [2];
+        }
+    });
+}); };
 usersRouter.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, decoded, userIdAuthenticated, _a, email, document, cellphone, isQueryParam, isAuthenticated, usersRepository, findUser, user;
+    var token, decoded, id, _a, email, document, cellphone, usersRepository, user;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 token = getTokenFromRequest(request);
                 decoded = token && verifyJwt_1.decodeJwt(token);
-                userIdAuthenticated = decoded && decoded.sub;
+                id = decoded && decoded.sub;
                 _a = request.query, email = _a.email, document = _a.document, cellphone = _a.cellphone;
-                isQueryParam = !!email || !!document || !!cellphone;
-                isAuthenticated = !!userIdAuthenticated;
-                if (!isQueryParam && !isAuthenticated) {
-                    throw new AppError_1.default("No query params or authorization header found!", 403);
+                if (!hasAnyId({ email: email, document: document, cellphone: cellphone, id: id })) {
+                    throw new AppError_1.default("No query params or authorization header found.", 403);
                 }
                 usersRepository = UsersRepository_1.default.getInstance();
-                findUser = function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var users;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                if (!isQueryParam) return [3, 2];
-                                return [4, usersRepository.findBy({
-                                        email: email,
-                                        document: document,
-                                        cellphone: cellphone,
-                                    })];
-                            case 1:
-                                users = _a.sent();
-                                return [2, users && users[0]];
-                            case 2:
-                                if (!userIdAuthenticated) return [3, 4];
-                                return [4, usersRepository.findById(userIdAuthenticated)];
-                            case 3: return [2, _a.sent()];
-                            case 4: return [2];
-                        }
-                    });
-                }); };
-                return [4, findUser()];
+                return [4, findUser({ id: id, email: email, document: document, cellphone: cellphone }, usersRepository)];
             case 1:
                 user = _b.sent();
                 if (!user) {
-                    throw new AppError_1.default("User not found!", 404);
+                    throw new AppError_1.default("User not found.", 404);
                 }
                 return [2, response.json(UserMap_1.default.toDTO(user))];
         }
     });
 }); });
-usersRouter.post("/confirmation", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, usersRepository, tokensRepository, mailProvider, dateProvider, service;
+usersRouter.post("/confirm", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var email, usersRepository, tokensRepository, mailProvider_2, dateProvider, service;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                id = request.user.id;
+                email = request.body.email;
+                if (!hasAnyId({ email: email })) return [3, 2];
                 usersRepository = UsersRepository_1.default.getInstance();
                 tokensRepository = TokensRepository_1.default.getInstance();
-                mailProvider = EtherealMailProvider_1.default.getInstance();
+                mailProvider_2 = EtherealMailProvider_1.default.getInstance();
                 dateProvider = DayjsProvider_1.default.getInstance();
-                service = new SendConfirmationMailService_1.default(usersRepository, tokensRepository, mailProvider, dateProvider);
-                return [4, service.execute(id)];
+                service = new SendConfirmMailService_1.default(usersRepository, tokensRepository, mailProvider_2, dateProvider);
+                return [4, service.execute(email)];
             case 1:
                 _a.sent();
                 return [2, response.status(201).send()];
+            case 2: throw new AppError_1.default("No ID found.", 403);
         }
     });
 }); });
-usersRouter.post("/confirm", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+usersRouter.patch("/confirm", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
     var token, repository, service;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 token = request.query.token;
+                console.log("Token request ", String(token));
                 repository = TokensRepository_1.default.getInstance();
-                service = new ConfirmRegistrationService_1.default(repository);
+                service = new ConfirmUserService_1.default(repository);
                 return [4, service.execute(String(token))];
             case 1:
                 _a.sent();
-                return [2, response.status(201).send()];
+                return [2, response.status(204).send()];
         }
     });
 }); });

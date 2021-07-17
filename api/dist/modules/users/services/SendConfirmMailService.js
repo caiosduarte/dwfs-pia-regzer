@@ -42,19 +42,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = require("path");
 var uuid_1 = require("uuid");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var SendConfirmationMailService = (function () {
-    function SendConfirmationMailService(usersRepository, tokensRepository, mailProvider, dateProvider) {
+var SendConfirmMailService = (function () {
+    function SendConfirmMailService(usersRepository, tokensRepository, mailProvider, dateProvider) {
         this.usersRepository = usersRepository;
         this.tokensRepository = tokensRepository;
         this.mailProvider = mailProvider;
         this.dateProvider = dateProvider;
     }
-    SendConfirmationMailService.prototype.execute = function (userId) {
+    SendConfirmMailService.prototype.execute = function (email) {
         return __awaiter(this, void 0, void 0, function () {
             var user, token, variables, templatePath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.usersRepository.findById(userId)];
+                    case 0: return [4, this.usersRepository.findByEmail(email)];
                     case 1:
                         user = _a.sent();
                         if (!user || !user.email) {
@@ -63,7 +63,7 @@ var SendConfirmationMailService = (function () {
                         token = uuid_1.v4();
                         variables = {
                             name: user.name,
-                            link: "" + process.env.CONFIRMATION_MAIL_URL + token,
+                            link: "" + process.env.CONFIRM_MAIL_URL + token,
                         };
                         templatePath = path_1.resolve(__dirname, "..", "views", "emails", "confirmRegistration.hbs");
                         return [4, this.mailProvider.sendMail(user.email, "Confirmação de registro", variables, templatePath)];
@@ -81,6 +81,6 @@ var SendConfirmationMailService = (function () {
             });
         });
     };
-    return SendConfirmationMailService;
+    return SendConfirmMailService;
 }());
-exports.default = SendConfirmationMailService;
+exports.default = SendConfirmMailService;

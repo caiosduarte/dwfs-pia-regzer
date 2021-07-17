@@ -37,8 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var CreateUserController = (function () {
-    function CreateUserController(createUserService) {
+    function CreateUserController(createUserService, sendConfirmService) {
         this.createUserService = createUserService;
+        this.sendConfirmService = sendConfirmService;
     }
     CreateUserController.prototype.handle = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
@@ -56,7 +57,12 @@ var CreateUserController = (function () {
                             })];
                     case 1:
                         user = _b.sent();
-                        return [2, response.status(201).json(user)];
+                        if (!!user.isConfirmed) return [3, 3];
+                        return [4, this.sendConfirmService.execute(email)];
+                    case 2:
+                        _b.sent();
+                        _b.label = 3;
+                    case 3: return [2, response.status(201).json(user)];
                 }
             });
         });
