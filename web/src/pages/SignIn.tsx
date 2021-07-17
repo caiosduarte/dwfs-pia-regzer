@@ -28,6 +28,8 @@ import { Copyright } from "../components/Copyright";
 import LinkWrapper from "../components/LinkWrapper";
 import { SubmitButton } from "../components/SubmitButton";
 import { AuthContext } from "../context/AuthContext";
+import { api } from "../services/api";
+import { isUuid } from "../utils/uuid";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -55,7 +57,9 @@ interface IFormData {
     remember?: any;
 }
 
-export default function SignIn() {
+export default function SignIn(props: any) {
+    const hash = props.match.params?.hash;
+    const isConfirmation = isUuid(hash);
     const { signIn, checkIn, isNewUser } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
     const { formState, handleSubmit, register, control } = useForm();
@@ -76,26 +80,44 @@ export default function SignIn() {
             if (isSignIn) {
                 const { password, remember } = values;
                 await signIn({ email: ids, password, remember });
+            } else if (isConfirmation) {
+                await api.patch(`users/confirm?token=${hash}`);
             } else {
                 await checkIn({ email: ids });
             }
         } catch (error) {
             const status = error.response?.status;
-            switch (status) {
-                case 401:
-                    setSubmitError("Usuário e senha inválidos.");
-                    break;
-                case 403:
-                    setSubmitError("Parâmetros incorretos.");
-                    break;
-                case 404:
-                    setSubmitError("Parâmetros incorretos.");
-                    break;
-                case 500:
-                    setSubmitError("Erro na aplicação.");
-                    break;
-                default:
-                    setSubmitError("Erro ao enviar os dados.");
+            if (isConfirmation)
+                switch (status) {
+                    case 401:
+                        setSubmitError("Confirmation expired.");
+                        break;
+                    case 403:
+                        setSubmitError("User already confirmed.");
+                        break;
+                    case 500:
+                        setSubmitError("App error. Try later.");
+                        break;
+                    default:
+                        setSubmitError("Error to send data.");
+                }
+            else {
+                switch (status) {
+                    case 401:
+                        setSubmitError("User/password invalid.");
+                        break;
+                    case 403:
+                        setSubmitError("Parâmetros incorretos.");
+                        break;
+                    case 404:
+                        setSubmitError("Parâmetros incorretos.");
+                        break;
+                    case 500:
+                        setSubmitError("App error. Try later.");
+                        break;
+                    default:
+                        setSubmitError("Error to send data.");
+                }
             }
 
             console.error(
@@ -104,6 +126,21 @@ export default function SignIn() {
                 error.response?.data
             );
         }
+    };
+
+    const getSubmitErrorMessage = () => {
+        return (
+            !!submitError && (
+                <>
+                    {submitError}{" "}
+                    {isConfirmation && (
+                        <Button onClick={() => alert(hash)}>
+                            Click to resend
+                        </Button>
+                    )}
+                </>
+            )
+        );
     };
 
     return (
@@ -139,25 +176,7 @@ export default function SignIn() {
                                 shouldUnregister: false,
                             })}
                         />
-                        {/* {                            {
-                                <IdTextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    label="Email Address"
-                                    id="ids"
-                                    type="text"
-                                    isError={isError(formState.errors.ids)}
-                                    errorMessage={errorMessage(
-                                        formState.errors.ids
-                                    )}
-                                    {...register("ids", {
-                                        required:
-                                            "O endereço de email é um campo obrigatório.",
-                                             shouldUnregister: true,
-                                    })}
-                                />
-                            }} */}
-                        {isSignIn && (
+                        {isSignIn && !isConfirmation && (
                             <>
                                 <TextField
                                     variant="outlined"
@@ -197,10 +216,16 @@ export default function SignIn() {
                         )}
 
                         <FormHelperText id="helper-text">
-                            {submitError}
+                            {getSubmitErrorMessage()}
                         </FormHelperText>
                         <SubmitButton
-                            name={isSignIn ? "Sign in" : "Next"}
+                            name={
+                                isSignIn
+                                    ? "Sign in"
+                                    : isConfirmation
+                                    ? "Send confirmation"
+                                    : "Next"
+                            }
                             isSubmitting={formState.isSubmitting}
                             isSubmitted={formState.isSubmitted}
                             isInvalid={!!formState.errors}
@@ -210,7 +235,7 @@ export default function SignIn() {
                     </FormControl>
 
                     <Grid container>
-                        {isSignIn && (
+                        {isSignIn && !isConfirmation && (
                             <>
                                 <Grid item xs>
                                     <LinkWrapper

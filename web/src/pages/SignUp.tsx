@@ -13,11 +13,12 @@ import {
 import { Copyright } from "../components/Copyright";
 import { SubmitButton } from "../components/SubmitButton";
 import { LockOutlined } from "@material-ui/icons";
-import { NavLink } from "react-router-dom";
 import { useContext, useState } from "react";
 import { FieldError, useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthContext";
+import LinkWrapper from "../components/LinkWrapper";
 import { useEffect } from "react";
+import { api } from "../services/api";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -39,10 +40,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function SignUp() {
-    const { signUp } = useContext(AuthContext);
+export function SignUp(props: any) {
+    const { signUp, isConfirmed } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
-    const { formState, register, handleSubmit } = useForm<{
+    const [confirmation, setConfirmation] = useState<string>();
+    const { formState, register, handleSubmit, reset, clearErrors } = useForm<{
         name: string;
         email: string;
         password: string;
@@ -64,26 +66,52 @@ export function SignUp() {
 
     useEffect(() => {}, []);
 
+    const getConfirmation = () => {
+        return (
+            !!confirmation && (
+                <>
+                    {confirmation}{" "}
+                    <LinkWrapper to="/sign-in">Click to sign in.</LinkWrapper>
+                </>
+            )
+        );
+    };
+
+    const getSubmitErrorMessage = () => {
+        return !!submitError && <p>{submitError}</p>;
+    };
+
     const handleSignUp = async (values: any) => {
         try {
             setSubmitError(undefined);
+
             await signUp(values);
+
+            await new Promise((resolve) => {
+                setTimeout(resolve, 1500);
+                reset();
+                clearErrors();
+            })
+                .catch()
+                .finally(() => {
+                    setConfirmation(
+                        !isConfirmed
+                            ? "Check your email for a link to confirm your registration. If it doesn’t appear within a few minutes, check your spam folder."
+                            : "Your registration is confirmed."
+                    );
+                });
         } catch (error) {
             const status = error.response?.status;
+
             switch (status) {
-                case 401:
-                    setSubmitError("Usuário e senha inválidos.");
-                    break;
                 case 403:
-                    setSubmitError(
-                        "Já existe um usuário com o email informado."
-                    );
+                    setSubmitError("This email is already been used.");
                     break;
                 case 500:
-                    setSubmitError("Erro na aplicação.");
+                    setSubmitError("App error. Try later.");
                     break;
                 default:
-                    setSubmitError("Erro ao enviar os dados.");
+                    setSubmitError("Error to send data.");
             }
 
             console.error(
@@ -115,11 +143,10 @@ export function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                inputProps={{
-                                    autoComplete: "off",
-                                }}
+                                autoComplete="off"
                                 id="email"
                                 label="Email Address"
+                                autoFocus
                                 error={isError("email")}
                                 helperText={errorMessage(errors.email)}
                                 {...register("email", {
@@ -136,7 +163,6 @@ export function SignUp() {
                                 id="name"
                                 label="Full Name"
                                 autoComplete="nome"
-                                autoFocus
                                 error={isError("name")}
                                 helperText={errorMessage(errors.name)}
                                 {...register("name", {
@@ -185,7 +211,7 @@ export function SignUp() {
                             filled={true}
                             error={hasErrors}
                         >
-                            {submitError}
+                            {getSubmitErrorMessage() || getConfirmation()}
                         </FormHelperText>
                         <SubmitButton
                             name="Sign Up"
@@ -195,12 +221,9 @@ export function SignUp() {
                     </FormControl>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <NavLink to="/sign-in">
+                            <LinkWrapper to="/sign-in" variant="body2">
                                 Already have an account? Sign in
-                                {/* <Link href="#" variant="body2">
-                                    Already have an account? Sign in
-                                </Link> */}
-                            </NavLink>
+                            </LinkWrapper>
                         </Grid>
                     </Grid>
                 </form>

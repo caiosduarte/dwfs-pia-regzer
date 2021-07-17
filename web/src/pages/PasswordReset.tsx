@@ -60,6 +60,8 @@ type PasswordResetProps = {
 // };
 
 export function PasswordReset(props: any) {
+    const hash = props.match.params?.hash;
+
     const [submitError, setSubmitError] = useState<string | null>();
 
     const [confirmation, setConfirmation] = useState<string | null>();
@@ -85,7 +87,6 @@ export function PasswordReset(props: any) {
     const classes = useStyles();
 
     useEffect(() => {
-        const hash = props.match.params.hash;
         console.log(
             "Hash [%s] é um uuid? %s",
             hash,
@@ -99,10 +100,10 @@ export function PasswordReset(props: any) {
     const getConfirmation = () => {
         return (
             !!confirmation && (
-                <>
+                <p>
                     {confirmation}{" "}
-                    <LinkWrapper to="/sign-in">Clique para entrar.</LinkWrapper>
-                </>
+                    <LinkWrapper to="/sign-in">Click to sign in.</LinkWrapper>
+                </p>
             )
         );
     };
@@ -110,19 +111,18 @@ export function PasswordReset(props: any) {
     const getSubmitErrorMessage = () => {
         return (
             !!submitError && (
-                <>
+                <p>
                     {submitError}{" "}
                     <LinkWrapper to="/password-forgot">
                         Clique solicitar novamente
                     </LinkWrapper>
                     {"."}
-                </>
+                </p>
             )
         );
     };
 
     const handleChange = async ({ password, confirm }: any) => {
-        const hash = props.match.params.hash;
         try {
             setSubmitError(undefined);
             await api.patch(`/password/reset?token=${hash}`, {
@@ -131,7 +131,7 @@ export function PasswordReset(props: any) {
 
             await new Promise((resolve) => {
                 setTimeout(resolve, 1500);
-                setConfirmation("Senha alterada.");
+                setConfirmation("Password changed.");
                 reset();
                 clearErrors();
             }).catch((err) => console.error(err.data));
@@ -221,9 +221,11 @@ export function PasswordReset(props: any) {
                     </Grid>
                     <FormControl fullWidth>
                         <FormHelperText id="helper-text" error={hasErrors}>
-                            {getSubmitErrorMessage() ||
-                                getConfirmation() ||
-                                "Make sure it's at least 15 characters OR at least 8 characters including a number and a lowercase letter."}
+                            <p>
+                                {getSubmitErrorMessage() ||
+                                    getConfirmation() ||
+                                    "Make sure it's at least 15 characters OR at least 8 characters including a number and a lowercase letter."}
+                            </p>
                         </FormHelperText>
                         <SubmitButton
                             name="Change password"

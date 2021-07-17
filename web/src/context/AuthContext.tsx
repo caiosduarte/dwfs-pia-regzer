@@ -40,7 +40,7 @@ interface IAuthContextData {
     checkIn: (ids: IIds) => Promise<void>;
     isAuthenticated: boolean;
     // isValid: boolean;
-    // isConfirmed: boolean;
+    isConfirmed: boolean;
     toAuthorized: () => void;
     user?: IUser;
     isNewUser: boolean;
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
     let isValid = !!user?.isValid;
 
-    let isConfirmed = !user?.isConfirmed || user?.isConfirmed ? true : false;
+    let isConfirmed = !!user && user.isConfirmed!;
 
     const canSignIn = (guestUser: IUser | undefined) => {
         return !guestUser
@@ -186,9 +186,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         const { user } = data;
 
         if (canSignIn(user)) {
-            await signIn(user as ISignInCredentials);
-        } else {
-            history.push("/sign-in");
+            // await signIn(user as ISignInCredentials);
         }
     }
 
@@ -203,6 +201,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 toAuthorized,
                 user,
                 isNewUser,
+                isConfirmed,
             }}
         >
             {children}
