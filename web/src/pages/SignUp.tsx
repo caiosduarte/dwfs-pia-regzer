@@ -44,12 +44,13 @@ export function SignUp(props: any) {
     const { signUp, isConfirmed } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
     const [confirmation, setConfirmation] = useState<string>();
-    const { formState, register, handleSubmit, reset, clearErrors } = useForm<{
-        name: string;
-        email: string;
-        password: string;
-        confirmation: string;
-    }>();
+    const { formState, register, handleSubmit, reset, clearErrors, getValues } =
+        useForm<{
+            name: string;
+            email: string;
+            password: string;
+            confirmation: string;
+        }>();
 
     const hasErrors = !!submitError;
 
@@ -64,7 +65,10 @@ export function SignUp(props: any) {
 
     const classes = useStyles();
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        console.log("Props => ", props);
+        console.log("Props emailCheckIn => ", props.match.params?.emailCheckIn);
+    }, []);
 
     const getConfirmation = () => {
         return (
@@ -147,6 +151,7 @@ export function SignUp(props: any) {
                                 id="email"
                                 label="Email Address"
                                 autoFocus
+                                defaultValue={props.match.params?.emailCheckin}
                                 error={isError("email")}
                                 helperText={errorMessage(errors.email)}
                                 {...register("email", {
@@ -221,7 +226,13 @@ export function SignUp(props: any) {
                     </FormControl>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <LinkWrapper to="/sign-in" variant="body2">
+                            <LinkWrapper
+                                params={{
+                                    emailCheckIn: getValues("email"),
+                                }}
+                                to="/sign-in"
+                                variant="body2"
+                            >
                                 Already have an account? Sign in
                             </LinkWrapper>
                         </Grid>

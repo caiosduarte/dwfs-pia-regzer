@@ -18,10 +18,19 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import PersonIcon from "@material-ui/icons/Person";
 
 import clsx from "clsx";
 import { useState } from "react";
 import { Copyright } from "../../components/Copyright";
+// import Chart from "./Chart";
+import { mainListItems, secondaryListItems } from "./listItem";
+// import Deposits from "./Deposit";
+import Orders from "./Orders";
+import Users from "./Users";
+import { Can } from "../../components/Can";
+import { useCan } from "../../hooks/useCan";
+import Checkout from "../Checkout";
 
 const drawerWidth = 240;
 
@@ -105,8 +114,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
+    const validRoles = ["administrator"];
+    const userIsAdmin = useCan({ roles: ["administrator"] });
+
     const classes = useStyles();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -115,7 +127,7 @@ export default function Dashboard() {
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-    return (
+    const dash = (
         <div className={classes.root}>
             <CssBaseline />
             <AppBar
@@ -123,18 +135,20 @@ export default function Dashboard() {
                 className={clsx(classes.appBar, open && classes.appBarShift)}
             >
                 <Toolbar className={classes.toolbar}>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        className={clsx(
-                            classes.menuButton,
-                            open && classes.menuButtonHidden
-                        )}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    <Can roles={validRoles}>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleDrawerOpen}
+                            className={clsx(
+                                classes.menuButton,
+                                open && classes.menuButtonHidden
+                            )}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Can>
                     <Typography
                         component="h1"
                         variant="h6"
@@ -149,51 +163,65 @@ export default function Dashboard() {
                             <NotificationsIcon />
                         </Badge>
                     </IconButton>
+                    <IconButton color="inherit">
+                        <Badge badgeContent={0} color="secondary">
+                            <PersonIcon />
+                        </Badge>
+                    </IconButton>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: clsx(
-                        classes.drawerPaper,
-                        !open && classes.drawerPaperClose
-                    ),
-                }}
-                open={open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>{mainListItems}</List>
-                <Divider />
-                <List>{secondaryListItems}</List>
-            </Drawer>
+            <Can roles={validRoles}>
+                <Drawer
+                    variant="permanent"
+                    classes={{
+                        paper: clsx(
+                            classes.drawerPaper,
+                            !open && classes.drawerPaperClose
+                        ),
+                    }}
+                    open={open}
+                >
+                    <div className={classes.toolbarIcon}>
+                        <IconButton onClick={handleDrawerClose}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </div>
+                    <Divider />
+                    <List>{mainListItems}</List>
+                    <Divider />
+                    <List>{secondaryListItems}</List>
+                </Drawer>
+            </Can>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
-                    <Grid container spacing={3}>
-                        {/* Chart */}
+                    <Grid container spacing={2}>
+                        {/* {
+                            // Chart
+                        }
                         <Grid item xs={12} md={8} lg={9}>
                             <Paper className={fixedHeightPaper}>
                                 <Chart />
                             </Paper>
                         </Grid>
-                        {/* Recent Deposits */}
+                        {
+                            // Recent Deposits
+                        }
                         <Grid item xs={12} md={4} lg={3}>
                             <Paper className={fixedHeightPaper}>
                                 <Deposits />
                             </Paper>
-                        </Grid>
-                        {/* Recent Orders */}
+                        </Grid> */}
+                        {
+                            // Recent Users
+                        }
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>
-                                <Orders />
+                                <Users />
                             </Paper>
                         </Grid>
                     </Grid>
+
                     <Box pt={4}>
                         <Copyright />
                     </Box>
@@ -201,4 +229,6 @@ export default function Dashboard() {
             </main>
         </div>
     );
+
+    return userIsAdmin ? dash : <Checkout />;
 }

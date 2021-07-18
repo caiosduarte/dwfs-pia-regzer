@@ -8,9 +8,7 @@ import {
     FormControl,
     FormControlLabel,
     FormHelperText,
-    FormLabel,
     Grid,
-    Link,
     makeStyles,
     TextField,
     Typography,
@@ -23,7 +21,7 @@ import {
     FieldError,
     Controller,
 } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Copyright } from "../components/Copyright";
 import LinkWrapper from "../components/LinkWrapper";
 import { SubmitButton } from "../components/SubmitButton";
@@ -54,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 interface IFormData {
     ids: string;
     password: string;
-    remember?: any;
+    remember?: string;
 }
 
 export default function SignIn(props: any) {
@@ -62,14 +60,15 @@ export default function SignIn(props: any) {
     const isConfirmation = isUuid(hash);
     const { signIn, checkIn, isNewUser } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
-    const { formState, handleSubmit, register, control } = useForm();
+    const { formState, handleSubmit, register, control, getValues } =
+        useForm<IFormData>();
 
     // TODO: Não precisa ser um isNewUser vindo do contexto?
     const isSignIn = !isNewUser;
 
     const hasErrors = !!submitError;
-    const errorMessage = (field: FieldError) => field?.message;
-    const isError = (field: FieldError) => !!field || hasErrors;
+    const errorMessage = (field?: FieldError) => field?.message;
+    const isError = (field?: FieldError) => !!field || hasErrors;
 
     const classes = useStyles();
 
@@ -134,7 +133,11 @@ export default function SignIn(props: any) {
                 <>
                     {submitError}{" "}
                     {isConfirmation && (
-                        <Button onClick={() => alert(hash)}>
+                        <Button
+                            onClick={(event: any) => {
+                                event.preventDefault();
+                            }}
+                        >
                             Click to resend
                         </Button>
                     )}
@@ -168,6 +171,7 @@ export default function SignIn(props: any) {
                             label="Email Address"
                             type="text"
                             id="ids"
+                            defaultValue={props.match.params?.emailCheckin}
                             error={isError(formState.errors.ids)}
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
@@ -241,14 +245,23 @@ export default function SignIn(props: any) {
                                     <LinkWrapper
                                         to="/password-forgot"
                                         variant="body2"
+                                        {...{
+                                            emailCheckIn: getValues("ids"),
+                                        }}
                                     >
                                         Forgot password?
                                     </LinkWrapper>
                                 </Grid>
                                 <Grid item>
-                                    <LinkWrapper to="/sign-up" variant="body2">
+                                    <Link
+                                        to="/sign-up"
+                                        // variant="body2"
+                                        {...{
+                                            emailCheckIn: getValues("ids"),
+                                        }}
+                                    >
                                         Don't have an account? Sign Up
-                                    </LinkWrapper>
+                                    </Link>
                                 </Grid>
                             </>
                         )}

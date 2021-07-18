@@ -10,21 +10,17 @@ import Confirm from "../pages/Confirm";
 export function Routes() {
     return (
         <Switch>
-            <Route path="/" exact={true} component={SignIn} />
-            <Route path="/sign-in" exact={true} component={SignIn} />
-            <Route path="/sign-up" exact={true} component={SignUp} />
+            <Route path="/" exact component={SignIn} />
+            <Route path="/sign-in" exact component={SignIn} />
+            <Route path="/sign-up" exact component={SignUp} />
             <Route path="/confirm/:hash" component={Confirm} />
-            <Route
-                path="/password-forgot"
-                exact={true}
-                component={PasswordForgot}
-            />
+            <Route path="/password-forgot" exact component={PasswordForgot} />
             <Route
                 path="/password-reset/:hash"
-                exact={true}
+                exact
                 component={PasswordReset}
             />
-            <Route path="/dashboard" exact={true} component={Dashboard} />
+            <Route path="/dashboard" exact component={Dashboard} />
             <Route component={NotFound} />
         </Switch>
     );

@@ -20,6 +20,7 @@ import { IdTextField } from "../components/IdTextField";
 import { useState } from "react";
 import { api } from "../services/api";
 import LinkWrapper from "../components/LinkWrapper";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function PasswordForgot() {
+export function PasswordForgot(props: any) {
     const [submitError, setSubmitError] = useState<string>();
     const { formState, handleSubmit, register, reset, clearErrors } = useForm();
 
@@ -89,6 +90,11 @@ export function PasswordForgot() {
         );
     };
 
+    useEffect(() => {
+        console.log("Props => ", props);
+        console.log("Props emailCheckIn => ", props.match.params?.emailCheckIn);
+    }, []);
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -122,7 +128,9 @@ export function PasswordForgot() {
                                     label="Email Address"
                                     type="text"
                                     id="ids"
-                                    autoComplete="email"
+                                    defaultValue={
+                                        props.match.params?.emailCheckin
+                                    }
                                     error={isError(formState.errors.ids)}
                                     helperText={errorMessage(
                                         formState.errors.ids
