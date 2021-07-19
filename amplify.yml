@@ -10,7 +10,6 @@ applications:
                   commands:
                       - pwd
                       - ls -lah
-                      - cd web
                       - yarn
               build:
                   commands:
@@ -18,7 +17,6 @@ applications:
               postBuild:
                   commands:
                       - pwd
-                      - rm -rf docs/
                       - ls -lah
                       - echo $NODE_ENV
           artifacts:
