@@ -16,8 +16,13 @@ frontend:
             commands:
                 - yarn build
 
+        postBuild:
+            commands:
+                - pwd
+                - ls -lah
+
     artifacts:
-        baseDirectory: build
+        baseDirectory: web/build
         files:
             - "**/*"
     cache:
