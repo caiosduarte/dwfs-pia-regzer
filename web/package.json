@@ -1,6 +1,6 @@
 {
-    "name": "regzer",
-    "version": "0.1.0",
+    "name": "Regzer",
+    "version": "1.0.0",
     "private": true,
     "dependencies": {
         "@hookform/resolvers": "^2.6.0",
@@ -16,6 +16,7 @@
         "react-hook-form": "^7.9.0",
         "react-modal": "^3.14.3",
         "react-router-dom": "^5.2.0",
+        "@types/react-router-dom": "^5.1.8",
         "react-scripts": "4.0.3",
         "recharts": "^2.0.10",
         "styled-components": "^5.3.0",
@@ -33,7 +34,6 @@
         "@types/react-cookies": "^0.1.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-modal": "^3.12.0",
-        "@types/react-router-dom": "^5.1.8",
         "@types/recharts": "^2.0.0",
         "@types/styled-components": "^5.1.10",
         "typescript": "^4.1.2"
