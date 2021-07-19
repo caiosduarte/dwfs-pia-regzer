@@ -60,14 +60,16 @@ var CreateUserService = (function () {
                         if (checkEmailExists) {
                             throw new AppError_1.default("This email is already been used.", 403);
                         }
+                        if (!document) return [3, 3];
                         return [4, this.repository.findByDocument(document)];
                     case 2:
                         checkDocument = _b.sent();
                         if (checkDocument) {
                             throw new AppError_1.default("This document is already been used.", 403);
                         }
-                        return [4, bcrypt_1.hash(password, 8)];
-                    case 3:
+                        _b.label = 3;
+                    case 3: return [4, bcrypt_1.hash(password, 8)];
+                    case 4:
                         hashedPassword = _b.sent();
                         return [4, this.repository.create({
                                 name: name,
@@ -76,7 +78,7 @@ var CreateUserService = (function () {
                                 email: email,
                                 password: hashedPassword,
                             })];
-                    case 4:
+                    case 5:
                         user = _b.sent();
                         return [2, UserMap_1.default.toDTO(user)];
                 }

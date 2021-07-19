@@ -63,7 +63,7 @@ var SendConfirmMailService = (function () {
                         token = uuid_1.v4();
                         variables = {
                             name: user.name,
-                            link: "" + process.env.CONFIRM_MAIL_URL + token,
+                            link: "" + process.env.CONFIRM_MAIL_URL + token + "?email=" + user.email,
                         };
                         templatePath = path_1.resolve(__dirname, "..", "views", "emails", "confirmRegistration.hbs");
                         return [4, this.mailProvider.sendMail(user.email, "Confirmação de registro", variables, templatePath)];

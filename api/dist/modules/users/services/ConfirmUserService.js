@@ -53,7 +53,6 @@ var ConfirmUserService = (function () {
                     case 0: return [4, this.repository.findByEncoded(tokenEncoded)];
                     case 1:
                         token = _a.sent();
-                        console.log("Token [%o] encoded [%s]", token, tokenEncoded);
                         if (!token) {
                             throw new AppError_1.default("Token invalid.", 401);
                         }

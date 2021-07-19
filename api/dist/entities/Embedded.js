@@ -17,7 +17,6 @@ var CreatedTimestamp = (function () {
     __decorate([
         typeorm_1.CreateDateColumn({
             name: "created_at",
-            type: "datetime",
         }),
         __metadata("design:type", Date)
     ], CreatedTimestamp.prototype, "createdAt", void 0);
@@ -32,7 +31,7 @@ var Dated = (function () {
         __metadata("design:type", CreatedTimestamp)
     ], Dated.prototype, "createdTimestamp", void 0);
     __decorate([
-        typeorm_1.UpdateDateColumn({ name: "updated_at", type: "datetime" }),
+        typeorm_1.UpdateDateColumn({ name: "updated_at" }),
         __metadata("design:type", Date)
     ], Dated.prototype, "updatedAt", void 0);
     return Dated;

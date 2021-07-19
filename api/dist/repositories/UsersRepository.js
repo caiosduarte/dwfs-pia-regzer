@@ -131,10 +131,29 @@ var UsersRepository = (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.repository.find({
-                            where: { email: email },
+                            where: [{ email: email }, { document: document }, { cellphone: cellphone }],
                             relations: ["tokens"],
+                            cache: true,
                         })];
                     case 1: return [2, _b.sent()];
+                }
+            });
+        });
+    };
+    UsersRepository.prototype.find = function (_a) {
+        var _b = _a.start, start = _b === void 0 ? 0 : _b, _c = _a.offset, offset = _c === void 0 ? 10 : _c;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0: return [4, this.repository
+                            .createQueryBuilder("user")
+                            .orderBy("user.updatedAt", "DESC")
+                            .addOrderBy("user.name", "ASC")
+                            .skip(start)
+                            .take(offset)
+                            .cache(true)
+                            .getMany()];
+                    case 1: return [2, _d.sent()];
                 }
             });
         });

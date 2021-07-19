@@ -35,6 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -46,9 +51,7 @@ var controllers_1 = require("../modules/users/controllers");
 var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
 var ConfirmUserService_1 = __importDefault(require("../modules/users/services/ConfirmUserService"));
 var SendConfirmMailService_1 = __importDefault(require("../modules/users/services/SendConfirmMailService"));
-var verifyJwt_1 = require("../modules/users/utils/verifyJwt");
 var DayjsProvider_1 = __importDefault(require("../providers/DateProvider/implementations/DayjsProvider"));
-var EtherealMailProvider_1 = __importDefault(require("../providers/MailProvider/implementations/EtherealMailProvider"));
 var TokensRepository_1 = __importDefault(require("../repositories/TokensRepository"));
 var UsersRepository_1 = __importDefault(require("../repositories/UsersRepository"));
 var mailProvider_1 = __importDefault(require("../utils/mailProvider"));
@@ -76,76 +79,54 @@ usersRouter.get("/:id", ensureAuthenticated_1.ensureAuthenticated, function (req
         }
     });
 }); });
-function getTokenFromRequest(request) {
-    var valueInBody = function () {
-        var token = request.body.token ||
-            request.query.token ||
-            request.headers["x-access-token"] ||
-            request.headers["x-access"];
-        if (token) {
-            return String(token);
-        }
-    };
-    var valueInAuthorizationBeared = function () {
-        var authorization = request.headers.authorization;
-        if (authorization) {
-            var _a = authorization.split(" "), token = _a[1];
-            return token;
-        }
-    };
-    return valueInAuthorizationBeared() || valueInBody();
-}
 var hasAnyId = function (_a) {
     var email = _a.email, document = _a.document, cellphone = _a.cellphone, id = _a.id;
     return !!email || !!document || !!cellphone || !!id;
 };
-var findUser = function (ids, repository) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, email, document_1, cellphone;
+var findUsers = function (query, repository) { return __awaiter(void 0, void 0, void 0, function () {
+    var email, document, cellphone, start, offset, start_1, offset_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!hasAnyId(ids)) return [3, 4];
-                id = ids.id, email = ids.email, document_1 = ids.document, cellphone = ids.cellphone;
-                if (!id) return [3, 2];
-                return [4, repository.findById(id)];
+                email = query.email, document = query.document, cellphone = query.cellphone, start = query.start, offset = query.offset;
+                if (!hasAnyId(query)) return [3, 2];
+                return [4, repository.findBy({
+                        email: email,
+                        document: document,
+                        cellphone: cellphone,
+                    })];
             case 1: return [2, _a.sent()];
-            case 2: return [4, repository
-                    .findBy({
-                    email: email,
-                    document: document_1,
-                    cellphone: cellphone,
-                })
-                    .then(function (result) { return result && result[0]; })];
+            case 2:
+                start_1 = Number(query.start);
+                offset_1 = Number(query.offset);
+                return [4, repository.find({ start: start_1, offset: offset_1 })];
             case 3: return [2, _a.sent()];
-            case 4: return [2];
         }
     });
 }); };
-usersRouter.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, decoded, id, _a, email, document, cellphone, usersRepository, user;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+usersRouter.get("/", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var repository, query, users;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                token = getTokenFromRequest(request);
-                decoded = token && verifyJwt_1.decodeJwt(token);
-                id = decoded && decoded.sub;
-                _a = request.query, email = _a.email, document = _a.document, cellphone = _a.cellphone;
-                if (!hasAnyId({ email: email, document: document, cellphone: cellphone, id: id })) {
-                    throw new AppError_1.default("No query params or authorization header found.", 403);
-                }
-                usersRepository = UsersRepository_1.default.getInstance();
-                return [4, findUser({ id: id, email: email, document: document, cellphone: cellphone }, usersRepository)];
+                repository = UsersRepository_1.default.getInstance();
+                query = request.query;
+                return [4, findUsers(query, repository).then(function (users) {
+                        return users === null || users === void 0 ? void 0 : users.reduce(function (dtos, user) { return __spreadArray(__spreadArray([], dtos), [
+                            UserMap_1.default.toDTO(user),
+                        ]); }, []);
+                    })];
             case 1:
-                user = _b.sent();
-                if (!user) {
+                users = _a.sent();
+                if (!users) {
                     throw new AppError_1.default("User not found.", 404);
                 }
-                return [2, response.json(UserMap_1.default.toDTO(user))];
+                return [2, response.json(users)];
         }
     });
 }); });
 usersRouter.post("/confirm", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, usersRepository, tokensRepository, mailProvider_2, dateProvider, service;
+    var email, usersRepository, tokensRepository, dateProvider, service;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -153,9 +134,8 @@ usersRouter.post("/confirm", function (request, response) { return __awaiter(voi
                 if (!hasAnyId({ email: email })) return [3, 2];
                 usersRepository = UsersRepository_1.default.getInstance();
                 tokensRepository = TokensRepository_1.default.getInstance();
-                mailProvider_2 = EtherealMailProvider_1.default.getInstance();
                 dateProvider = DayjsProvider_1.default.getInstance();
-                service = new SendConfirmMailService_1.default(usersRepository, tokensRepository, mailProvider_2, dateProvider);
+                service = new SendConfirmMailService_1.default(usersRepository, tokensRepository, mailProvider_1.default(), dateProvider);
                 return [4, service.execute(email)];
             case 1:
                 _a.sent();

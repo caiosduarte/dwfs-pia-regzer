@@ -7,14 +7,17 @@ var EtherealMailProvider_1 = __importDefault(require("../providers/MailProvider/
 var SESMailProvider_1 = __importDefault(require("../providers/MailProvider/implementations/SESMailProvider"));
 var SESSMTPMailProvider_1 = __importDefault(require("../providers/MailProvider/implementations/SESSMTPMailProvider"));
 var mailProvider = function () {
+    var provider = process.env.MAIL_PROVIDER;
+    console.log("mail provider => ", provider);
     switch (process.env.MAIL_PROVIDER) {
         case "ethereal":
             return EtherealMailProvider_1.default.getInstance();
         case "ses":
             return SESMailProvider_1.default.getInstance();
         case "smtp":
-        default:
             return SESSMTPMailProvider_1.default.getInstance();
+        default:
+            return EtherealMailProvider_1.default.getInstance();
     }
 };
 exports.default = mailProvider;

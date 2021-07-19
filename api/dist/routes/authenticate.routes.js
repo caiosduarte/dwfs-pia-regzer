@@ -40,7 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
+var AppError_1 = __importDefault(require("../errors/AppError"));
+var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
 var controllers_1 = require("../modules/users/controllers");
+var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
 var DayjsProvider_1 = __importDefault(require("../providers/DateProvider/implementations/DayjsProvider"));
 var TokensRepository_1 = __importDefault(require("../repositories/TokensRepository"));
 var UsersRepository_1 = __importDefault(require("../repositories/UsersRepository"));
@@ -52,6 +55,23 @@ authenticateRoutes.post("/sessions", function (request, response) { return __awa
         tokensRepo = TokensRepository_1.default.getInstance();
         dateProvider = DayjsProvider_1.default.getInstance();
         return [2, controllers_1.authenticateUserController(usersRepo, tokensRepo, dateProvider).handle(request, response)];
+    });
+}); });
+authenticateRoutes.get("/sessions", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, usersRepository, user;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                id = request.params.id;
+                usersRepository = UsersRepository_1.default.getInstance();
+                return [4, usersRepository.findById(id)];
+            case 1:
+                user = _a.sent();
+                if (!user) {
+                    throw new AppError_1.default("User not found!", 404);
+                }
+                return [2, response.json(UserMap_1.default.toDTO(user))];
+        }
     });
 }); });
 authenticateRoutes.post("/refresh-token", function (request, response) {

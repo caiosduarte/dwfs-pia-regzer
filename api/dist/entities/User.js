@@ -43,6 +43,10 @@ var User = (function () {
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", String)
+    ], User.prototype, "cellphone", void 0);
+    __decorate([
+        typeorm_1.Column(),
+        __metadata("design:type", String)
     ], User.prototype, "password", void 0);
     __decorate([
         typeorm_1.Column({ name: "is_admin", default: false }),
@@ -53,7 +57,7 @@ var User = (function () {
         __metadata("design:type", Boolean)
     ], User.prototype, "isConfirmed", void 0);
     __decorate([
-        typeorm_1.Column({ name: "is_valid", default: false }),
+        typeorm_1.Column({ name: "is_valid", default: true }),
         __metadata("design:type", Boolean)
     ], User.prototype, "isValid", void 0);
     __decorate([

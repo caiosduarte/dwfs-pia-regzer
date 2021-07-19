@@ -87,7 +87,7 @@ var CreateUsers1594592667317 = (function () {
                                 {
                                     name: "is_valid",
                                     type: "boolean",
-                                    default: false,
+                                    default: true,
                                 },
                                 {
                                     name: "is_confirmed",
