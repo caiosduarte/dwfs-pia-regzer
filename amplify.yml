@@ -1,30 +1,35 @@
 version: 1.0.1
-env:
-    variables:
-        NODE_ENV: production
+applications:
+  - appRoot: web
 
-frontend:
-    phases:
-        preBuild:
-            commands:
-                - pwd
-                - ls -lah
-                - cd web
-                - yarn
+  env:
+      variables:
+          NODE_ENV: production
 
-        build:
-            commands:
-                - yarn build
+  frontend:
+      phases:
+          preBuild:
+              commands:
+                  - pwd
+                  - ls -lah
+                  - cd web
+                  - yarn
 
-        postBuild:
-            commands:
-                - pwd
-                - ls -lah
+          build:
+              commands:
+                  - yarn build
 
-    artifacts:
-        baseDirectory: web/build
-        files:
-            - "**/*"
-    cache:
-        paths:
-            - node_modules/**/*
+          postBuild:
+              commands:
+                  - pwd
+                  - rm -rf docs/
+                  - ls -lah
+                  - echo $NODE_ENV
+
+      artifacts:
+          baseDirectory: build
+          files:
+              - "**/*"
+      cache:
+          paths:
+              - node_modules/**/*
