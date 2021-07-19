@@ -29,6 +29,9 @@ class User implements IUser {
     email: string;
 
     @Column()
+    cellphone: string;
+
+    @Column()
     password: string;
 
     @Column({ name: "is_admin", default: false })
@@ -37,7 +40,7 @@ class User implements IUser {
     @Column({ name: "is_confirmed", default: false })
     isConfirmed: boolean;
 
-    @Column({ name: "is_valid", default: false })
+    @Column({ name: "is_valid", default: true })
     isValid: boolean;
 
     @Column((type) => Dated, { prefix: false })

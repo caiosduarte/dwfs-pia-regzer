@@ -23,10 +23,14 @@ class CreateUserService {
             throw new AppError("This email is already been used.", 403);
         }
 
-        const checkDocument = await this.repository.findByDocument(document);
+        if (document) {
+            const checkDocument = await this.repository.findByDocument(
+                document
+            );
 
-        if (checkDocument) {
-            throw new AppError("This document is already been used.", 403);
+            if (checkDocument) {
+                throw new AppError("This document is already been used.", 403);
+            }
         }
 
         const hashedPassword = await hash(password, 8);

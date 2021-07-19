@@ -1,17 +1,21 @@
-import { Router, Request } from "express";
+import { Router } from "express";
 import AppError from "../errors/AppError";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
+import IUserResponseDTO from "../modules/users/dtos/IUserResponseDTO";
 import UserMap from "../modules/users/mappers/UserMap";
+import IUser from "../modules/users/models/IUser";
 import { IUsersRepository } from "../modules/users/repositories/IUsersRepository";
 import ConfirmUserService from "../modules/users/services/ConfirmUserService";
 import SendConfirmMailService from "../modules/users/services/SendConfirmMailService";
-import { decodeJwt } from "../modules/users/utils/verifyJwt";
+
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
-import EtherealMailProvider from "../providers/MailProvider/implementations/EtherealMailProvider";
+
 import TokensRepository from "../repositories/TokensRepository";
 import UsersRepository from "../repositories/UsersRepository";
 import mailProvider from "../utils/mailProvider";
+
+import { getTokenFromRequest } from "../modules/users/utils/token";
 
 const usersRouter = Router();
 
@@ -41,29 +45,6 @@ usersRouter.get("/:id", ensureAuthenticated, async (request, response) => {
     return response.json(UserMap.toDTO(user));
 });
 
-function getTokenFromRequest(request: Request): string | undefined {
-    const valueInBody = () => {
-        const token =
-            request.body.token ||
-            request.query.token ||
-            request.headers["x-access-token"] ||
-            request.headers["x-access"];
-        if (token) {
-            return String(token);
-        }
-    };
-
-    const valueInAuthorizationBeared = () => {
-        const authorization = request.headers.authorization;
-        if (authorization) {
-            const [, token] = authorization.split(" ");
-            return token;
-        }
-    };
-
-    return valueInAuthorizationBeared() || valueInBody();
-}
-
 interface IIDs {
     email?: string;
     document?: string;
@@ -71,55 +52,50 @@ interface IIDs {
     id?: string;
 }
 
+interface ISearch extends IIDs {
+    offset?: string;
+    start?: string;
+}
+
 const hasAnyId = ({ email, document, cellphone, id }: IIDs) => {
     return !!email || !!document || !!cellphone || !!id;
 };
 
-const findUser = async (ids: IIDs, repository: IUsersRepository) => {
-    if (hasAnyId(ids)) {
-        const { id, email, document, cellphone } = ids;
-        if (id) {
-            return await repository.findById(id);
-        } else {
-            return await repository
-                .findBy({
-                    email,
-                    document,
-                    cellphone,
-                })
-                .then((result) => result && result[0]);
-        }
+const findUsers = async (query: ISearch, repository: IUsersRepository) => {
+    const { email, document, cellphone, start, offset } = query;
+    if (hasAnyId(query)) {
+        return await repository.findBy({
+            email,
+            document,
+            cellphone,
+        });
+    } else {
+        const start = Number(query.start);
+        const offset = Number(query.offset);
+        return await repository.find({ start, offset });
     }
 };
 
-usersRouter.get("/", async (request, response) => {
-    const token = getTokenFromRequest(request);
+usersRouter.get("/", ensureAuthenticated, async (request, response) => {
+    const repository = UsersRepository.getInstance();
 
-    const decoded = token && decodeJwt(token);
+    const query = request.query as ISearch;
 
-    const id = decoded && decoded.sub;
-
-    const { email, document, cellphone } = request.query as IIDs;
-
-    if (!hasAnyId({ email, document, cellphone, id })) {
-        throw new AppError(
-            "No query params or authorization header found.",
-            403
-        );
-    }
-
-    const usersRepository = UsersRepository.getInstance();
-
-    const user = await findUser(
-        { id, email, document, cellphone },
-        usersRepository
+    const users = await findUsers(query, repository).then((users) =>
+        users?.reduce(
+            (dtos: IUserResponseDTO[], user: IUser) => [
+                ...dtos,
+                UserMap.toDTO(user),
+            ],
+            []
+        )
     );
 
-    if (!user) {
+    if (!users) {
         throw new AppError("User not found.", 404);
     }
 
-    return response.json(UserMap.toDTO(user));
+    return response.json(users);
 });
 
 usersRouter.post("/confirm", async (request, response) => {

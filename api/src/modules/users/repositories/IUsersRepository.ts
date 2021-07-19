@@ -7,6 +7,11 @@ export interface IUserQueryParams {
     cellphone?: string;
 }
 
+export interface ISearchParams {
+    start: number;
+    offset: number;
+}
+
 export interface IUsersRepository {
     readonly INSTANCE: IUsersRepository;
     findByDocument(document: string): Promise<IUser | undefined>;
@@ -16,4 +21,5 @@ export interface IUsersRepository {
     save(user: IUser): Promise<IUser>;
     findByToken(token: string): Promise<IUser | undefined>;
     findBy(data: IUserQueryParams): Promise<IUser[] | undefined>;
+    find(data: ISearchParams): Promise<IUser[] | undefined>;
 }

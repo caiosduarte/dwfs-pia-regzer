@@ -1,9 +1,9 @@
 import { compare } from "bcrypt";
-import { IsDivisibleBy } from "class-validator";
-import { response } from "express";
+
 import AppError from "../../../errors/AppError";
 import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
 import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
+import UserMap from "../mappers/UserMap";
 
 import IToken from "../models/IToken";
 
@@ -11,7 +11,7 @@ import IDateProvider from "../providers/IDateProvider";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 import { createRefreshToken, createToken } from "../utils/createJwt";
-import { isRefreshTokenValid, isTokenExpired } from "../utils/token";
+import { isRefreshTokenValid } from "../utils/token";
 
 interface ICredentials {
     email?: string;
@@ -74,19 +74,7 @@ class AuthenticateUserService {
         } as ICreateTokenDTO);
 
         return {
-            user: {
-                id: user.id,
-
-                email: user.email,
-                document: user.document,
-                cellphone: user.cellphone,
-
-                isAdmin: user.isAdmin,
-                roles: user.roles,
-                permissions: user.permissions,
-
-                isConfirmed: user.isConfirmed,
-            },
+            user: UserMap.toDTO(user),
             token,
             refreshToken,
         };

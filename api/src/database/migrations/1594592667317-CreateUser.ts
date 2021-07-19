@@ -44,7 +44,7 @@ export class CreateUsers1594592667317 implements MigrationInterface {
                     {
                         name: "is_valid",
                         type: "boolean",
-                        default: false,
+                        default: true,
                     },
 
                     {

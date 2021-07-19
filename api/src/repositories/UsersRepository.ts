@@ -4,8 +4,10 @@ import User from "../entities/User";
 import {
     IUsersRepository,
     IUserQueryParams,
+    ISearchParams,
 } from "../modules/users/repositories/IUsersRepository";
 import IUser from "../modules/users/models/IUser";
+import { Dated } from "../entities/Embedded";
 
 export default class UsersRepository implements IUsersRepository {
     readonly INSTANCE: IUsersRepository;
@@ -66,8 +68,24 @@ export default class UsersRepository implements IUsersRepository {
         cellphone,
     }: IUserQueryParams): Promise<User[] | undefined> {
         return await this.repository.find({
-            where: { email },
+            where: [{ email }, { document }, { cellphone }],
             relations: ["tokens"],
+            cache: true,
         });
+    }
+
+    async find({
+        start = 0,
+        offset = 10,
+    }: ISearchParams): Promise<User[] | undefined> {
+        return await this.repository
+            .createQueryBuilder("user")
+            // .leftJoinAndSelect("user.tokens", "token")
+            .orderBy("user.updatedAt", "DESC")
+            .addOrderBy("user.name", "ASC")
+            .skip(start)
+            .take(offset)
+            .cache(true)
+            .getMany();
     }
 }
