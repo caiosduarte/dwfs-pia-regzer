@@ -1,14 +1,17 @@
 version: 1.0.0
 applications:
-  - appRoot: /web
+  - appRoot: web
     env:
       variables:
-      NODE_ENV: production
+        NODE_ENV: production
   
     frontend:
       phases:
         preBuild:
           commands:
+            - pwd
+            - ls -lah
+            - cd web
             - yarn
             
         build:
@@ -16,8 +19,9 @@ applications:
             - yarn build
             
       artifacts:
-        baseDirectory: /build
+        baseDirectory: build
         files:
           - '**/*'
       cache:
-        paths: []
+        paths: 
+          - node_modules/**/*
