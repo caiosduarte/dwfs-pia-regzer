@@ -1,4 +1,11 @@
 import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    useRouteMatch,
+} from "react-router-dom";
+
+import {
     AppBar,
     Badge,
     Box,
@@ -6,31 +13,37 @@ import {
     CssBaseline,
     Divider,
     Drawer,
-    Grid,
     IconButton,
     List,
-    Paper,
     Toolbar,
     Typography,
     makeStyles,
+    Tooltip,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import PersonIcon from "@material-ui/icons/Person";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import clsx from "clsx";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Copyright } from "../../components/Copyright";
-// import Chart from "./Chart";
-import { mainListItems, secondaryListItems } from "./listItem";
-// import Deposits from "./Deposit";
-import Orders from "./Orders";
-import Users from "./Users";
+
 import { Can } from "../../components/Can";
 import { useCan } from "../../hooks/useCan";
-import Checkout from "../Checkout";
+
+import {
+    PainelCheckouts,
+    PainelCheckout,
+    PainelDashboard,
+    PainelUsers,
+} from "./painels";
+
+import LinkWrapper from "../../components/LinkWrapper";
+import { mainListItems, secondaryListItems } from "./listItem";
+import { AuthContext } from "../../context/AuthContext";
 
 const drawerWidth = 240;
 
@@ -113,18 +126,29 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// export const classes = useStyles();
+
 export default function Dashboard() {
+    const { user, signOut } = useContext(AuthContext);
+
     const validRoles = ["administrator"];
+
     const userIsAdmin = useCan({ roles: ["administrator"] });
 
-    const classes = useStyles();
+    const { path, url } = useRouteMatch();
+
     const [open, setOpen] = useState(false);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
+
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const classes = useStyles();
+
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     const dash = (
@@ -134,21 +158,21 @@ export default function Dashboard() {
                 position="absolute"
                 className={clsx(classes.appBar, open && classes.appBarShift)}
             >
-                <Toolbar className={classes.toolbar}>
-                    <Can roles={validRoles}>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={handleDrawerOpen}
-                            className={clsx(
-                                classes.menuButton,
-                                open && classes.menuButtonHidden
-                            )}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                    </Can>
+                <Toolbar className={classes.toolbar} color="primary">
+                    {/* <Can roles={validRoles}> */}
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        className={clsx(
+                            classes.menuButton,
+                            open && classes.menuButtonHidden
+                        )}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    {/* </Can> */}
                     <Typography
                         component="h1"
                         variant="h6"
@@ -156,71 +180,106 @@ export default function Dashboard() {
                         noWrap
                         className={classes.title}
                     >
-                        Dashboard
+                        Regzer
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={0} color="secondary">
-                            <PersonIcon />
-                        </Badge>
-                    </IconButton>
+
+                    <Tooltip
+                        title="Notifications"
+                        aria-label="notifications"
+                        interactive
+                    >
+                        <IconButton aria-label="notifications" color="inherit">
+                            <Badge badgeContent={4} color="secondary">
+                                <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip
+                        title={!!user && (user.name || "User")}
+                        aria-label={"user " && user?.name}
+                        interactive
+                    >
+                        <IconButton aria-label="user" color="inherit">
+                            <Badge badgeContent={0} color="secondary">
+                                <PersonIcon />
+                            </Badge>
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Sign out" aria-label="sign out" interactive>
+                        <IconButton
+                            onClick={(event: any) => {
+                                event.preventDefault();
+                                signOut();
+                            }}
+                            color="inherit"
+                        >
+                            <ExitToAppIcon />
+                        </IconButton>
+                    </Tooltip>
                 </Toolbar>
             </AppBar>
-            <Can roles={validRoles}>
-                <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: clsx(
-                            classes.drawerPaper,
-                            !open && classes.drawerPaperClose
-                        ),
-                    }}
-                    open={open}
-                >
-                    <div className={classes.toolbarIcon}>
-                        <IconButton onClick={handleDrawerClose}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>{mainListItems}</List>
-                    <Divider />
-                    <List>{secondaryListItems}</List>
-                </Drawer>
-            </Can>
+            {/* <Can roles={validRoles}> */}
+            <Drawer
+                variant="permanent"
+                classes={{
+                    paper: clsx(
+                        classes.drawerPaper,
+                        !open && classes.drawerPaperClose
+                    ),
+                }}
+                open={open}
+            >
+                <div className={classes.toolbarIcon}>
+                    <IconButton onClick={handleDrawerClose}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </div>
+
+                <Divider />
+
+                <List>{mainListItems}</List>
+                <Divider />
+                <List>{secondaryListItems}</List>
+            </Drawer>
+            {/* </Can> */}
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
-                    <Grid container spacing={2}>
-                        {/* {
-                            // Chart
-                        }
-                        <Grid item xs={12} md={8} lg={9}>
-                            <Paper className={fixedHeightPaper}>
-                                <Chart />
-                            </Paper>
-                        </Grid>
-                        {
-                            // Recent Deposits
-                        }
-                        <Grid item xs={12} md={4} lg={3}>
-                            <Paper className={fixedHeightPaper}>
-                                <Deposits />
-                            </Paper>
-                        </Grid> */}
-                        {
-                            // Recent Users
-                        }
-                        <Grid item xs={12}>
-                            <Paper className={classes.paper}>
-                                <Users />
-                            </Paper>
-                        </Grid>
-                    </Grid>
+                    <Switch>
+                        <Route exact path={path}>
+                            <PainelDashboard
+                                isAdmin={userIsAdmin}
+                                classesContent={[
+                                    fixedHeightPaper,
+                                    fixedHeightPaper,
+                                    classes.paper,
+                                ]}
+                            />
+                        </Route>
+
+                        <Route path={`${path}/users`}>
+                            <PainelUsers
+                                isAdmin={userIsAdmin}
+                                classesContent={[classes.paper]}
+                            />
+                        </Route>
+
+                        <Route path="/dashboard/checkouts">
+                            <PainelCheckouts
+                                isAdmin={userIsAdmin}
+                                classesContent={[classes.paper]}
+                            />
+                        </Route>
+
+                        <Route path="/dashboard/checkout">
+                            <PainelCheckout
+                                isAdmin={userIsAdmin}
+                                classesContent={[classes.paper]}
+                            />
+                        </Route>
+                    </Switch>
 
                     <Box pt={4}>
                         <Copyright />
@@ -229,6 +288,6 @@ export default function Dashboard() {
             </main>
         </div>
     );
-
-    return userIsAdmin ? dash : <Checkout />;
+    return dash;
+    //return userIsAdmin ? dash : <Checkout />;
 }

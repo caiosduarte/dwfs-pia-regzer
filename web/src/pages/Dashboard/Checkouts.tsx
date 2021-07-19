@@ -40,15 +40,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type UsersProps = {
-    title?: "Recent Users" | "Users";
+    title?: "Recent Checkouts" | "Checkouts";
     pageStart?: number;
     pageSize?: number;
     checkBoxSelection?: boolean;
     classSeeMore?: string;
 };
 
-export default function Users({
-    title = "Recent Users",
+export default function Checkouts({
+    title = "Recent Checkouts",
     pageStart = 0,
     pageSize = 5,
     classSeeMore,
@@ -164,9 +164,9 @@ export default function Users({
                 </TableBody>
             </Table>
 
-            {title === "Recent Users" && (
+            {title === "Recent Checkouts" && (
                 <div className={classSeeMore || classes.seeMore}>
-                    <LinkWrapper to="/dashboard/users">
+                    <LinkWrapper to="/dashboard/checkouts">
                         See more users
                     </LinkWrapper>
                 </div>

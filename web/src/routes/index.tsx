@@ -1,11 +1,12 @@
 import { Switch, Route } from "react-router-dom";
-import Dashboard from "../pages/Dashboard/";
+
 import { NotFound } from "../pages/NotFound";
 import { SignUp } from "../pages/SignUp";
 import { PasswordForgot } from "../pages/PasswordForgot";
 import SignIn from "../pages/SignIn";
 import { PasswordReset } from "../pages/PasswordReset";
 import Confirm from "../pages/Confirm";
+import Dashboard from "../pages/Dashboard/";
 
 export function Routes() {
     return (
@@ -20,7 +21,9 @@ export function Routes() {
                 exact
                 component={PasswordReset}
             />
-            <Route path="/dashboard" exact component={Dashboard} />
+
+            <Route path="/dashboard" component={Dashboard} />
+
             <Route component={NotFound} />
         </Switch>
     );

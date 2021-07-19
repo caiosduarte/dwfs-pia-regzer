@@ -18,7 +18,6 @@ import { FieldError, useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthContext";
 import LinkWrapper from "../components/LinkWrapper";
 import { useEffect } from "react";
-import { api } from "../services/api";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -67,7 +66,7 @@ export function SignUp(props: any) {
 
     useEffect(() => {
         console.log("Props => ", props);
-        console.log("Props emailCheckIn => ", props.match.params?.emailCheckIn);
+        // console.log("Props emailCheckIn => ", props.match.params?.emailCheckIn);
     }, []);
 
     const getConfirmation = () => {
@@ -151,7 +150,7 @@ export function SignUp(props: any) {
                                 id="email"
                                 label="Email Address"
                                 autoFocus
-                                defaultValue={props.match.params?.emailCheckin}
+                                // defaultValue={props.match.params?.emailCheckin}
                                 error={isError("email")}
                                 helperText={errorMessage(errors.email)}
                                 {...register("email", {
@@ -227,9 +226,9 @@ export function SignUp(props: any) {
                     <Grid container justifyContent="flex-end">
                         <Grid item>
                             <LinkWrapper
-                                params={{
-                                    emailCheckIn: getValues("email"),
-                                }}
+                                // params={{
+                                //     emailCheckIn: getValues("email"),
+                                // }}
                                 to="/sign-in"
                                 variant="body2"
                             >

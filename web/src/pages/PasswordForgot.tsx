@@ -92,7 +92,6 @@ export function PasswordForgot(props: any) {
 
     useEffect(() => {
         console.log("Props => ", props);
-        console.log("Props emailCheckIn => ", props.match.params?.emailCheckIn);
     }, []);
 
     return (

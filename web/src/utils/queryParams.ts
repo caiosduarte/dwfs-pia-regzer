@@ -1,5 +1,5 @@
 export const queryParams = (str: string) => {
-    const regex = /(?:[\?&]([^&]+)=([^&#]*))/g;
+    const regex = /(?:[?&]([^&]+)=([^&#]*))/g;
 
     let match;
 

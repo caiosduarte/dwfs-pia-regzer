@@ -22,6 +22,7 @@ interface ISignUpData extends IIds {
 
 interface IUser extends IIds {
     id: string;
+    name: string;
 
     isAdmin?: boolean;
     roles?: string[];
@@ -110,7 +111,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
         if (token) {
             // mantém a parte de permissões e roles o mais atualizadas possível
-            api.get("/users", { headers: { Authorization: `Beared ${token}` } })
+            api.get("/sessions")
                 .then((response) => {
                     const { user } = response.data;
                     setUser(user);

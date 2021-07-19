@@ -21,7 +21,7 @@ import {
     FieldError,
     Controller,
 } from "react-hook-form";
-import { Link } from "react-router-dom";
+
 import { Copyright } from "../components/Copyright";
 import LinkWrapper from "../components/LinkWrapper";
 import { SubmitButton } from "../components/SubmitButton";
@@ -60,8 +60,7 @@ export default function SignIn(props: any) {
     const isConfirmation = isUuid(hash);
     const { signIn, checkIn, isNewUser } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
-    const { formState, handleSubmit, register, control, getValues } =
-        useForm<IFormData>();
+    const { formState, handleSubmit, register, control } = useForm<IFormData>();
 
     // TODO: Não precisa ser um isNewUser vindo do contexto?
     const isSignIn = !isNewUser;
@@ -171,7 +170,7 @@ export default function SignIn(props: any) {
                             label="Email Address"
                             type="text"
                             id="ids"
-                            defaultValue={props.match.params?.emailCheckin}
+                            // defaultValue={props.match.params?.emailCheckin}
                             error={isError(formState.errors.ids)}
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
@@ -245,23 +244,23 @@ export default function SignIn(props: any) {
                                     <LinkWrapper
                                         to="/password-forgot"
                                         variant="body2"
-                                        {...{
-                                            emailCheckIn: getValues("ids"),
-                                        }}
+                                        // {...{
+                                        //     emailCheckIn: getValues("ids"),
+                                        // }}
                                     >
                                         Forgot password?
                                     </LinkWrapper>
                                 </Grid>
                                 <Grid item>
-                                    <Link
+                                    <LinkWrapper
                                         to="/sign-up"
                                         // variant="body2"
-                                        {...{
-                                            emailCheckIn: getValues("ids"),
-                                        }}
+                                        // {...{
+                                        //     emailCheckIn: getValues("ids"),
+                                        // }}
                                     >
-                                        Don't have an account? Sign Up
-                                    </Link>
+                                        {"Don't have an account? Sign Up"}
+                                    </LinkWrapper>
                                 </Grid>
                             </>
                         )}
