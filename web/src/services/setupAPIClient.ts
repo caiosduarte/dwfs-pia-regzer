@@ -2,24 +2,28 @@ import axios, { AxiosError } from "axios";
 import { AuthError } from "../errors/AuthError";
 import { CookieProvider } from "../providers";
 
-let isRefreshing = false;
-let failedRequests = [] as IRequest[];
-
 interface IRequest {
     onSuccess: (token: string) => void;
     onFailure: (err: AxiosError) => void;
 }
 
-function authorizationHeader(token: string) {
-    return token ? { Authorization: `Beared ${token}` } : {};
-}
+const isDevelopment = process.env.NODE_ENV !== "production";
+
+let isRefreshing = false;
+
+let failedRequests = [] as IRequest[];
+
+const authorizationHeader = (token: string) =>
+    token ? { Authorization: `Beared ${token}` } : {};
 
 export function setupAPIClient(context = undefined) {
     const cookieProvider = new CookieProvider(context);
 
     const api = axios.create({
-        // baseURL: "https://api.regzer.com.br",
-        baseURL: "http://localhost:3333",
+        baseURL: isDevelopment
+            ? "http://localhost:3333"
+            : "https://api.regzer.com.br",
+
         headers: authorizationHeader(cookieProvider.token),
     });
 
