@@ -66,11 +66,13 @@ export function PasswordForgot(props: any) {
                 reset();
                 clearErrors();
                 setConfirmation(
-                    "Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder."
+                    "Email sent! Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder."
                 );
             }).catch();
         } catch (error) {
-            setSubmitError("Email não enviado");
+            // TODO: Casos em que o erro não está mapeado na APP
+            const message = error.response?.data.message;
+            setSubmitError(message);
             console.error(
                 "/ForgorPassword.handleSend => status %d, %o",
                 error.response?.status,
