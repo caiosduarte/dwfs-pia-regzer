@@ -47,8 +47,9 @@ jobs:
                   username: ${{ secrets.USERNAME }}
                   port: ${{ secrets.PORT }}
                   key: ${{ secrets.KEY }}
-                  source: "api/*,!api/node_modules,!api/.vscode,!docs,!old,!web"
-                  target: "~/regzer_api"
+                  source: "api,!api/node_modules,!api/.vscode"
+                  target: "regzer_api"
+                  strip_components: 1
 
             - name: "Update API: modules, migrations and app process"
               uses: appleboy/ssh-action@master
