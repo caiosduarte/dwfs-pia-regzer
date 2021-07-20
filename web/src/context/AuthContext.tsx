@@ -164,7 +164,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 setIsNewUser(true);
                 setUser(undefined);
                 history.push("/sign-up", { emailCheckIn: email });
-            } else if (status != 401 || status != 403) {
+            } else if (status != 401 && status != 403) {
                 throw err;
             }
         }
