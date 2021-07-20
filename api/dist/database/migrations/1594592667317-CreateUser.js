@@ -113,9 +113,9 @@ var CreateUsers1594592667317 = (function () {
                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"];
                         _d = ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548",
                             "ADMIN",
-                            "",
-                            "",
-                            "caiosduarte@yahoo.com.br"];
+                            null,
+                            null,
+                            "admin@regzer.com.br"];
                         return [4, bcrypt_1.hash("root", 8)];
                     case 2: return [4, _b.apply(_a, _c.concat([_d.concat([
                                 _j.sent(),
@@ -131,7 +131,7 @@ var CreateUsers1594592667317 = (function () {
                         _h = ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209",
                             "Caio Duarte",
                             "01351676636",
-                            "31984227833",
+                            "5531984227833",
                             "caiosduarte@gmail.com"];
                         return [4, bcrypt_1.hash("password123", 8)];
                     case 4: return [4, _f.apply(_e, _g.concat([_h.concat([
