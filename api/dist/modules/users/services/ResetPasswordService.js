@@ -59,22 +59,25 @@ var ResetPasswordService = (function () {
                             throw new AppError_1.default("Token invalid.", 403);
                         }
                         expiresAt = token.expiresAt;
+                        user = token === null || token === void 0 ? void 0 : token.user;
+                        if (!token_1.isTokenExpired(expiresAt)) return [3, 3];
                         return [4, this.repository.deleteById(token.id)];
                     case 2:
                         _c.sent();
-                        if (token_1.isTokenExpired(expiresAt)) {
-                            throw new AppError_1.default("Token expired at " + expiresAt + ".", 403);
-                        }
-                        user = token === null || token === void 0 ? void 0 : token.user;
+                        throw new AppError_1.default("Token expired at " + expiresAt + ".", 403);
+                    case 3:
                         _b = user;
                         return [4, bcrypt_1.hash(password, 8)];
-                    case 3:
+                    case 4:
                         _b.password = _c.sent();
                         if (!user.isConfirmed) {
                             user.isConfirmed = true;
                         }
                         return [4, this.repository.save(token)];
-                    case 4:
+                    case 5:
+                        _c.sent();
+                        return [4, this.repository.deleteById(token.id)];
+                    case 6:
                         _c.sent();
                         return [2];
                 }

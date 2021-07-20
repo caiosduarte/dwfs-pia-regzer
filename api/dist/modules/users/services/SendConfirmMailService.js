@@ -58,7 +58,7 @@ var SendConfirmMailService = (function () {
                     case 1:
                         user = _a.sent();
                         if (!user || !user.email) {
-                            throw new AppError_1.default("User/email does not exists!");
+                            throw new AppError_1.default("User/email does not exists", 404);
                         }
                         token = uuid_1.v4();
                         variables = {
