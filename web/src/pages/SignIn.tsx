@@ -105,16 +105,16 @@ export default function SignIn(props: any) {
                         setSubmitError("User/password invalid.");
                         break;
                     case 403:
-                        setSubmitError("Parâmetros incorretos.");
+                        setSubmitError("Wrong parameters.");
                         break;
                     case 404:
-                        setSubmitError("Parâmetros incorretos.");
+                        setSubmitError("Wrong parameters.");
                         break;
                     case 500:
                         setSubmitError("App error. Try later.");
                         break;
                     default:
-                        setSubmitError("Error to send data.");
+                        setSubmitError("Error to send data. Try again.");
                 }
             }
 

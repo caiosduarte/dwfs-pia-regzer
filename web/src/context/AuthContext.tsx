@@ -127,7 +127,13 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         }
     }, []);
 
-    async function enter({ token, refreshToken, user }: any) {
+    async function enter({ token, refreshToken, user }: any) {}
+
+    async function signIn(params: ISignInCredentials) {
+        const { data } = await api.post("sessions", params);
+
+        const { token, refreshToken, user } = data;
+
         setUser(user);
 
         setIsNewUser(false);
@@ -143,27 +149,22 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         authChannel.current.postMessage("signIn");
     }
 
-    async function signIn(params: ISignInCredentials) {
-        const { data } = await api.post("sessions", params);
-
-        await enter(data);
-    }
-
     async function checkIn(params: IIds) {
+        const email = params.email;
         try {
-            const { data } = await api.post("sessions", params);
-            await enter(data);
+            api.defaults.headers["Authorization"] = {};
+            setIsNewUser(false);
+            setUser(undefined);
+            const { data } = await api.get(`sessions?email=${email}`);
+            history.push("/sign-in", { emailCheckIn: email });
         } catch (err) {
             const { status } = err.response;
-            if (status === 401) {
-                setIsNewUser(false);
-                setUser(undefined);
-            } else if (status === 404) {
+            if (status === 404) {
                 // 404 - user não existe
                 setIsNewUser(true);
                 setUser(undefined);
-                history.push("/sign-up", { emailCheckIn: params.email });
-            } else {
+                history.push("/sign-up", { emailCheckIn: email });
+            } else if (status != 401 || status != 403) {
                 throw err;
             }
         }
