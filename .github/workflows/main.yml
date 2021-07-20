@@ -1,65 +1,64 @@
 name: CI
 
 on:
-  push:
-    branches: [ master ]
+    push:
+        branches: [master]
 
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  api_deploy:
-    name: Build API
-    
-    runs-on: ubuntu-latest
+    api_deploy:
+        name: Build API
 
-    defaults:
-      run:
-        shell: bash
-        working-directory: api
+        runs-on: ubuntu-latest
 
-    env:
-      NODE_ENV: production
-        
-    steps:
-      - uses: actions/checkout@v2
+        defaults:
+            run:
+                shell: bash
+                working-directory: api
 
-      - name: Setup Nodejs 14.x
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14.x
-          
+        env:
+            NODE_ENV: production
 
+        steps:
+            - uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: yarn
+            - name: Setup Nodejs 14.x
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 14.x
 
-      - name: Build
-        run: |
-          cd api
-          yarn build
+            - name: Install dependencies
+              run: |
+                  echo $NODE_ENV
+                  pwd
+                  yarn
 
-      - name: Copy files with ssh key
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.KEY }}
-          source: "api,!node_modules,!.vscode,!docs,!old,!web"
-          target: "~/regzer_api"
+            - name: Build
+              run: |
+                  pwd
+                  ls -lah
+                  yarn build
 
-      - name: "Update API: modules, migrations and app process"
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.KEY }}
-          script: |
-            cd ~/regzer_api/api
-            yarn
-            ./node_modules/typeorm/cli.js migration:run
-            pm2 --update-env restart regzer_api
-          
-          
-  
+            - name: Copy files with ssh key
+              uses: appleboy/scp-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  port: ${{ secrets.PORT }}
+                  key: ${{ secrets.KEY }}
+                  source: "api,!node_modules,!.vscode,!docs,!old,!web"
+                  target: "~/regzer_api"
+
+            - name: "Update API: modules, migrations and app process"
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  port: ${{ secrets.PORT }}
+                  key: ${{ secrets.KEY }}
+                  script: |
+                      cd ~/regzer_api/
+                      yarn
+                      ./node_modules/typeorm/cli.js migration:run
+                      pm2 --update-env restart regzer_api
