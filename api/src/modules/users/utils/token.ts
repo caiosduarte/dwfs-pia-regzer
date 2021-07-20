@@ -55,26 +55,3 @@ export const isRefreshTokenValid = (
         hasIdValid(ids, refreshToken.token)
     );
 };
-
-export function getTokenFromRequest(request: Request): string | undefined {
-    const valueInBody = () => {
-        const token =
-            request.body.token ||
-            request.query.token ||
-            request.headers["x-access-token"] ||
-            request.headers["x-access"];
-        if (token) {
-            return String(token);
-        }
-    };
-
-    const valueInAuthorizationBeared = () => {
-        const authorization = request.headers.authorization;
-        if (authorization) {
-            const [, token] = authorization.split(" ");
-            return token;
-        }
-    };
-
-    return valueInAuthorizationBeared() || valueInBody();
-}

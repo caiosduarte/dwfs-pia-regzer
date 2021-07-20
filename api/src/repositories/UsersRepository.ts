@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+import { getRepository, IsNull, Not, Repository } from "typeorm";
 import ICreateUserDTO from "../modules/users/dtos/ICreateUserDTO";
 import User from "../entities/User";
 import {
@@ -6,8 +6,6 @@ import {
     IUserQueryParams,
     ISearchParams,
 } from "../modules/users/repositories/IUsersRepository";
-import IUser from "../modules/users/models/IUser";
-import { Dated } from "../entities/Embedded";
 
 export default class UsersRepository implements IUsersRepository {
     readonly INSTANCE: IUsersRepository;
@@ -62,13 +60,14 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     // TODO: Acrescentar os demais parâmetros se não forem nulos
-    async findBy({
+    async findByIds({
+        id,
         email,
         document,
         cellphone,
     }: IUserQueryParams): Promise<User[] | undefined> {
         return await this.repository.find({
-            where: [{ email }, { document }, { cellphone }],
+            where: [{ id }, { email }, { document }, { cellphone }],
             relations: ["tokens"],
             cache: true,
         });

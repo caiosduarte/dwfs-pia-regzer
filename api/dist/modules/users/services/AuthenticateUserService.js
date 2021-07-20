@@ -62,7 +62,7 @@ var AuthenticateUserService = (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.usersRepository
-                            .findBy({ email: email, cellphone: cellphone, document: document })
+                            .findByIds({ email: email, cellphone: cellphone, document: document })
                             .then(function (result) { return result && result[0]; })];
                     case 1:
                         user = _b.sent();

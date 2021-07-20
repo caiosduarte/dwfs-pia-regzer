@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTokenFromRequest = exports.isRefreshTokenValid = exports.isTokenExpired = exports.verifyRefreshToken = exports.verifyToken = void 0;
+exports.isRefreshTokenValid = exports.isTokenExpired = exports.verifyRefreshToken = exports.verifyToken = void 0;
 var auth_1 = __importDefault(require("../config/auth"));
 var verifyJwt_1 = require("./verifyJwt");
 function verifyToken(token) {
@@ -38,23 +38,3 @@ var isRefreshTokenValid = function (ids, refreshToken) {
         hasIdValid(ids, refreshToken.token));
 };
 exports.isRefreshTokenValid = isRefreshTokenValid;
-function getTokenFromRequest(request) {
-    var valueInBody = function () {
-        var token = request.body.token ||
-            request.query.token ||
-            request.headers["x-access-token"] ||
-            request.headers["x-access"];
-        if (token) {
-            return String(token);
-        }
-    };
-    var valueInAuthorizationBeared = function () {
-        var authorization = request.headers.authorization;
-        if (authorization) {
-            var _a = authorization.split(" "), token = _a[1];
-            return token;
-        }
-    };
-    return valueInAuthorizationBeared() || valueInBody();
-}
-exports.getTokenFromRequest = getTokenFromRequest;

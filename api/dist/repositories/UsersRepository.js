@@ -125,13 +125,13 @@ var UsersRepository = (function () {
             });
         });
     };
-    UsersRepository.prototype.findBy = function (_a) {
-        var email = _a.email, document = _a.document, cellphone = _a.cellphone;
+    UsersRepository.prototype.findByIds = function (_a) {
+        var id = _a.id, email = _a.email, document = _a.document, cellphone = _a.cellphone;
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.repository.find({
-                            where: [{ email: email }, { document: document }, { cellphone: cellphone }],
+                            where: [{ id: id }, { email: email }, { document: document }, { cellphone: cellphone }],
                             relations: ["tokens"],
                             cache: true,
                         })];

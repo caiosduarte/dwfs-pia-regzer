@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,9 +52,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var AppError_1 = __importDefault(require("../errors/AppError"));
-var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
 var controllers_1 = require("../modules/users/controllers");
 var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
+var request_1 = require("../modules/users/utils/request");
+var request_2 = require("../modules/users/utils/request");
+var token_1 = require("../modules/users/utils/token");
 var DayjsProvider_1 = __importDefault(require("../providers/DateProvider/implementations/DayjsProvider"));
 var TokensRepository_1 = __importDefault(require("../repositories/TokensRepository"));
 var UsersRepository_1 = __importDefault(require("../repositories/UsersRepository"));
@@ -57,18 +70,51 @@ authenticateRoutes.post("/sessions", function (request, response) { return __awa
         return [2, controllers_1.authenticateUserController(usersRepo, tokensRepo, dateProvider).handle(request, response)];
     });
 }); });
-authenticateRoutes.get("/sessions", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, usersRepository, user;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+authenticateRoutes.get("/sessions", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, ids, id_1, repository, id, email, cellphone, document, user, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                id = request.params.id;
-                usersRepository = UsersRepository_1.default.getInstance();
-                return [4, usersRepository.findById(id)];
+                token = request_2.getTokenFromRequest(request);
+                ids = request.query;
+                if (!request_1.hasAnyId(ids)) {
+                    if (token) {
+                        id_1 = token_1.verifyToken(token).sub;
+                        ids = __assign(__assign({}, ids), { id: id_1 });
+                    }
+                    else {
+                        throw new AppError_1.default("No params.", 403);
+                    }
+                }
+                repository = UsersRepository_1.default.getInstance();
+                id = ids.id, email = ids.email, cellphone = ids.cellphone, document = ids.document;
+                if (!id) return [3, 2];
+                return [4, repository.findById(id)];
             case 1:
-                user = _a.sent();
+                _a = _b.sent();
+                return [3, 4];
+            case 2: return [4, repository
+                    .findByIds({ id: id, email: email, cellphone: cellphone, document: document })
+                    .then(function (users) { return users && users[0]; })
+                    .then(function (user) {
+                    if (!user)
+                        throw new AppError_1.default("User not found.", 404);
+                    var tokens = user === null || user === void 0 ? void 0 : user.tokens;
+                    var isValid = !!(tokens === null || tokens === void 0 ? void 0 : tokens.find(function (token) {
+                        return token_1.isRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, token);
+                    }));
+                    if (isValid) {
+                        return user;
+                    }
+                    throw new AppError_1.default("User unauthorized.", 401);
+                })];
+            case 3:
+                _a = _b.sent();
+                _b.label = 4;
+            case 4:
+                user = _a;
                 if (!user) {
-                    throw new AppError_1.default("User not found!", 404);
+                    throw new AppError_1.default("User not found.", 404);
                 }
                 return [2, response.json(UserMap_1.default.toDTO(user))];
         }

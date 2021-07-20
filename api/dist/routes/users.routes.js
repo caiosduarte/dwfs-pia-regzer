@@ -51,6 +51,7 @@ var controllers_1 = require("../modules/users/controllers");
 var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
 var ConfirmUserService_1 = __importDefault(require("../modules/users/services/ConfirmUserService"));
 var SendConfirmMailService_1 = __importDefault(require("../modules/users/services/SendConfirmMailService"));
+var request_1 = require("../modules/users/utils/request");
 var DayjsProvider_1 = __importDefault(require("../providers/DateProvider/implementations/DayjsProvider"));
 var TokensRepository_1 = __importDefault(require("../repositories/TokensRepository"));
 var UsersRepository_1 = __importDefault(require("../repositories/UsersRepository"));
@@ -79,31 +80,6 @@ usersRouter.get("/:id", ensureAuthenticated_1.ensureAuthenticated, function (req
         }
     });
 }); });
-var hasAnyId = function (_a) {
-    var email = _a.email, document = _a.document, cellphone = _a.cellphone, id = _a.id;
-    return !!email || !!document || !!cellphone || !!id;
-};
-var findUsers = function (query, repository) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, document, cellphone, start, offset, start_1, offset_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                email = query.email, document = query.document, cellphone = query.cellphone, start = query.start, offset = query.offset;
-                if (!hasAnyId(query)) return [3, 2];
-                return [4, repository.findBy({
-                        email: email,
-                        document: document,
-                        cellphone: cellphone,
-                    })];
-            case 1: return [2, _a.sent()];
-            case 2:
-                start_1 = Number(query.start);
-                offset_1 = Number(query.offset);
-                return [4, repository.find({ start: start_1, offset: offset_1 })];
-            case 3: return [2, _a.sent()];
-        }
-    });
-}); };
 usersRouter.get("/", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
     var repository, query, users;
     return __generator(this, function (_a) {
@@ -111,7 +87,7 @@ usersRouter.get("/", ensureAuthenticated_1.ensureAuthenticated, function (reques
             case 0:
                 repository = UsersRepository_1.default.getInstance();
                 query = request.query;
-                return [4, findUsers(query, repository).then(function (users) {
+                return [4, request_1.findUsers(query, repository).then(function (users) {
                         return users === null || users === void 0 ? void 0 : users.reduce(function (dtos, user) { return __spreadArray(__spreadArray([], dtos), [
                             UserMap_1.default.toDTO(user),
                         ]); }, []);
@@ -131,7 +107,7 @@ usersRouter.post("/confirm", function (request, response) { return __awaiter(voi
         switch (_a.label) {
             case 0:
                 email = request.body.email;
-                if (!hasAnyId({ email: email })) return [3, 2];
+                if (!request_1.hasAnyId({ email: email })) return [3, 2];
                 usersRepository = UsersRepository_1.default.getInstance();
                 tokensRepository = TokensRepository_1.default.getInstance();
                 dateProvider = DayjsProvider_1.default.getInstance();

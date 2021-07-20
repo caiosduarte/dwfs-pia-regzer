@@ -8,14 +8,17 @@ import IUser from "../modules/users/models/IUser";
 import { IUsersRepository } from "../modules/users/repositories/IUsersRepository";
 import ConfirmUserService from "../modules/users/services/ConfirmUserService";
 import SendConfirmMailService from "../modules/users/services/SendConfirmMailService";
+import {
+    findUsers,
+    hasAnyId,
+    IUserSearch,
+} from "../modules/users/utils/request";
 
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
 
 import TokensRepository from "../repositories/TokensRepository";
 import UsersRepository from "../repositories/UsersRepository";
 import mailProvider from "../utils/mailProvider";
-
-import { getTokenFromRequest } from "../modules/users/utils/token";
 
 const usersRouter = Router();
 
@@ -45,41 +48,10 @@ usersRouter.get("/:id", ensureAuthenticated, async (request, response) => {
     return response.json(UserMap.toDTO(user));
 });
 
-interface IIDs {
-    email?: string;
-    document?: string;
-    cellphone?: string;
-    id?: string;
-}
-
-interface ISearch extends IIDs {
-    offset?: string;
-    start?: string;
-}
-
-const hasAnyId = ({ email, document, cellphone, id }: IIDs) => {
-    return !!email || !!document || !!cellphone || !!id;
-};
-
-const findUsers = async (query: ISearch, repository: IUsersRepository) => {
-    const { email, document, cellphone, start, offset } = query;
-    if (hasAnyId(query)) {
-        return await repository.findBy({
-            email,
-            document,
-            cellphone,
-        });
-    } else {
-        const start = Number(query.start);
-        const offset = Number(query.offset);
-        return await repository.find({ start, offset });
-    }
-};
-
 usersRouter.get("/", ensureAuthenticated, async (request, response) => {
     const repository = UsersRepository.getInstance();
 
-    const query = request.query as ISearch;
+    const query = request.query as IUserSearch;
 
     const users = await findUsers(query, repository).then((users) =>
         users?.reduce(

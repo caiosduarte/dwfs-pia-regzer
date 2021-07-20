@@ -42,7 +42,7 @@ class AuthenticateUserService {
         remember,
     }: ICredentials & { remember: boolean }): Promise<ITokenResponseDTO> {
         const user = await this.usersRepository
-            .findBy({ email, cellphone, document })
+            .findByIds({ email, cellphone, document })
             .then((result) => result && result[0]);
 
         if (!user) {
