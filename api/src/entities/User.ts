@@ -21,14 +21,14 @@ class User implements IUser {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ nullable: true })
     document: string;
 
     @Column()
     @IsEmail()
     email: string;
 
-    @Column()
+    @Column({ nullable: true })
     cellphone: string;
 
     @Column()

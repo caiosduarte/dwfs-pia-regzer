@@ -32,7 +32,7 @@ var User = (function () {
         __metadata("design:type", String)
     ], User.prototype, "name", void 0);
     __decorate([
-        typeorm_1.Column(),
+        typeorm_1.Column({ nullable: true }),
         __metadata("design:type", String)
     ], User.prototype, "document", void 0);
     __decorate([
@@ -41,7 +41,7 @@ var User = (function () {
         __metadata("design:type", String)
     ], User.prototype, "email", void 0);
     __decorate([
-        typeorm_1.Column(),
+        typeorm_1.Column({ nullable: true }),
         __metadata("design:type", String)
     ], User.prototype, "cellphone", void 0);
     __decorate([
