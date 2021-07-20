@@ -47,7 +47,7 @@ jobs:
                   username: ${{ secrets.USERNAME }}
                   port: ${{ secrets.PORT }}
                   key: ${{ secrets.KEY }}
-                  source: "api,!node_modules,!.vscode,!docs,!old,!web"
+                  source: "./api/.,!./api/node_modules,!./api/.vscode,!docs,!old,!web"
                   target: "~/regzer_api"
 
             - name: "Update API: modules, migrations and app process"
@@ -62,3 +62,4 @@ jobs:
                       yarn
                       ./node_modules/typeorm/cli.js migration:run
                       pm2 --update-env restart regzer_api
+                      echo $NODE_ENV
