@@ -19,7 +19,7 @@ export default class SendConfirmMailService {
         const user = await this.usersRepository.findByEmail(email);
 
         if (!user || !user.email) {
-            throw new AppError("User/email does not exists!");
+            throw new AppError("User/email does not exists", 404);
         }
 
         const token = uuidV4();
