@@ -113,9 +113,7 @@ export function PasswordReset(props: any) {
             !!submitError && (
                 <p>
                     {submitError}{" "}
-                    <LinkWrapper to="/password-forgot">
-                        Clique solicitar novamente
-                    </LinkWrapper>
+                    <LinkWrapper to="/password-forgot">Ask again!</LinkWrapper>
                     {"."}
                 </p>
             )
@@ -138,17 +136,11 @@ export function PasswordReset(props: any) {
         } catch (error) {
             const status = error.response?.status;
             switch (status) {
-                case 204:
-                    setSubmitError("No content.");
-                    break;
                 case 403:
-                    setSubmitError("Tempo para mudar a senha expirado.");
-                    break;
-                case 500:
-                    setSubmitError("Erro na aplicação.");
+                    setSubmitError("Request expired. Try again!");
                     break;
                 default:
-                    setSubmitError("Erro ao enviar os dados.");
+                    setSubmitError(error.response?.data.message);
             }
 
             console.error(
