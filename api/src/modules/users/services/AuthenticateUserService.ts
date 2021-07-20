@@ -63,7 +63,7 @@ class AuthenticateUserService {
 
         const token = createToken(user);
 
-        const refreshTokenDays = remember ? 30 : 10;
+        const refreshTokenDays = remember ? 30 : 9;
 
         const refreshToken = createRefreshToken(user, refreshTokenDays);
 

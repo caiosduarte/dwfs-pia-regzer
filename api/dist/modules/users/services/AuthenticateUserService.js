@@ -84,7 +84,7 @@ var AuthenticateUserService = (function () {
                         _b.label = 4;
                     case 4:
                         token = createJwt_1.createToken(user);
-                        refreshTokenDays = remember ? 30 : 10;
+                        refreshTokenDays = remember ? 30 : 9;
                         refreshToken = createJwt_1.createRefreshToken(user, refreshTokenDays);
                         this.tokensRepository.create({
                             userId: user.id,
