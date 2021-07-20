@@ -3,6 +3,7 @@ import AppError from "../../../errors/AppError";
 import IUserResponseDTO from "../dtos/IUserResponseDTO";
 import UserMap from "../mappers/UserMap";
 import ITokensRepository from "../repositories/ITokensRepository";
+import { IUsersRepository } from "../repositories/IUsersRepository";
 import { isTokenExpired } from "../utils/token";
 
 interface IRequest {
@@ -21,17 +22,15 @@ export default class ResetPasswordService {
         }
 
         const expiresAt = token.expiresAt;
-
-        // remove o token antigo
-        await this.repository.deleteById(token.id);
+        const user = token?.user;
 
         // verifica se token expirado
 
         if (isTokenExpired(expiresAt)) {
+            // remove o token antigo
+            await this.repository.deleteById(token.id);
             throw new AppError(`Token expired at ${expiresAt}.`, 403);
         }
-
-        const user = token?.user;
 
         // atualiza o password
         user.password = await hash(password, 8);
@@ -42,5 +41,7 @@ export default class ResetPasswordService {
 
         // salva a senha do usuário
         await this.repository.save(token);
+
+        await this.repository.deleteById(token.id);
     }
 }
