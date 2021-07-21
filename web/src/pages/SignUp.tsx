@@ -43,6 +43,7 @@ export function SignUp(props: any) {
     const { signUp, isConfirmed } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
     const [confirmation, setConfirmation] = useState<string>();
+    const [messageComponent, setMessageComponent] = useState<JSX.Element>();
     const { formState, register, handleSubmit, reset, clearErrors, getValues } =
         useForm<{
             name: string;
@@ -73,20 +74,26 @@ export function SignUp(props: any) {
         return (
             !!confirmation && (
                 <>
-                    {confirmation}{" "}
-                    <LinkWrapper to="/sign-in">Click to sign in.</LinkWrapper>
+                    {confirmation} {" " && messageComponent}
                 </>
             )
         );
     };
 
     const getSubmitErrorMessage = () => {
-        return !!submitError && <p>{submitError}</p>;
+        return (
+            !!submitError && (
+                <>
+                    {submitError} {" " && messageComponent}
+                </>
+            )
+        );
     };
 
     const handleSignUp = async (values: any) => {
         try {
             setSubmitError(undefined);
+            setMessageComponent(undefined);
 
             await signUp(values);
 
@@ -102,19 +109,30 @@ export function SignUp(props: any) {
                             ? "Check your email for a link to confirm your registration. If it doesn’t appear within a few minutes, check your spam folder."
                             : "Your registration is confirmed."
                     );
+                    setMessageComponent(
+                        <LinkWrapper to="/sign-in">Sign in.</LinkWrapper>
+                    );
                 });
         } catch (error) {
             const status = error.response?.status;
 
             switch (status) {
                 case 403:
+                    setMessageComponent(
+                        <LinkWrapper to="/sign-in">
+                            Click to sign in.
+                        </LinkWrapper>
+                    );
                     setSubmitError("This email is already been used.");
+
                     break;
                 case 500:
                     setSubmitError("App error. Try later.");
                     break;
                 default:
-                    setSubmitError("Error to send data.");
+                    setSubmitError(
+                        error.response?.data.message || "Error to send data."
+                    );
             }
 
             console.error(

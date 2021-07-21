@@ -9,12 +9,14 @@ import {
     Link,
     makeStyles,
     TextField,
+    Tooltip,
     Typography,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
-import { useContext } from "react";
+import { ReactElement, useContext } from "react";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm, FieldError } from "react-hook-form";
+import Icon from "@material-ui/core/Icon";
 
 import { Copyright } from "../components/Copyright";
 
@@ -62,6 +64,10 @@ export default function Confirm(props: any) {
 
     const [submitError, setSubmitError] = useState<string>();
 
+    const [confirmMessage, setConfirmMessage] = useState<string>();
+
+    const [messageComponent, setMessageComponent] = useState<JSX.Element>();
+
     const params = queryParams(props.location.search) as IIDs;
 
     const hash: string = props.match.params?.hash;
@@ -80,10 +86,31 @@ export default function Confirm(props: any) {
         }
     }, []);
 
-    const handleErrors = async (status: number) => {
+    const getSubmitErrorMessage = () => {
+        return (
+            submitError && (
+                <>
+                    {submitError} {" " && messageComponent}
+                </>
+            )
+        );
+    };
+
+    const getConfirmMessage = () => {
+        return (
+            confirmMessage && (
+                <>
+                    {confirmMessage} {" " && messageComponent}
+                </>
+            )
+        );
+    };
+
+    const handleErrors = async (status: number, originalMessage?: string) => {
         switch (status) {
             case 401:
                 setSubmitError("Confirmation expired.");
+                setMessageComponent(tokenExpired);
                 break;
             case 403:
                 setSubmitError("User already confirmed.");
@@ -93,37 +120,20 @@ export default function Confirm(props: any) {
                 setSubmitError("App error. Try later.");
                 break;
             default:
-                setSubmitError("Error to send data.");
+                setSubmitError(originalMessage || "Error to send data.");
         }
     };
 
     const handleSend: SubmitHandler<IFormData> = async (values) => {
         try {
             setSubmitError(undefined);
+            setMessageComponent(undefined);
 
             const { ids: email } = values;
 
             await api.patch(`users/confirm?token=${hash}`, { email });
-        } catch (error) {
-            const status = error.response?.status;
 
-            await handleErrors(status);
-
-            console.error(
-                "/Confirm.handleConfirm => status %d, %o",
-                status,
-                error.response?.data
-            );
-        }
-    };
-
-    const handleResend: SubmitHandler<IFormData> = async (values) => {
-        try {
-            setSubmitError(undefined);
-
-            const { ids: email } = values;
-
-            await api.post(`users/confirm`, { email });
+            setConfirmMessage("Registration confirmed.");
         } catch (error) {
             const status = error.response?.status;
 
@@ -137,18 +147,51 @@ export default function Confirm(props: any) {
         }
     };
 
-    const getSubmitErrorFromSend = () => {
-        return (
-            !!submitError && (
-                <>
-                    {submitError}{" "}
-                    <Button onClick={handleSubmit(handleResend)}>
-                        Resend confirm mail
-                    </Button>
-                </>
-            )
-        );
+    const handleResend: SubmitHandler<IFormData> = async (values) => {
+        try {
+            setSubmitError(undefined);
+            setMessageComponent(undefined);
+
+            const { ids: email } = values;
+
+            await api.post(`users/confirm`, { email });
+
+            setConfirmMessage(
+                "Check your email for a link to confirm your registration. If it doesn’t appear within a few minutes, check your spam folder."
+            );
+        } catch (error) {
+            const status = error.response?.status;
+
+            handleErrors(status, error.response?.data.message);
+
+            console.error(
+                "/Confirm.handleConfirm => status %d, %o",
+                status,
+                error.response?.data
+            );
+        }
     };
+
+    const tokenExpired = (
+        <>
+            {submitError}{" "}
+            <Tooltip
+                title="Click to resend confirm email"
+                aria-label="resend confirm email"
+                interactive
+            >
+                <Button
+                    variant="contained"
+                    color="default"
+                    size="small"
+                    endIcon={<Icon>send</Icon>}
+                    onClick={handleSubmit(handleResend)}
+                >
+                    Resend
+                </Button>
+            </Tooltip>
+        </>
+    );
 
     return (
         <Container component="main" maxWidth="xs">
@@ -186,7 +229,8 @@ export default function Confirm(props: any) {
                         />
 
                         <FormHelperText id="helper-text">
-                            {getSubmitErrorFromSend() ||
+                            {getSubmitErrorMessage() ||
+                                getConfirmMessage() ||
                                 "Confirm your registration by email."}
                         </FormHelperText>
                         <SubmitButton
