@@ -44,6 +44,7 @@ import {
 import LinkWrapper from "../../components/LinkWrapper";
 import { mainListItems, secondaryListItems } from "./listItem";
 import { AuthContext } from "../../context/AuthContext";
+import Checkout from "./Checkout";
 
 const drawerWidth = 240;
 
@@ -133,7 +134,7 @@ export default function Dashboard() {
 
     const validRoles = ["administrator"];
 
-    const userIsAdmin = useCan({ roles: ["administrator"] });
+    const userIsAdmin = useCan({ roles: validRoles });
 
     const { path, url } = useRouteMatch();
 
@@ -151,7 +152,7 @@ export default function Dashboard() {
 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-    const dash = (
+    return (
         <div className={classes.root}>
             <CssBaseline />
             <AppBar
@@ -159,20 +160,20 @@ export default function Dashboard() {
                 className={clsx(classes.appBar, open && classes.appBarShift)}
             >
                 <Toolbar className={classes.toolbar} color="primary">
-                    {/* <Can roles={validRoles}> */}
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        className={clsx(
-                            classes.menuButton,
-                            open && classes.menuButtonHidden
-                        )}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    {/* </Can> */}
+                    <Can roles={validRoles}>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleDrawerOpen}
+                            className={clsx(
+                                classes.menuButton,
+                                open && classes.menuButtonHidden
+                            )}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Can>
                     <Typography
                         component="h1"
                         variant="h6"
@@ -220,30 +221,30 @@ export default function Dashboard() {
                     </Tooltip>
                 </Toolbar>
             </AppBar>
-            {/* <Can roles={validRoles}> */}
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: clsx(
-                        classes.drawerPaper,
-                        !open && classes.drawerPaperClose
-                    ),
-                }}
-                open={open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
+            <Can roles={validRoles}>
+                <Drawer
+                    variant="permanent"
+                    classes={{
+                        paper: clsx(
+                            classes.drawerPaper,
+                            !open && classes.drawerPaperClose
+                        ),
+                    }}
+                    open={open}
+                >
+                    <div className={classes.toolbarIcon}>
+                        <IconButton onClick={handleDrawerClose}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </div>
 
-                <Divider />
+                    <Divider />
 
-                <List>{mainListItems}</List>
-                <Divider />
-                <List>{secondaryListItems}</List>
-            </Drawer>
-            {/* </Can> */}
+                    <List>{mainListItems}</List>
+                    <Divider />
+                    <List>{secondaryListItems}</List>
+                </Drawer>
+            </Can>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
@@ -288,6 +289,6 @@ export default function Dashboard() {
             </main>
         </div>
     );
-    return dash;
-    //return userIsAdmin ? dash : <Checkout />;
+
+    // return userIsAdmin ? dash : <Checkout />;
 }

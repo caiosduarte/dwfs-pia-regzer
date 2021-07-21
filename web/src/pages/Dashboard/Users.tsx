@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import Link from "@material-ui/core/Link";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+    makeStyles,
+    withStyles,
+    Theme,
+    createStyles,
+} from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -14,6 +19,28 @@ import Icon from "@material-ui/core/Icon";
 import { useEffect } from "react";
 import { api } from "../../services/api";
 
+const StyledTableCell = withStyles((theme: Theme) =>
+    createStyles({
+        head: {
+            backgroundColor: theme.palette.common.black,
+            color: theme.palette.common.white,
+        },
+        body: {
+            fontSize: 14,
+        },
+    })
+)(TableCell);
+
+const StyledTableRow = withStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            "&:nth-of-type(odd)": {
+                backgroundColor: theme.palette.action.hover,
+            },
+        },
+    })
+)(TableRow);
+
 interface IIds {
     id: string;
     email?: string;
@@ -26,7 +53,6 @@ interface IUser extends IIds {
 
     isValid?: boolean;
     isConfirmed?: boolean;
-    // expiresAt?: Date;
 }
 
 function preventDefault(event: any) {
@@ -113,7 +139,7 @@ export default function Users({
                 </TableHead>
                 <TableBody>
                     {rows.map((row, key) => (
-                        <TableRow key={row.id}>
+                        <TableRow key={row.id} color="default">
                             <TableCell>
                                 <LinkWrapper to={`/users/${row.id}`}>
                                     {row.name}
