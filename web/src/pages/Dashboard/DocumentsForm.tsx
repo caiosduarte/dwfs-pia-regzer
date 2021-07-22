@@ -9,56 +9,43 @@ export default function DocumentsForm() {
     return (
         <React.Fragment>
             <Typography variant="h6" gutterBottom>
-                Payment method
+                Documents & Certifications to send
             </Typography>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                     <TextField
                         required
-                        id="cardName"
-                        label="Name on card"
+                        id="id"
+                        label="Identity"
                         fullWidth
-                        autoComplete="cc-name"
+                        autoComplete="rg"
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField
                         required
-                        id="cardNumber"
-                        label="Card number"
+                        id="cpf"
+                        label="CPF"
                         fullWidth
-                        autoComplete="cc-number"
+                        autoComplete="cpf"
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField
                         required
-                        id="expDate"
-                        label="Expiry date"
+                        id="id"
+                        label="Identity"
                         fullWidth
-                        autoComplete="cc-exp"
+                        autoComplete="rg"
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField
                         required
-                        id="cvv"
-                        label="CVV"
-                        helperText="Last three digits on signature strip"
+                        id="cpf"
+                        label="CPF"
                         fullWidth
-                        autoComplete="cc-csc"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                color="secondary"
-                                name="saveCard"
-                                value="yes"
-                            />
-                        }
-                        label="Remember credit card details for next time"
+                        autoComplete="cpf"
                     />
                 </Grid>
             </Grid>

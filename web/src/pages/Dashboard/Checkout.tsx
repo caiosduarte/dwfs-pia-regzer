@@ -9,6 +9,7 @@ import AddressForm from "./AddressForm";
 import DocumentsForm from "./DocumentsForm";
 import Review from "./Review";
 import Title from "./Title";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const steps = ["Address", "Documents", "Review"];
+const steps = ["Documents", "Info", "Contacts", "Address", "Review"];
 
 function getSteps() {
     return steps;
@@ -37,10 +38,14 @@ function getSteps() {
 function getStepContent(step: number) {
     switch (step) {
         case 0:
-            return <AddressForm />;
-        case 1:
             return <DocumentsForm />;
+        case 1:
+            return <AddressForm />;
         case 2:
+            return <AddressForm />;
+        case 3:
+            return <AddressForm />;
+        case 4:
             return <Review />;
         default:
             throw new Error("Unknown step");
@@ -172,15 +177,26 @@ export default function Checkout() {
             <div>
                 {allStepsCompleted() ? (
                     <div>
-                        <Typography className={classes.instructions}>
-                            All steps completed - you&apos;re finished
-                        </Typography>
-                        <Button onClick={handleReset}>Reset</Button>
+                        <Grid container direction="row" justifyContent="center">
+                            <Typography className={classes.instructions}>
+                                All steps completed - you&apos;re finished
+                            </Typography>
+                        </Grid>
+                        <Grid container direction="row" justifyContent="center">
+                            <Button onClick={handleReset}>Reset</Button>
+                        </Grid>
                     </div>
                 ) : (
-                    <div>
+                    <>
                         {getStepContent(activeStep)}
-                        <div>
+                        <br />
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="baseline"
+                            justifyContent="center"
+                            spacing={2}
+                        >
                             <Button
                                 disabled={activeStep === 0}
                                 onClick={handleBack}
@@ -223,11 +239,11 @@ export default function Checkout() {
                                     >
                                         {completedSteps() === totalSteps() - 1
                                             ? "Finish"
-                                            : "Complete Step"}
+                                            : "Complete"}
                                     </Button>
                                 ))}
-                        </div>
-                    </div>
+                        </Grid>
+                    </>
                 )}
             </div>
         </React.Fragment>
