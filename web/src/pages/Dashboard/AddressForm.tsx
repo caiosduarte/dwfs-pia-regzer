@@ -11,7 +11,17 @@ export default function AddressForm() {
             <Typography variant="h6" gutterBottom>
                 Address
             </Typography>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
+                <Grid item xs={3}>
+                    <TextField
+                        required
+                        id="zip"
+                        name="zip"
+                        label="Zip / Postal code"
+                        fullWidth
+                        autoComplete="postal-code"
+                    />
+                </Grid>
                 <Grid item xs={12}>
                     <TextField
                         required
@@ -22,7 +32,7 @@ export default function AddressForm() {
                         autoComplete="address"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={8} sm={6}>
                     <TextField
                         required
                         id="city"
@@ -32,7 +42,7 @@ export default function AddressForm() {
                         autoComplete="city"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={6} sm={3}>
                     <TextField
                         id="state"
                         name="state"
@@ -40,17 +50,8 @@ export default function AddressForm() {
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="zip"
-                        name="zip"
-                        label="Zip / Postal code"
-                        fullWidth
-                        autoComplete="postal-code"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+
+                <Grid item xs={6} sm={3}>
                     <TextField
                         required
                         id="country"
