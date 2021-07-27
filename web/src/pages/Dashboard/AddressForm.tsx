@@ -18,7 +18,6 @@ export default function AddressForm() {
                         id="zip"
                         name="zip"
                         label="Zip / Postal code"
-                        fullWidth
                         autoComplete="postal-code"
                     />
                 </Grid>

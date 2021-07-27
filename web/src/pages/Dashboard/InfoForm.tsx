@@ -50,9 +50,10 @@ export default function InfoForm() {
                         autoComplete="name"
                     />
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid item xs={3}>
                     <TextField
                         required
+                        fullWidth
                         id="birthday"
                         label="Birthday"
                         type="date"
@@ -62,8 +63,8 @@ export default function InfoForm() {
                         }}
                     />
                 </Grid>
-                <Grid item xs={6} sm={3}>
-                    <FormControl component="fieldset">
+                <Grid item xs={3}>
+                    <FormControl component="fieldset" fullWidth>
                         <FormLabel component="legend">Gender</FormLabel>
                         <RadioGroup
                             row
@@ -90,6 +91,23 @@ export default function InfoForm() {
                         </RadioGroup>
                     </FormControl>
                 </Grid>
+
+                <Grid item xs={6}>
+                    <TextField
+                        id="mothersName"
+                        name="mothersName"
+                        label="Mother's Name"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="fathersName"
+                        name="fathersName"
+                        label="Father's Name"
+                        fullWidth
+                    />
+                </Grid>
                 <Grid item xs={6} sm={3}>
                     {/* <FormControl
                         // className={classes.formControl}
@@ -115,7 +133,8 @@ export default function InfoForm() {
                     </FormControl> */}
 
                     <FormControl
-                    // className={classes.formControl}
+                        fullWidth
+                        // className={classes.formControl}
                     >
                         <InputLabel htmlFor="ethnicity-label">
                             Ethnicity
@@ -125,7 +144,6 @@ export default function InfoForm() {
                             // onChange={handleChange}
                             // className={classes.selectEmpty}
                             displayEmpty
-                            autoWidth={false}
                             labelId="ethnicity-label"
                             id="ethnicity"
                             name="ethnicity"
@@ -149,24 +167,9 @@ export default function InfoForm() {
                     </FormControl>
                 </Grid>
                 <Grid item xs={6} sm={3}>
-                    <TextField
-                        id="mothersName"
-                        name="mothersName"
-                        label="Mother's Name"
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <TextField
-                        id="fathersName"
-                        name="fathersName"
-                        label="Father's Name"
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
                     <FormControl
-                    // className={classes.formControl}
+                        fullWidth
+                        // className={classes.formControl}
                     >
                         <InputLabel htmlFor="civilStatus-label">
                             Civil Status
