@@ -13,6 +13,7 @@ export enum ALL_PERSON_TYPES {
 export enum GENDER {
     MASCULINO = "M",
     FEMININO = "F",
+    OUTRO = "O",
 }
 
 export enum CIVIL_STATUS {
