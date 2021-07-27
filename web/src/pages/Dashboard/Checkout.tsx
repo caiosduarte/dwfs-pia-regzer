@@ -10,6 +10,7 @@ import DocumentsForm from "./DocumentsForm";
 import Review from "./Review";
 import Title from "./Title";
 import { Grid } from "@material-ui/core";
+import InfoForm from "./InfoForm";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -40,7 +41,7 @@ function getStepContent(step: number) {
         case 0:
             return <DocumentsForm />;
         case 1:
-            return <AddressForm />;
+            return <InfoForm />;
         case 2:
             return <AddressForm />;
         case 3:

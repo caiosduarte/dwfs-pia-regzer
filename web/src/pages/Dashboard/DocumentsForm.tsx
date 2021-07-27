@@ -30,24 +30,6 @@ export default function DocumentsForm() {
                         autoComplete="cpf"
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <TextField
-                        required
-                        id="id"
-                        label="Identity"
-                        fullWidth
-                        autoComplete="rg"
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <TextField
-                        required
-                        id="cpf"
-                        label="CPF"
-                        fullWidth
-                        autoComplete="cpf"
-                    />
-                </Grid>
             </Grid>
         </React.Fragment>
     );
