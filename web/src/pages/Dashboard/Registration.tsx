@@ -11,6 +11,7 @@ import Review from "./Review";
 import Title from "./Title";
 import { Grid } from "@material-ui/core";
 import InfoForm from "./InfoForm";
+import ContactsForm from "./ContactsForm";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,7 +44,7 @@ function getStepContent(step: number) {
         case 1:
             return <InfoForm />;
         case 2:
-            return <AddressForm />;
+            return <ContactsForm />;
         case 3:
             return <AddressForm />;
         case 4:

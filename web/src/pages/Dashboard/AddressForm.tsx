@@ -43,6 +43,7 @@ export default function AddressForm() {
                 </Grid>
                 <Grid item xs={6} sm={3}>
                     <TextField
+                        required
                         id="state"
                         name="state"
                         label="State/Province/Region"
