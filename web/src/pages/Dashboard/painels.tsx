@@ -3,7 +3,7 @@ import React from "react";
 import Chart from "./Chart";
 import Deposits from "./Deposit";
 import Users from "./Users";
-import Checkout from "./Checkout";
+import Registration from "./Registration";
 import Checkouts from "./Checkouts";
 
 type PainelProps = {
@@ -13,12 +13,12 @@ type PainelProps = {
     classesUser?: string[];
 };
 
-export function PainelCheckout({ isAdmin, classesContent }: PainelProps) {
+export function PainelRegistration({ isAdmin, classesContent }: PainelProps) {
     return (
         <Grid container spacing={1}>
             <Grid item xs={12}>
                 <Paper className={classesContent[0]}>
-                    <Checkout />
+                    <Registration />
                 </Paper>
             </Grid>
         </Grid>
@@ -47,7 +47,7 @@ export function PainelDashboard({ isAdmin, classesContent }: PainelProps) {
             </Grid>
         </Grid>
     ) : (
-        <PainelCheckout isAdmin classesContent={[classesContent[2]]} />
+        <PainelRegistration isAdmin classesContent={[classesContent[2]]} />
     );
 }
 

@@ -53,7 +53,7 @@ function getStepContent(step: number) {
     }
 }
 
-export default function Checkout() {
+export default function Registration() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState(new Set<number>());

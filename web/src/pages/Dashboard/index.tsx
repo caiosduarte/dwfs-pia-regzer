@@ -36,7 +36,7 @@ import { useCan } from "../../hooks/useCan";
 
 import {
     PainelCheckouts,
-    PainelCheckout,
+    PainelRegistration,
     PainelDashboard,
     PainelUsers,
 } from "./painels";
@@ -44,7 +44,7 @@ import {
 import LinkWrapper from "../../components/LinkWrapper";
 import { mainListItems, secondaryListItems } from "./listItem";
 import { AuthContext } from "../../context/AuthContext";
-import Checkout from "./Checkout";
+import Checkout from "./Registration";
 
 const drawerWidth = 240;
 
@@ -274,8 +274,8 @@ export default function Dashboard() {
                             />
                         </Route>
 
-                        <Route path="/dashboard/checkout">
-                            <PainelCheckout
+                        <Route path="/dashboard/registration">
+                            <PainelRegistration
                                 isAdmin={userIsAdmin}
                                 classesContent={[classes.paper]}
                             />

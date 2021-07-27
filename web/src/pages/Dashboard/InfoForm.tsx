@@ -10,9 +10,11 @@ import {
     FormLabel,
     InputLabel,
     makeStyles,
+    MenuItem,
     NativeSelect,
     Radio,
     RadioGroup,
+    Select,
     Theme,
 } from "@material-ui/core";
 
@@ -22,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
             width: 200,
+        },
+        selectEmpty: {
+            marginTop: theme.spacing(2),
         },
     })
 );
@@ -85,8 +90,8 @@ export default function InfoForm() {
                         </RadioGroup>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <FormControl
+                <Grid item xs={6} sm={3}>
+                    {/* <FormControl
                         // className={classes.formControl}
                         error={false}
                     >
@@ -107,35 +112,87 @@ export default function InfoForm() {
                             <option value="kevin">Kevin</option>
                         </NativeSelect>
                         <FormHelperText>{}</FormHelperText>
+                    </FormControl> */}
+
+                    <FormControl
+                    // className={classes.formControl}
+                    >
+                        <InputLabel htmlFor="ethnicity-label">
+                            Ethnicity
+                        </InputLabel>
+                        <Select
+                            // value={ethnicity}
+                            // onChange={handleChange}
+                            // className={classes.selectEmpty}
+                            displayEmpty
+                            autoWidth={false}
+                            labelId="ethnicity-label"
+                            id="ethnicity"
+                            name="ethnicity"
+                            inputProps={{ "aria-label": "ethnicity" }}
+                        >
+                            <MenuItem value={"AFRODESCENDENTE"}>
+                                AFRODESCENDENTE
+                            </MenuItem>
+                            <MenuItem value={"BRANCO"}>BRANCO</MenuItem>
+                            <MenuItem value={"ASIÁTICO"}>ASIÁTICO</MenuItem>
+                            <MenuItem value={"AMERÍNDIO"}>AMERÍNDIO</MenuItem>
+                            <MenuItem value={"MULATO"}>MULATO</MenuItem>
+                            <MenuItem value={"MULTIRRACIAL/PARDO"}>
+                                MULTIRRACIAL/PARDO
+                            </MenuItem>
+                            <MenuItem value={"NÃO DECLARADA"}>
+                                NÃO DECLARADA
+                            </MenuItem>
+                        </Select>
+                        <FormHelperText>{}</FormHelperText>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={6} sm={3}>
                     <TextField
-                        id="state"
-                        name="state"
-                        label="State/Province/Region"
+                        id="mothersName"
+                        name="mothersName"
+                        label="Mother's Name"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                    <TextField
+                        id="fathersName"
+                        name="fathersName"
+                        label="Father's Name"
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="zip"
-                        name="zip"
-                        label="Zip / Postal code"
-                        fullWidth
-                        autoComplete="postal-code"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="country"
-                        name="country"
-                        label="Country"
-                        fullWidth
-                        autoComplete="country"
-                    />
+                    <FormControl
+                    // className={classes.formControl}
+                    >
+                        <InputLabel htmlFor="civilStatus-label">
+                            Civil Status
+                        </InputLabel>
+                        <Select
+                            // value={ethnicity}
+                            // onChange={handleChange}
+                            // className={classes.selectEmpty}
+                            displayEmpty
+                            labelWidth={13}
+                            labelId="civilStatus-label"
+                            id="civilStatus"
+                            name="civilStatus"
+                            inputProps={{ "aria-label": "civilStatus" }}
+                        >
+                            <MenuItem value={"SOLTEIRO"}>SOLTEIRO</MenuItem>
+                            <MenuItem value={"UNIÃO ESTÁVEL"}>
+                                UNIÃO ESTÁVEL
+                            </MenuItem>
+                            <MenuItem value={"CASADO"}>CASADO</MenuItem>
+                            <MenuItem value={"SEPARADO"}>SEPARADO</MenuItem>
+                            <MenuItem value={"DIVORCIADO"}>DIVORCIADO</MenuItem>
+                            <MenuItem value={"VIÚVO"}>VIÚVO</MenuItem>
+                        </Select>
+                        <FormHelperText>{}</FormHelperText>
+                    </FormControl>
                 </Grid>
             </Grid>
         </React.Fragment>

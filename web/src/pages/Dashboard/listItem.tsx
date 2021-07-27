@@ -52,7 +52,7 @@ export const mainListItems = (
 export const secondaryListItems = (
     <div>
         <ListSubheader inset>Saved reports</ListSubheader>
-        <LinkWrapper to="/dashboard/checkout">
+        <LinkWrapper to="/dashboard/registration">
             <ListItem button>
                 <ListItemIcon>
                     <LayersIcon />
