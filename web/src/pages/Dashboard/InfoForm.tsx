@@ -37,9 +37,9 @@ export default function InfoForm() {
     return (
         <React.Fragment>
             <Typography variant="h6" gutterBottom>
-                Info
+                Main Information
             </Typography>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                     <TextField
                         required

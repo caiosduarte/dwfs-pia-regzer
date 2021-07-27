@@ -7,12 +7,11 @@ export default function ContactsForm() {
     return (
         <React.Fragment>
             <Typography variant="h6" gutterBottom>
-                Contacts
+                Contacts & Social Media
             </Typography>
             <Grid container spacing={2}>
-                <Grid item xs={6} sm={3}>
+                <Grid item xs={4}>
                     <TextField
-                        required
                         id="telephone"
                         name="telephone"
                         autoComplete="telephone"
@@ -20,13 +19,21 @@ export default function ContactsForm() {
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid item xs={4}>
                     <TextField
-                        required
                         id="cellphone"
                         name="cellphone"
                         autoComplete="cellphone"
                         label="Cellphone"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <TextField
+                        id="email"
+                        name="email"
+                        autoComplete="email"
+                        label="Email Address"
                         fullWidth
                     />
                 </Grid>

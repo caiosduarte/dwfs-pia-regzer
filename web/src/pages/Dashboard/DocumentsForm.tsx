@@ -11,23 +11,29 @@ export default function DocumentsForm() {
             <Typography variant="h6" gutterBottom>
                 Documents & Certifications to send
             </Typography>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+            <Grid container spacing={2}>
+                <Grid item xs={4}>
                     <TextField
-                        required
                         id="id"
-                        label="Identity"
-                        fullWidth
                         autoComplete="rg"
+                        label="Identity (RG)"
+                        fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={4}>
                     <TextField
-                        required
                         id="cpf"
+                        autoComplete="cpf"
                         label="CPF"
                         fullWidth
-                        autoComplete="cpf"
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <TextField
+                        id="passport"
+                        autoComplete="passport"
+                        label="Passport"
+                        fullWidth
                     />
                 </Grid>
             </Grid>
