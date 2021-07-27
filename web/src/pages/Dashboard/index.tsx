@@ -41,10 +41,8 @@ import {
     PainelUsers,
 } from "./painels";
 
-import LinkWrapper from "../../components/LinkWrapper";
 import { mainListItems, secondaryListItems } from "./listItem";
 import { AuthContext } from "../../context/AuthContext";
-import Checkout from "./Registration";
 
 const drawerWidth = 240;
 
@@ -184,17 +182,22 @@ export default function Dashboard() {
                         Regzer
                     </Typography>
 
-                    <Tooltip
-                        title="Notifications"
-                        aria-label="notifications"
-                        interactive
-                    >
-                        <IconButton aria-label="notifications" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                    </Tooltip>
+                    <Can roles={validRoles}>
+                        <Tooltip
+                            title="Notifications"
+                            aria-label="notifications"
+                            interactive
+                        >
+                            <IconButton
+                                aria-label="notifications"
+                                color="inherit"
+                            >
+                                <Badge badgeContent={4} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
+                    </Can>
 
                     <Tooltip
                         title={!!user && (user.name || "User")}
