@@ -29,7 +29,7 @@ export function PainelRegistration({ isAdmin, classesContent }: PainelProps) {
 export function PainelDashboard({ isAdmin, classesContent }: PainelProps) {
     return isAdmin ? (
         <Grid container spacing={2}>
-            <Grid item xs={12} md={8} lg={9}>
+            {/* <Grid item xs={12} md={8} lg={9}>
                 <Paper className={classesContent[0]}>
                     <Chart />
                 </Paper>
@@ -39,7 +39,7 @@ export function PainelDashboard({ isAdmin, classesContent }: PainelProps) {
                 <Paper className={classesContent[1]}>
                     <Deposits />
                 </Paper>
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
                 <Paper className={classesContent[2]}>

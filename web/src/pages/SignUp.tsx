@@ -48,6 +48,8 @@ export function SignUp(props: any) {
         useForm<{
             name: string;
             email: string;
+            cellphone?: string;
+            document: string;
             password: string;
             confirmation: string;
         }>();
@@ -64,11 +66,6 @@ export function SignUp(props: any) {
             : !!field) || hasErrors;
 
     const classes = useStyles();
-
-    useEffect(() => {
-        console.log("Props => ", props);
-        // console.log("Props emailCheckIn => ", props.match.params?.emailCheckIn);
-    }, []);
 
     const getConfirmation = () => {
         return (
@@ -123,7 +120,9 @@ export function SignUp(props: any) {
                             Click to sign in.
                         </LinkWrapper>
                     );
-                    setSubmitError("This email is already been used.");
+                    setSubmitError(
+                        error.response.data.message || "User already exists."
+                    );
 
                     break;
                 case 500:
@@ -131,7 +130,7 @@ export function SignUp(props: any) {
                     break;
                 default:
                     setSubmitError(
-                        error.response?.data.message || "Error to send data."
+                        error.response.data.message || "Error to send data."
                     );
             }
 
@@ -172,11 +171,11 @@ export function SignUp(props: any) {
                                 error={isError("email")}
                                 helperText={errorMessage(errors.email)}
                                 {...register("email", {
-                                    required:
-                                        "O endereço de email é um campo obrigatório.",
+                                    required: "Email address is required.",
                                 })}
                             />
                         </Grid>
+
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
@@ -188,8 +187,36 @@ export function SignUp(props: any) {
                                 error={isError("name")}
                                 helperText={errorMessage(errors.name)}
                                 {...register("name", {
+                                    required: "Full name is required.",
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                fullWidth
+                                label="Cellphone"
+                                type="text"
+                                id="cellphone"
+                                autoComplete="cellphone"
+                                error={isError("cellphone")}
+                                helperText={errorMessage(errors.password)}
+                                {...register("cellphone")}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                label="Document: CPF/CNPJ/Passport"
+                                type="text"
+                                id="document"
+                                error={isError("document")}
+                                helperText={errorMessage(errors.confirmation)}
+                                {...register("document", {
                                     required:
-                                        "O nome completo é um campo obrigatório.",
+                                        "Any document is required: CPF or CNPJ or Passport.",
                                 })}
                             />
                         </Grid>
@@ -206,7 +233,7 @@ export function SignUp(props: any) {
                                 error={isError("password")}
                                 helperText={errorMessage(errors.password)}
                                 {...register("password", {
-                                    required: "A senha é obrigatória.",
+                                    required: "Password is required..",
                                 })}
                             />
                         </Grid>
@@ -221,17 +248,21 @@ export function SignUp(props: any) {
                                 error={isError("confirmation")}
                                 helperText={errorMessage(errors.confirmation)}
                                 {...register("confirmation", {
-                                    required: "A confirmação é obrigatória.",
+                                    required: "Confirm password is required.",
                                 })}
                             />
                         </Grid>
                     </Grid>
                     <FormControl fullWidth>
+                        {/* TODO: mudar a cor do texto de resposta ou colocar um ícone para diferenciar: error, warning e tip */}
                         <FormHelperText
                             id="helper-text"
                             margin="dense"
                             filled={true}
                             error={hasErrors}
+                            color={
+                                !hasErrors && getConfirmation() ? "primary" : ""
+                            }
                         >
                             {getSubmitErrorMessage() || getConfirmation()}
                         </FormHelperText>

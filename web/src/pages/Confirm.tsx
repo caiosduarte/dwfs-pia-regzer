@@ -26,6 +26,7 @@ import { api } from "../services/api";
 import { queryParams } from "../utils/queryParams";
 
 import { isUuid } from "../utils/uuid";
+import LinkWrapper from "../components/LinkWrapper";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -60,7 +61,8 @@ interface IFormData {
 export default function Confirm(props: any) {
     const { toPrivate, isConfirmed } = useContext(AuthContext);
 
-    const { formState, handleSubmit, register } = useForm<{ ids: string }>();
+    const { formState, handleSubmit, register, clearErrors, reset } =
+        useForm<{ ids: string }>();
 
     const [submitError, setSubmitError] = useState<string>();
 
@@ -133,7 +135,10 @@ export default function Confirm(props: any) {
 
             await api.patch(`users/confirm?token=${hash}`, { email });
 
-            setConfirmMessage("Registration confirmed.");
+            setConfirmMessage(`Registration confirmed by ${email}.`);
+
+            clearErrors();
+            reset();
         } catch (error) {
             const status = error.response?.status;
 
@@ -159,6 +164,9 @@ export default function Confirm(props: any) {
             setConfirmMessage(
                 "Check your email for a link to confirm your registration. If it doesn’t appear within a few minutes, check your spam folder."
             );
+
+            clearErrors();
+            reset();
         } catch (error) {
             const status = error.response?.status;
 
@@ -223,18 +231,23 @@ export default function Confirm(props: any) {
                             error={isError(formState.errors.ids)}
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
-                                required:
-                                    "O endereço de email é um campo obrigatório.",
+                                required: "Email address is required.",
                             })}
                         />
 
                         <FormHelperText id="helper-text">
-                            {getSubmitErrorMessage() ||
-                                getConfirmMessage() ||
+                            {getSubmitErrorMessage() || (
+                                    <>
+                                        {getConfirmMessage()}
+                                        <LinkWrapper to="/sign-in">
+                                            Sign in
+                                        </LinkWrapper>
+                                    </>
+                                ) ||
                                 "Confirm your registration by email."}
                         </FormHelperText>
                         <SubmitButton
-                            name={"Confirm"}
+                            label="Confirm"
                             isSubmitting={formState.isSubmitting}
                             isSubmitted={formState.isSubmitted}
                             isInvalid={!!formState.errors}
