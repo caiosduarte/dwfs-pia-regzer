@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "@material-ui/core/Link";
 import {
     makeStyles,
@@ -11,13 +11,12 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Title from "./Title";
+import Title from "../../components/Title";
 import LinkWrapper from "../../components/LinkWrapper";
-import { Button, Tooltip } from "@material-ui/core";
 
-import Icon from "@material-ui/core/Icon";
 import { useEffect } from "react";
 import { api } from "../../services/api";
+import { UserModal } from "../../components/UserModal";
 
 const StyledTableCell = withStyles((theme: Theme) =>
     createStyles({
@@ -41,22 +40,18 @@ const StyledTableRow = withStyles((theme: Theme) =>
     })
 )(TableRow);
 
-interface IIds {
+interface IIDs {
     id: string;
     email?: string;
     document?: string;
     cellphone?: string;
 }
 
-interface IUser extends IIds {
+interface IUser extends IIDs {
     name: string;
 
     isValid?: boolean;
     isConfirmed?: boolean;
-}
-
-function preventDefault(event: any) {
-    event.preventDefault();
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -71,6 +66,8 @@ type UsersProps = {
     pageSize?: number;
     checkBoxSelection?: boolean;
     classSeeMore?: string;
+    // onEdit?: (user: IUser) => void;
+    onEdit?: () => void;
 };
 
 export default function Users({
@@ -78,8 +75,19 @@ export default function Users({
     pageStart = 0,
     pageSize = 5,
     classSeeMore,
+    onEdit,
 }: UsersProps) {
     const [rows, setRows] = useState<IUser[]>([]);
+
+    const [isUserModalOpen, setUserModalOpen] = useState(false);
+
+    function handleOpenUserModal() {
+        setUserModalOpen(true);
+    }
+
+    function handleCloseUserModal() {
+        setUserModalOpen(false);
+    }
 
     const classes = useStyles();
 
@@ -141,9 +149,19 @@ export default function Users({
                     {rows.map((row, key) => (
                         <TableRow key={row.id} color="default">
                             <TableCell>
-                                <LinkWrapper to={`/users/${row.id}`}>
-                                    {row.name}
-                                </LinkWrapper>
+                                {onEdit ? (
+                                    <Link
+                                        href="#"
+                                        onClick={(event: FormEvent) => {
+                                            event.preventDefault();
+                                            setUserModalOpen(true);
+                                        }}
+                                    >
+                                        {row.name}
+                                    </Link>
+                                ) : (
+                                    row.name
+                                )}
                             </TableCell>
                             <TableCell>
                                 {row.email}
@@ -197,6 +215,10 @@ export default function Users({
                     </LinkWrapper>
                 </div>
             )}
+            <UserModal
+                isOpen={isUserModalOpen}
+                onRequestClose={() => setUserModalOpen(false)}
+            />
         </React.Fragment>
     );
 }

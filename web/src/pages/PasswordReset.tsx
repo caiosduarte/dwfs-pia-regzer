@@ -66,7 +66,7 @@ export function PasswordReset(props: any) {
 
     const [confirmation, setConfirmation] = useState<string | null>();
 
-    const { toAuthorized } = useContext(AuthContext);
+    const { toPublic } = useContext(AuthContext);
 
     const { formState, register, handleSubmit, reset, clearErrors } = useForm<{
         password: string;
@@ -93,7 +93,7 @@ export function PasswordReset(props: any) {
             isUuid(hash) ? "Sim" : "Não"
         );
         if (!isUuid(hash)) {
-            toAuthorized();
+            toPublic();
         }
     }, []);
 
@@ -220,7 +220,7 @@ export function PasswordReset(props: any) {
                             </p>
                         </FormHelperText>
                         <SubmitButton
-                            name="Change password"
+                            label="Change password"
                             isFullWidth={true}
                             className={classes.submit}
                             isSubmitting={formState.isSubmitting}

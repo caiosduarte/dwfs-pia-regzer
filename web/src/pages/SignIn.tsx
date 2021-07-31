@@ -14,6 +14,7 @@ import {
     Typography,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
+import { useEffect } from "react";
 import { useState, useContext } from "react";
 import {
     SubmitHandler,
@@ -28,6 +29,7 @@ import { SubmitButton } from "../components/SubmitButton";
 import { AuthContext } from "../context/AuthContext";
 import { api } from "../services/api";
 import { isUuid } from "../utils/uuid";
+import { withGuest } from "../utils/withGuest";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -58,7 +60,7 @@ interface IFormData {
 export default function SignIn(props: any) {
     const hash = props.match.params?.hash;
     const isConfirmation = isUuid(hash);
-    const { signIn, checkIn, isNewUser } = useContext(AuthContext);
+    const { signIn, checkIn, isNewUser, toPrivate } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
     const { formState, handleSubmit, register, control } = useForm<IFormData>();
 
@@ -71,6 +73,10 @@ export default function SignIn(props: any) {
 
     const classes = useStyles();
 
+    useEffect(() => {
+        withGuest(toPrivate);
+    }, []);
+
     const handleSignIn: SubmitHandler<IFormData> = async (values) => {
         try {
             const { ids } = values;
@@ -78,9 +84,12 @@ export default function SignIn(props: any) {
             if (isSignIn) {
                 const { password, remember } = values;
                 await signIn({ email: ids, password, remember });
-            } else if (isConfirmation) {
-                await api.patch(`users/confirm?token=${hash}`);
-            } else {
+            }
+            // else if (isConfirmation) {
+            //     await api.patch(`users/confirm?token=${hash}`);
+
+            // }
+            else {
                 await checkIn({ email: ids });
             }
         } catch (error) {
@@ -222,7 +231,7 @@ export default function SignIn(props: any) {
                             {getSubmitErrorMessage()}
                         </FormHelperText>
                         <SubmitButton
-                            name={
+                            label={
                                 isSignIn
                                     ? "Sign in"
                                     : isConfirmation

@@ -236,7 +236,7 @@ export function SignUp(props: any) {
                             {getSubmitErrorMessage() || getConfirmation()}
                         </FormHelperText>
                         <SubmitButton
-                            name="Sign Up"
+                            label="Sign Up"
                             isFullWidth={true}
                             className={classes.submit}
                         />

@@ -1,10 +1,7 @@
 import { isAuthValid } from "./auth";
 
-export function withGuest(toAuthorized: () => void): Promise<boolean | any> {
+export async function withGuest(toAuthorized: () => void) {
     if (isAuthValid()) {
         toAuthorized();
-        return Promise.resolve(false);
     }
-
-    return Promise.resolve(true);
 }

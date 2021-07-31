@@ -18,31 +18,29 @@ export interface IAuthPermissions {
 }
 
 export async function withAuth(
-    signOut: () => void,
-    toAuthorized: () => void,
-    options?: IAuthPermissions,
-    fn?: Promise<any>
-): Promise<boolean | any> {
-    if (options) {
-        const user = options.user || getExistingPermissions<IUserPermissions>();
-        const { permissions, roles } = options;
+    options: IAuthPermissions,
+    toUnauthorized: () => void,
+    fn?: Promise<any>,
+    signOut?: () => void
+): Promise<any> {
+    const { permissions, roles } = options;
+    const user = options.user || getExistingPermissions<IUserPermissions>();
 
-        if (!user || !validateUserPermissions({ user, permissions, roles })) {
-            toAuthorized();
-            return await Promise.resolve(false);
-        }
+    if (!user || !validateUserPermissions({ permissions, roles, user })) {
+        toUnauthorized();
     }
 
-    if (fn) {
+    if (fn && signOut) {
         try {
             return await fn;
         } catch (error) {
             if (error instanceof AuthError) {
                 signOut();
+            } else {
+                return await Promise.reject(error);
             }
-            return await Promise.reject(error);
         }
     }
 
-    return await Promise.resolve(true);
+    return await Promise.resolve();
 }

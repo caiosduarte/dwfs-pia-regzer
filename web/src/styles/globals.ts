@@ -64,7 +64,7 @@ button {
     opacity: 0.6;
 }
 
-/* .react-modal-overlay {
+.react-modal-overlay {
     background: rgba(0,0,0,0.5);
 
     position: fixed;
@@ -80,7 +80,7 @@ button {
 
 .react-modal-content {
     width: 100%;
-    max-width: 576px;
+    max-width: 476px;
     background: var(--background);
     padding: 3rem;
     position: relative;
@@ -99,6 +99,6 @@ button {
     &:hover {
         filter: brightness(0.9);
     }
-} */
+}
 
 `;

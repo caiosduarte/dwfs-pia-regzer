@@ -5,6 +5,8 @@ import {
     useRouteMatch,
 } from "react-router-dom";
 
+import Modal from "react-modal";
+
 import {
     AppBar,
     Badge,
@@ -19,6 +21,8 @@ import {
     Typography,
     makeStyles,
     Tooltip,
+    Grid,
+    Paper,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -28,7 +32,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import clsx from "clsx";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Copyright } from "../../components/Copyright";
 
 import { Can } from "../../components/Can";
@@ -43,6 +47,13 @@ import {
 
 import { mainListItems, secondaryListItems } from "./listItem";
 import { AuthContext } from "../../context/AuthContext";
+import { UserModal } from "../../components/UserModal";
+import Users from "./Users";
+import { withAuth } from "../../utils/withAuth";
+import { api } from "../../services/api";
+
+// para acessibilidade
+//Modal.setAppElement("#root");
 
 const drawerWidth = 240;
 
@@ -125,10 +136,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// export const classes = useStyles();
-
 export default function Dashboard() {
-    const { user, signOut } = useContext(AuthContext);
+    const { user, toPublic, signOut } = useContext(AuthContext);
 
     const validRoles = ["administrator"];
 
@@ -138,6 +147,14 @@ export default function Dashboard() {
 
     const [open, setOpen] = useState(false);
 
+    const classes = useStyles();
+
+    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+    useEffect(() => {
+        // withAuth({ user }, toPublic, api.get(`users/${user?.id}`), signOut);
+    }, []);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -145,10 +162,6 @@ export default function Dashboard() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-
-    const classes = useStyles();
-
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     return (
         <div className={classes.root}>
@@ -213,7 +226,7 @@ export default function Dashboard() {
 
                     <Tooltip title="Sign out" aria-label="sign out" interactive>
                         <IconButton
-                            onClick={(event: any) => {
+                            onClick={(event: FormEvent) => {
                                 event.preventDefault();
                                 signOut();
                             }}
@@ -264,10 +277,19 @@ export default function Dashboard() {
                         </Route>
 
                         <Route path={`${path}/users`}>
-                            <PainelUsers
-                                isAdmin={userIsAdmin}
-                                classesContent={[classes.paper]}
-                            />
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Users
+                                            title="Users"
+                                            pageSize={25}
+                                            onEdit={() =>
+                                                alert("from dashboard")
+                                            }
+                                        />
+                                    </Paper>
+                                </Grid>
+                            </Grid>
                         </Route>
 
                         <Route path="/dashboard/checkouts">
@@ -292,6 +314,4 @@ export default function Dashboard() {
             </main>
         </div>
     );
-
-    // return userIsAdmin ? dash : <Checkout />;
 }

@@ -58,7 +58,7 @@ interface IFormData {
 }
 
 export default function Confirm(props: any) {
-    const { toAuthorized, isConfirmed } = useContext(AuthContext);
+    const { toPrivate, isConfirmed } = useContext(AuthContext);
 
     const { formState, handleSubmit, register } = useForm<{ ids: string }>();
 
@@ -82,7 +82,7 @@ export default function Confirm(props: any) {
 
     useEffect(() => {
         if (!isConfirmation) {
-            toAuthorized();
+            toPrivate();
         }
     }, []);
 
@@ -114,7 +114,7 @@ export default function Confirm(props: any) {
                 break;
             case 403:
                 setSubmitError("User already confirmed.");
-                toAuthorized();
+                toPrivate();
                 break;
             case 500:
                 setSubmitError("App error. Try later.");

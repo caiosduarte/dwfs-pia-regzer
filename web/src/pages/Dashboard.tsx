@@ -6,19 +6,14 @@ import { api } from "../services/api";
 import { withAuth } from "../utils/withAuth";
 
 export function Dashboard() {
-    const { user, signOut, toAuthorized } = useContext(AuthContext);
+    const { user, signOut, toPublic } = useContext(AuthContext);
 
     const userCanSeeMetrics = useCan({
         permissions: ["metrics.list"],
     });
 
     useEffect(() => {
-        withAuth(
-            signOut,
-            toAuthorized,
-            { user, roles: ["administrator"] },
-            api.get("users")
-        )
+        withAuth({ user }, toPublic, api.get("users"), signOut)
             .then((response) => console.log("dash => ", response))
             .catch((error) => console.log("dash error => ", error));
     }, []);

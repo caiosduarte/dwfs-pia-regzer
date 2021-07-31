@@ -8,11 +8,11 @@ export const Home = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [isSignIn, setIsSignIn] = useState(false);
 
-    const { checkIn, signIn, toAuthorized } = useContext(AuthContext);
+    const { checkIn, signIn, toPrivate } = useContext(AuthContext);
 
     useEffect(() => {
-        withGuest(toAuthorized);
-    }, [toAuthorized]);
+        withGuest(toPrivate);
+    }, []);
 
     const handleSubmit = async (data: any) => {
         try {

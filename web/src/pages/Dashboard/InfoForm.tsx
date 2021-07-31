@@ -11,7 +11,6 @@ import {
     InputLabel,
     makeStyles,
     MenuItem,
-    NativeSelect,
     Radio,
     RadioGroup,
     Select,
@@ -50,7 +49,7 @@ export default function InfoForm() {
                         autoComplete="name"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                     <TextField
                         required
                         fullWidth

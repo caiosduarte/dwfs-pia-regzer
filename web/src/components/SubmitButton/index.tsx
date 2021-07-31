@@ -4,6 +4,7 @@ import { Container } from "./styles";
 interface SubmitButtonProps {
     isSubmitting?: boolean;
     name?: string;
+    label?: string;
     isFullWidth?: boolean;
     isInvalid?: boolean;
     isSubmitted?: boolean;
@@ -13,7 +14,8 @@ interface SubmitButtonProps {
 }
 
 export function SubmitButton({
-    name = "Submit",
+    name = "submit",
+    label = "Submit",
     isSubmitting = false,
     isFullWidth = true,
     isInvalid = false,
@@ -36,7 +38,7 @@ export function SubmitButton({
                     : "defaultSubmit")
             }
         >
-            {name}
+            {label || name}
         </Button>
     );
 }

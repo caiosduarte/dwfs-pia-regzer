@@ -42,7 +42,8 @@ interface IAuthContextData {
     isAuthenticated: boolean;
     // isValid: boolean;
     isConfirmed: boolean;
-    toAuthorized: () => void;
+    toPrivate: () => void;
+    toPublic: () => void;
     user?: IUser;
     isNewUser: boolean;
 }
@@ -83,11 +84,19 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         authChannel.current?.postMessage("signOut");
     };
 
+    const toPrivate = () => {
+        history.push("/dashboard");
+    };
+
+    const toPublic = () => {
+        history.push("/sign-in");
+    };
+
     const toAuthorized = () => {
         if (isAuthenticated) {
-            history.push("/dashboard");
+            toPrivate();
         } else {
-            history.push("/sign-in");
+            toPublic();
         }
     };
 
@@ -114,6 +123,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
             api.get("/sessions")
                 .then((response) => {
                     const { user } = response.data;
+                    console.log(response.data);
                     setUser(user);
                     setIsNewUser(false);
                 })
@@ -200,7 +210,8 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 signOut,
                 checkIn,
                 isAuthenticated,
-                toAuthorized,
+                toPrivate,
+                toPublic,
                 user,
                 isNewUser,
                 isConfirmed,

@@ -11,11 +11,12 @@ type PainelProps = {
     classesContent: string[];
     classesAdmin?: string[];
     classesUser?: string[];
+    onRequestEditUser?: () => void;
 };
 
 export function PainelRegistration({ isAdmin, classesContent }: PainelProps) {
     return (
-        <Grid container spacing={1}>
+        <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Paper className={classesContent[0]}>
                     <Registration />
@@ -27,7 +28,7 @@ export function PainelRegistration({ isAdmin, classesContent }: PainelProps) {
 
 export function PainelDashboard({ isAdmin, classesContent }: PainelProps) {
     return isAdmin ? (
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
             <Grid item xs={12} md={8} lg={9}>
                 <Paper className={classesContent[0]}>
                     <Chart />
@@ -51,12 +52,20 @@ export function PainelDashboard({ isAdmin, classesContent }: PainelProps) {
     );
 }
 
-export function PainelUsers({ isAdmin, classesContent }: PainelProps) {
+export function PainelUsers({
+    isAdmin,
+    classesContent,
+    onRequestEditUser,
+}: PainelProps) {
     return (
-        <Grid container spacing={1}>
+        <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Paper className={classesContent[0]}>
-                    <Users title="Users" pageSize={25} />
+                    <Users
+                        title="Users"
+                        pageSize={25}
+                        onEdit={onRequestEditUser}
+                    />
                 </Paper>
             </Grid>
         </Grid>
@@ -65,7 +74,7 @@ export function PainelUsers({ isAdmin, classesContent }: PainelProps) {
 
 export function PainelCheckouts({ isAdmin, classesContent }: PainelProps) {
     return (
-        <Grid container spacing={1}>
+        <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Paper className={classesContent[0]}>
                     <Checkouts title="Checkouts" pageSize={25} />

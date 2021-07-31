@@ -152,7 +152,7 @@ export function PasswordForgot(props: any) {
                         </Grid>
                     </Grid>
                     <SubmitButton
-                        name="Send password reset email"
+                        label="Send password reset email"
                         isFullWidth={true}
                         className={classes.submit}
                         isSubmitting={formState.isSubmitting}

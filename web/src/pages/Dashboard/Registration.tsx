@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import AddressForm from "./AddressForm";
 import DocumentsForm from "./DocumentsForm";
 import Review from "./Review";
-import Title from "./Title";
+import Title from "../../components/Title";
 import { Grid } from "@material-ui/core";
 import InfoForm from "./InfoForm";
 import ContactsForm from "./ContactsForm";
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const steps = ["Documents", "Info", "Contacts", "Address", "Review"];
-
+// const steps = ["Documents", "Info", "Contacts", "Address", "Review"];
+const steps = ["Documents", "Info", "Contacts", "Address"];
 function getSteps() {
     return steps;
 }
@@ -47,8 +47,8 @@ function getStepContent(step: number) {
             return <ContactsForm />;
         case 3:
             return <AddressForm />;
-        case 4:
-            return <Review />;
+        // case 4:
+        //     return <Review />;
         default:
             throw new Error("Unknown step");
     }
