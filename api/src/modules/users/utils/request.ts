@@ -30,7 +30,12 @@ export const findUsers = async (
         const { start: startInQuery, offset: offsetInQuery } = query;
         const start = Number(startInQuery);
         const offset = Number(offsetInQuery);
-        return await repository.find({ start, offset });
+        console.log("Start ", start);
+        console.log("Offset ", offset);
+        return await repository.find({
+            start: Number(offsetInQuery),
+            offset: Number(offsetInQuery),
+        });
     }
 };
 

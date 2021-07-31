@@ -77,7 +77,7 @@ authenticateRoutes.get("/sessions", async (request, response) => {
         throw new AppError("User not found.", 404);
     }
 
-    return response.json(UserMap.toDTO(user));
+    return response.json({ user: UserMap.toDTO(user) });
 });
 
 authenticateRoutes.post("/refresh-token", (request, response) => {

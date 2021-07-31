@@ -9,8 +9,8 @@ export interface IUserQueryParams {
 }
 
 export interface ISearchParams {
-    start: number;
-    offset: number;
+    start?: number;
+    offset?: number;
 }
 
 export interface IUsersRepository {

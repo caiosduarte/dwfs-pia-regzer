@@ -8,6 +8,9 @@ import {
 } from "../modules/users/repositories/IUsersRepository";
 
 export default class UsersRepository implements IUsersRepository {
+    skip = 0;
+    take = 10;
+
     readonly INSTANCE: IUsersRepository;
     private static INSTANCE: UsersRepository;
 
@@ -74,17 +77,20 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async find({
-        start = 0,
-        offset = 10,
+        start = this.skip,
+        offset = this.take,
     }: ISearchParams): Promise<User[] | undefined> {
-        return await this.repository
+        const queryBuilder = this.repository
             .createQueryBuilder("user")
             // .leftJoinAndSelect("user.tokens", "token")
             .orderBy("user.updatedAt", "DESC")
             .addOrderBy("user.name", "ASC")
-            .skip(start)
-            .take(offset)
-            .cache(true)
-            .getMany();
+            .cache(true);
+
+        if (!isNaN(start) && !isNaN(offset)) {
+            queryBuilder.skip(this.skip).take(this.take);
+        }
+
+        return queryBuilder.getMany();
     }
 }
