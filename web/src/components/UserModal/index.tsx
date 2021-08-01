@@ -61,9 +61,8 @@ export function UserModal({
 }: UserModalProps) {
     // form com Controlled Components
     const [email, setEmail] = useState<string>();
-    const [amount, setAmount] = useState(0);
-    const [category, setCategory] = useState("");
-    const [type, setType] = useState("deposit");
+    const [document, setDocument] = useState<string>();
+    const [type, setType] = useState<string>();
 
     const classes = useStyles();
 
@@ -74,11 +73,12 @@ export function UserModal({
 
     async function handleEdit(event: FormEvent) {
         event.preventDefault();
+        // await api.put(`users/${id}`, { email, document, type });
     }
 
     async function handleCreate(event: FormEvent) {
         event.preventDefault();
-        //await createTransaction({ title, amount, category, type });
+        //await createUser({ email, cellphone, document });
         setEmail("");
         // setType("deposit");
         // setAmount(0);
