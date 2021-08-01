@@ -47,7 +47,9 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async findById(id: string): Promise<User | undefined> {
-        return await this.repository.findOne(id, { relations: ["tokens"] });
+        return await this.repository.findOne(id, {
+            relations: ["tokens", "person"],
+        });
     }
 
     async save(user: User): Promise<User> {
@@ -71,7 +73,7 @@ export default class UsersRepository implements IUsersRepository {
     }: IUserQueryParams): Promise<User[] | undefined> {
         return await this.repository.find({
             where: [{ id }, { email }, { document }, { cellphone }],
-            relations: ["tokens"],
+            relations: ["tokens", "person"],
             cache: true,
         });
     }

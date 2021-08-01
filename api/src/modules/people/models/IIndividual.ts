@@ -9,5 +9,4 @@ export default interface IIndividual {
     motherName: string;
     fatherName: string;
     civilStatus: string;
-    cpf: IDocument;
 }

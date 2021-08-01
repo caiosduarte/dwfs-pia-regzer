@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import IDocumentFile from "../modules/people/models/IDocumentFile";
-import Document from "./Document";
+import Document from "./PersonDocument";
 
 @Entity("person_document_file")
 export default class DocumentFile implements IDocumentFile {

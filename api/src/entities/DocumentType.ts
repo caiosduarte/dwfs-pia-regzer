@@ -1,7 +1,7 @@
 import { PrimaryColumn, Column, Entity } from "typeorm";
 
 @Entity("document_type")
-export default abstract class DocumentType {
+export default class DocumentType {
     /*    @PrimaryColumn({ name: "document_type_id" }) */
     id: string;
 

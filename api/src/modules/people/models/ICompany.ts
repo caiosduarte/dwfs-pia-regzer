@@ -6,6 +6,6 @@ export default interface ICompany {
     fantasyName: string;
     openDate: Date;
     endDate: Date;
-    responsibleDocument: IDocument;
+    // responsibleDocument: IDocument;
     responsibleName: string;
 }

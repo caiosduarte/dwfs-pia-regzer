@@ -1,6 +1,7 @@
 import { IsDate } from "class-validator";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import ICompany from "../modules/people/models/ICompany";
+import IPerson from "../modules/people/models/IPerson";
 import CPF from "./CPF";
 import { ALL_PERSON_TYPES } from "./Enum";
 import Person from "./Person";
@@ -15,7 +16,7 @@ export default class Company extends Person implements ICompany {
         name: "person_company_id",
         referencedColumnName: "person_id",
     })
-    person: Person;
+    person: IPerson;
 
     @Column({ name: "fantasy_name" })
     fantasyName: string;
@@ -28,12 +29,12 @@ export default class Company extends Person implements ICompany {
     @IsDate()
     endDate: Date;
 
-    @OneToOne((type) => CPF, (cpf) => cpf.person)
-    @JoinColumn({
-        name: "responsible_document_id",
-        referencedColumnName: "person_document_id",
-    })
-    responsibleDocument: CPF;
+    // @OneToOne((type) => CPF, (cpf) => cpf.person)
+    // @JoinColumn({
+    //     name: "responsible_document_id",
+    //     referencedColumnName: "person_document_id",
+    // })
+    // responsibleDocument: CPF;
 
     @Column({ name: "responsible_name" })
     responsibleName: string;

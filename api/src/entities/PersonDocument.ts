@@ -13,9 +13,10 @@ import DocumentType from "./DocumentType";
 import DocumentFile from "./DocumentFile";
 import { CreatedTimestamp } from "./Embedded";
 import Person from "./Person";
+import IPerson from "../modules/people/models/IPerson";
 
 @Entity({ name: "person_document" })
-export default abstract class Document implements IDocument {
+export default class PersonDocument implements IDocument {
     /* @PrimaryColumn({ name: "person_document_id" }) */
     id: string;
 
@@ -24,7 +25,7 @@ export default abstract class Document implements IDocument {
 
     @ManyToOne((type) => Person, (person) => person.documents)
     @JoinColumn({ name: "person_id", referencedColumnName: "person_id" })
-    person: Person;
+    person: IPerson;
 
     @OneToOne((type) => DocumentType)
     @JoinColumn({

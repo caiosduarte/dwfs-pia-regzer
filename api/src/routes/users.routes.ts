@@ -5,9 +5,9 @@ import { createUserController } from "../modules/users/controllers";
 import IUserResponseDTO from "../modules/users/dtos/IUserResponseDTO";
 import UserMap from "../modules/users/mappers/UserMap";
 import IUser from "../modules/users/models/IUser";
-import { IUsersRepository } from "../modules/users/repositories/IUsersRepository";
 import ConfirmUserService from "../modules/users/services/ConfirmUserService";
 import SendConfirmMailService from "../modules/users/services/SendConfirmMailService";
+import UpdateUserService from "../modules/users/services/UpdateUserService";
 import {
     findUsers,
     hasAnyId,
@@ -15,6 +15,7 @@ import {
 } from "../modules/users/utils/request";
 
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
+import PeopleRepository from "../repositories/PeopleRepository";
 
 import TokensRepository from "../repositories/TokensRepository";
 import UsersRepository from "../repositories/UsersRepository";
@@ -68,6 +69,23 @@ usersRouter.get("/", ensureAuthenticated, async (request, response) => {
     }
 
     return response.json(users);
+});
+
+usersRouter.put("/:id", ensureAuthenticated, async (request, response) => {
+    const { id } = request.params;
+
+    const values = request.body;
+
+    const repository = UsersRepository.getInstance();
+
+    const service = new UpdateUserService(
+        repository
+        // PeopleRepository.getInstance()
+    );
+
+    await service.execute({ id, ...values });
+
+    return response.status(204).send();
 });
 
 usersRouter.post("/confirm", async (request, response) => {

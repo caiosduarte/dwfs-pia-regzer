@@ -1,3 +1,4 @@
+import IPerson from "../../people/models/IPerson";
 import IToken from "./IToken";
 
 interface IUser {
@@ -18,6 +19,8 @@ interface IUser {
     isValid?: boolean;
 
     tokens?: IToken[];
+
+    person?: IPerson;
 }
 
 export default IUser;

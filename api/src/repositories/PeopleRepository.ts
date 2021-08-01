@@ -1,6 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 import Person from "../entities/Person";
-import ICreatePersonDTO from "../modules/people/dtos/ICreatePersonDTO";
+import { ICreatePersonDTO } from "../modules/people/dtos/ICreatePersonDTO";
 import IPerson from "../modules/people/models/IPerson";
 import IPeopleRepository from "../modules/people/repositories/IPeopleRepository";
 
@@ -16,8 +16,8 @@ export default class PeopleRepository implements IPeopleRepository {
         return this.INSTANCE;
     }
 
-    async create({ name }: ICreatePersonDTO): Promise<IPerson> {
-        const person = this.repository.create({});
+    async create({ userId, type }: ICreatePersonDTO): Promise<IPerson> {
+        const person = this.repository.create({ id: userId, type });
 
         return await this.repository.save(person);
     }

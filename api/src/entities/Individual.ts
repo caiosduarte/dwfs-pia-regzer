@@ -1,6 +1,7 @@
 import { IsDate } from "class-validator";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import IIndividual from "../modules/people/models/IIndividual";
+import IPerson from "../modules/people/models/IPerson";
 import CPF from "./CPF";
 import { ALL_PERSON_TYPES, ETHNICITY, GENDER } from "./Enum";
 import Person from "./Person";
@@ -10,12 +11,12 @@ export default class Individual extends Person implements IIndividual {
     @PrimaryColumn({ name: "person_individual_id" })
     id: string;
 
-    @OneToOne((type) => Person, { eager: true })
+    @OneToOne((type) => Person)
     @JoinColumn({
         name: "person_individual_id",
         referencedColumnName: "person_id",
     })
-    person: Person;
+    person: IPerson;
 
     @Column()
     @IsDate()

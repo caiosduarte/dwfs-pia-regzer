@@ -1,3 +1,4 @@
-export default interface ICreatePersonDTO {
-    name: string;
+export interface ICreatePersonDTO {
+    userId: string;
+    type: string;
 }

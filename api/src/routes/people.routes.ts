@@ -29,11 +29,11 @@ function diskStorage() {
 }
 
 peopleRoutes.post("/", async (request, response) => {
-    const { name } = request.body;
+    const { userId, type } = request.body;
 
     const repository = PeopleRepository.getInstance();
 
-    const person = await repository.create({ name });
+    const person = await repository.create({ userId, type });
 
     console.log("Person saved ", person);
 

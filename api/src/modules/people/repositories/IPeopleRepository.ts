@@ -1,4 +1,4 @@
-import ICreatePersonDTO from "../dtos/ICreatePersonDTO";
+import { ICreatePersonDTO } from "../dtos/ICreatePersonDTO";
 import IPerson from "../models/IPerson";
 
 export default interface IPeopleRepository {

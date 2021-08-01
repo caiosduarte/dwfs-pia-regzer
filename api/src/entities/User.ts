@@ -1,4 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    OneToMany,
+    OneToOne,
+    PrimaryColumn,
+} from "typeorm";
 import {
     Contains,
     IsInt,
@@ -11,7 +19,7 @@ import { v4 as uuidV4 } from "uuid";
 import IUser from "../modules/users/models/IUser";
 import { Dated } from "./Embedded";
 import Token from "./Token";
-import IToken from "../modules/users/models/IToken";
+import Person from "./Person";
 
 @Entity()
 class User implements IUser {
@@ -25,7 +33,10 @@ class User implements IUser {
     document: string;
 
     @Column()
-    @IsEmail()
+    @IsEmail(
+        { allow_display_name: true },
+        { message: "Email address invalid." }
+    )
     email: string;
 
     @Column({ nullable: true })
@@ -51,7 +62,10 @@ class User implements IUser {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })
-    tokens?: IToken[];
+    tokens?: Token[];
+
+    @OneToOne((type) => Person, (person) => person.user, { cascade: true })
+    person?: Person;
 
     constructor() {
         if (!this.id) {
