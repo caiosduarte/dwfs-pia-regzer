@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import Link from "@material-ui/core/Link";
 import {
     makeStyles,
@@ -17,6 +17,8 @@ import LinkWrapper from "../../components/LinkWrapper";
 import { useEffect } from "react";
 import { api } from "../../services/api";
 import { UserModal } from "../../components/UserModal";
+import { withAuth } from "../../utils/withAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 const StyledTableCell = withStyles((theme: Theme) =>
     createStyles({
@@ -50,6 +52,9 @@ interface IIDs {
 interface IUser extends IIDs {
     name: string;
 
+    type?: string;
+
+    isAdmin?: boolean;
     isValid?: boolean;
     isConfirmed?: boolean;
 }
@@ -79,11 +84,11 @@ export default function Users({
 }: UsersProps) {
     const [rows, setRows] = useState<IUser[]>([]);
 
+    const [userToUpdate, setUserToUpdate] = useState<IUser>();
+
     const [isUserModalOpen, setUserModalOpen] = useState(false);
 
-    function handleOpenUserModal() {
-        setUserModalOpen(true);
-    }
+    const { toPublic, signOut } = useContext(AuthContext);
 
     function handleCloseUserModal() {
         setUserModalOpen(false);
@@ -96,29 +101,37 @@ export default function Users({
             ({
                 id,
                 name,
+                type,
                 email,
                 document,
                 cellphone,
                 isConfirmed,
                 isValid,
+                isAdmin,
             }: IUser) => {
                 return {
                     id,
                     name,
+                    type,
                     email,
                     document,
                     cellphone,
                     isConfirmed,
                     isValid,
+                    isAdmin,
                 };
             }
         );
 
     useEffect(() => {
         try {
-            api.get(`users?start=${pageStart}&offset=${pageSize}`)
+            withAuth(
+                {},
+                toPublic,
+                api.get(`users?start=${pageStart}&offset=${pageSize}`),
+                signOut
+            )
                 .then((response) => {
-                    console.log(response);
                     setRows(usersMap(response.data));
 
                     console.log(rows);
@@ -149,12 +162,13 @@ export default function Users({
                     {rows.map((row, key) => (
                         <TableRow key={row.id} color="default">
                             <TableCell>
-                                {onEdit ? (
+                                {onEdit && !row.isAdmin ? (
                                     <Link
                                         href="#"
                                         onClick={(event: FormEvent) => {
                                             event.preventDefault();
                                             setUserModalOpen(true);
+                                            setUserToUpdate(row);
                                         }}
                                     >
                                         {row.name}
@@ -163,33 +177,7 @@ export default function Users({
                                     row.name
                                 )}
                             </TableCell>
-                            <TableCell>
-                                {row.email}
-                                {/* {row.isConfirmed ? (
-                                    row.email
-                                ) : (
-                                    <Tooltip
-                                        title="Send confirm email"
-                                        aria-label="send confirm email"
-                                        interactive
-                                    >
-                                        <Button
-                                            onClick={(event) => {
-                                                event?.preventDefault();
-                                                alert(
-                                                    `Confirm email send to ${row.email}`
-                                                );
-                                            }}
-                                            variant="contained"
-                                            color="default"
-                                            size="small"
-                                            endIcon={<Icon>send</Icon>}
-                                        >
-                                            {row.email}
-                                        </Button>
-                                    </Tooltip>
-                                )} */}
-                            </TableCell>
+                            <TableCell>{row.email}</TableCell>
                             <TableCell>{row.document}</TableCell>
                             <TableCell>{row.cellphone}</TableCell>
                             <TableCell
@@ -215,9 +203,11 @@ export default function Users({
                     </LinkWrapper>
                 </div>
             )}
+
             <UserModal
                 isOpen={isUserModalOpen}
                 onRequestClose={() => setUserModalOpen(false)}
+                {...userToUpdate}
             />
         </React.Fragment>
     );

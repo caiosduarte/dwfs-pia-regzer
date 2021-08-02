@@ -59,7 +59,7 @@ interface IFormData {
 }
 
 export default function Confirm(props: any) {
-    const { toPrivate, isConfirmed } = useContext(AuthContext);
+    const { isConfirmed } = useContext(AuthContext);
 
     const { formState, handleSubmit, register, clearErrors, reset } =
         useForm<{ ids: string }>();
@@ -82,12 +82,6 @@ export default function Confirm(props: any) {
 
     const classes = useStyles();
 
-    useEffect(() => {
-        if (!isConfirmation) {
-            toPrivate();
-        }
-    }, []);
-
     const getSubmitErrorMessage = () => {
         return (
             submitError && (
@@ -99,12 +93,12 @@ export default function Confirm(props: any) {
     };
 
     const getConfirmMessage = () => {
-        return (
-            confirmMessage && (
-                <>
-                    {confirmMessage} {" " && messageComponent}
-                </>
-            )
+        return !!messageComponent ? (
+            <>
+                {confirmMessage} {" " && messageComponent}
+            </>
+        ) : (
+            confirmMessage
         );
     };
 
@@ -116,7 +110,6 @@ export default function Confirm(props: any) {
                 break;
             case 403:
                 setSubmitError("User already confirmed.");
-                toPrivate();
                 break;
             case 500:
                 setSubmitError("App error. Try later.");
@@ -136,6 +129,9 @@ export default function Confirm(props: any) {
             await api.patch(`users/confirm?token=${hash}`, { email });
 
             setConfirmMessage(`Registration confirmed by ${email}.`);
+            setMessageComponent(
+                <LinkWrapper to="/sign-in">Sign in</LinkWrapper>
+            );
 
             clearErrors();
             reset();
@@ -236,14 +232,8 @@ export default function Confirm(props: any) {
                         />
 
                         <FormHelperText id="helper-text">
-                            {getSubmitErrorMessage() || (
-                                    <>
-                                        {getConfirmMessage()}
-                                        <LinkWrapper to="/sign-in">
-                                            Sign in
-                                        </LinkWrapper>
-                                    </>
-                                ) ||
+                            {getSubmitErrorMessage() ||
+                                getConfirmMessage() ||
                                 "Confirm your registration by email."}
                         </FormHelperText>
                         <SubmitButton

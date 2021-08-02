@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import {
     Container,
     Button,
@@ -12,9 +12,12 @@ import {
     RadioGroup,
     Radio,
     Icon,
+    Typography,
 } from "@material-ui/core";
-
-import Title from "../Title";
+import { AxiosError } from "axios";
+import { api } from "../../services/api";
+import { withAuth } from "../../utils/withAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -33,7 +36,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IUser {
-    id: number;
+    id: string;
+
+    type: string;
 
     name: string;
     email: string;
@@ -43,28 +48,35 @@ interface IUser {
     isConfirmed: boolean;
     isValid: boolean;
 
+    isAdmin: boolean;
+
     updatedAt: Date;
 }
 
-type IUserInput = Omit<IUser, "id" | "createdAt">;
+Modal.setAppElement("#root");
+
+type UserInput = Partial<IUser>;
 
 type UserModalProps = {
     isOpen: boolean;
     onRequestClose: () => void;
-    isConfirmed?: boolean;
-};
+} & UserInput;
 
-export function UserModal({
-    isOpen,
-    onRequestClose,
-    isConfirmed,
-}: UserModalProps) {
-    // form com Controlled Components
-    const [email, setEmail] = useState<string>();
-    const [document, setDocument] = useState<string>();
-    const [type, setType] = useState<string>();
+export function UserModal(props: UserModalProps) {
+    const { isOpen, onRequestClose } = props;
+    const [user, setUser] = useState<Exclude<UserInput, UserModalProps>>();
+
+    const email = user?.email;
+    const isConfirmed = user?.isConfirmed;
+    const type = user?.type;
+
+    const { toPublic, signOut } = useContext(AuthContext);
 
     const classes = useStyles();
+
+    function handleOpen() {
+        setUser({ ...props });
+    }
 
     async function handleSendConfirmMail(event: FormEvent) {
         event.preventDefault();
@@ -73,41 +85,52 @@ export function UserModal({
 
     async function handleEdit(event: FormEvent) {
         event.preventDefault();
-        // await api.put(`users/${id}`, { email, document, type });
+
+        try {
+            await withAuth(
+                {},
+                toPublic,
+                api.put(`users/${user?.id}`, { ...user }),
+                signOut
+            );
+            onRequestClose();
+        } catch (error) {
+            if (error.constructor.name === "AxiosError") {
+                console.error("Error axios => ", error.response.data.message);
+            } else {
+                console.error("Error => ", error.message);
+            }
+        }
     }
 
     async function handleCreate(event: FormEvent) {
         event.preventDefault();
         //await createUser({ email, cellphone, document });
-        setEmail("");
         // setType("deposit");
         // setAmount(0);
         // setCategory("");
         onRequestClose();
     }
 
+    function handleRadio(event: any) {
+        setUser({
+            ...user,
+            type: event.target.value,
+        });
+    }
+
     return (
         <Modal
             isOpen={isOpen}
+            onAfterOpen={handleOpen}
             onRequestClose={onRequestClose}
             overlayClassName="react-modal-overlay"
             className="react-modal-content"
         >
             <Container component="main" maxWidth="sm">
-                <Grid container direction="row">
-                    <Grid item alignItems="flex-start">
-                        <Title>User</Title>
-                    </Grid>
-                    <Grid item alignItems="flex-end">
-                        <Button
-                            type="button"
-                            onClick={onRequestClose}
-                            className="react-modal-close"
-                        >
-                            X
-                        </Button>
-                    </Grid>
-                </Grid>
+                <Typography component="h1" variant="h5">
+                    User
+                </Typography>
 
                 <form onSubmit={handleEdit} className={classes.form} noValidate>
                     <Grid container spacing={2}>
@@ -119,10 +142,14 @@ export function UserModal({
                                 autoComplete="off"
                                 id="email"
                                 label="Email Address"
-                                onChange={(event) =>
-                                    setEmail(event.target.value)
-                                }
                                 autoFocus
+                                value={user?.email}
+                                onChange={(event) =>
+                                    setUser({
+                                        ...user,
+                                        email: event.target.value,
+                                    })
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -133,10 +160,21 @@ export function UserModal({
                                 autoComplete="off"
                                 id="document"
                                 label="Document"
+                                value={user?.document}
+                                onChange={(event) =>
+                                    setUser({
+                                        ...user,
+                                        document: event.target.value,
+                                    })
+                                }
                             />
                         </Grid>
                         <Grid item xs={12} direction="row">
-                            <FormControl component="fieldset" fullWidth>
+                            <FormControl
+                                component="fieldset"
+                                error={!type}
+                                fullWidth
+                            >
                                 <FormLabel component="legend">
                                     Person Type
                                 </FormLabel>
@@ -144,18 +182,27 @@ export function UserModal({
                                     row
                                     aria-label="person type"
                                     name="personType"
-
-                                    // value={value}
-                                    // onChange={handleChange}
                                 >
                                     <FormControlLabel
-                                        value="F"
-                                        control={<Radio />}
+                                        control={
+                                            <Radio
+                                                value="F"
+                                                checked={user?.type === "F"}
+                                                onChange={handleRadio}
+                                                color="primary"
+                                            />
+                                        }
                                         label="Individual"
                                     />
                                     <FormControlLabel
-                                        value="J"
-                                        control={<Radio />}
+                                        control={
+                                            <Radio
+                                                value="J"
+                                                checked={user?.type === "J"}
+                                                onChange={handleRadio}
+                                                color="primary"
+                                            />
+                                        }
                                         label="Company"
                                     />
                                 </RadioGroup>
@@ -181,9 +228,10 @@ export function UserModal({
                                 Send confirm mail
                             </Button>{" "}
                             <Button
-                                onClick={handleSendConfirmMail}
+                                onClick={handleEdit}
                                 variant="contained"
                                 color="primary"
+                                disabled={!type || !email}
                                 // size="small"
                                 // fullWidth
                             >
@@ -192,52 +240,8 @@ export function UserModal({
                         </Grid>
                     </Grid>
                 </form>
+                {console.log("user updated: ", user)}
             </Container>
-
-            {/* <input
-                    type="text"
-                    placeholder="Título"
-                    value={title}
-                    onChange={(event) => setTitle(event.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Valor"
-                    value={amount}
-                    onChange={(event) => setAmount(Number(event.target.value))}
-                />
-
-                <TransactionTypeContainer>
-                    <RadioBox
-                        type="button"
-                        onClick={() => setType("deposit")}
-                        isActive={type === "deposit"}
-                        activeColor="green"
-                    >
-                        <img src={incomeImg} alt="Entrada" />
-                        <span>Entrada</span>
-                    </RadioBox>
-
-                    <RadioBox
-                        type="button"
-                        onClick={() => setType("withdraw")}
-                        isActive={type === "withdraw"}
-                        activeColor="red"
-                    >
-                        <img src={withdrawImg} alt="Saída" />
-                        <span>Saída</span>
-                    </RadioBox>
-                </TransactionTypeContainer>
-
-                <input
-                    type="text"
-                    placeholder="Categoria"
-                    value={category}
-                    onChange={(event) => setCategory(event.target.value)}
-                />
-                <button type="submit" onClick={handleCreateNewTransaction}>
-                    Cadastrar
-                </button> */}
         </Modal>
     );
 }
