@@ -2,7 +2,7 @@
     "name": "default",
     "type": "sqlite",
     "database": "database/db.sqlite",
-    "autoSchemaSync": true,
+    "synchronize": false,
     "entities": ["dist/entities/*"],
     "migrations": ["dist/database/migrations/*"],
     "cli": { "migrationsDir": "dist/database/migrations" },

@@ -1,7 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 import Person from "../entities/Person";
 import { ICreatePersonDTO } from "../modules/people/dtos/ICreatePersonDTO";
-import IPerson from "../modules/people/models/IPerson";
 import IPeopleRepository from "../modules/people/repositories/IPeopleRepository";
 
 export default class PeopleRepository implements IPeopleRepository {
@@ -16,19 +15,19 @@ export default class PeopleRepository implements IPeopleRepository {
         return this.INSTANCE;
     }
 
-    async create({ userId, type }: ICreatePersonDTO): Promise<IPerson> {
+    async create({ userId, type }: ICreatePersonDTO): Promise<Person> {
         const person = this.repository.create({ id: userId, type });
 
         return await this.repository.save(person);
     }
 
-    async save(person: IPerson): Promise<IPerson> {
+    async save(person: Person): Promise<Person> {
         return await this.repository.save(person);
     }
 
-    async findById(id: string): Promise<IPerson | undefined> {
+    async findById(id: string): Promise<Person | undefined> {
         const person = await this.repository.findOne(id, {
-            relations: ["documents"],
+            relations: ["user", "individual", "company"],
         });
 
         return person;

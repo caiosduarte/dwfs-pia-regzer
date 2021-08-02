@@ -11,7 +11,8 @@ export default class Token implements IToken {
     id: string;
 
     @ManyToOne((type) => User, (user) => user.tokens, {
-        cascade: ["update"],
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
     })
     @JoinColumn({ name: "user_id" })
     user: IUser;

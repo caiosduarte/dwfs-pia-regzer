@@ -63,7 +63,10 @@ export class CreateUsers1594592667317 implements MigrationInterface {
                         default: "CURRENT_TIMESTAMP",
                     },
                 ],
-            })
+            }),
+            false,
+            false,
+            true
         );
 
         await queryRunner.query(

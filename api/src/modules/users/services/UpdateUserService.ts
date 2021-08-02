@@ -4,7 +4,11 @@ import ICreateUserDTO from "../dtos/ICreateUserDTO";
 import IUser from "../models/IUser";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 
-type UpdateUser = Partial<ICreateUserDTO> & { id: string; type: string };
+type UpdateUser = Partial<ICreateUserDTO> & {
+    id: string;
+    type: string;
+    person: IPerson;
+};
 
 class UpdateUserService {
     constructor(private repository: IUsersRepository) {}
@@ -19,19 +23,15 @@ class UpdateUserService {
 
         // let person = this.peopleRepository.create({ userId: id, type });
 
-        const person = user.person;
+        // if (person && person?.type !== type) {
+        //     throw new AppError("Can'not change person type yet.", 403);
+        // }
 
-        if (person && person?.type !== type) {
-            throw new AppError("Can'not change person type yet.", 403);
-        }
-
-        user.person = Object.assign<any, Partial<IPerson>>(
-            {},
-            {
-                type,
-                user,
-            }
-        );
+        const person = {
+            type,
+            user,
+            id: user.id,
+        } as IPerson;
 
         if (email && user.email !== email) {
             user.isConfirmed = false;
@@ -39,9 +39,13 @@ class UpdateUserService {
 
         const updatedUser = Object.assign<IUser, UpdateUser>(user, {
             ...values,
+            person,
         });
 
         await this.repository.save(updatedUser);
+
+        console.log("Person: ", updatedUser.person);
+        console.log("Person type: ", updatedUser.person?.personType);
     }
 }
 

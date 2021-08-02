@@ -11,7 +11,7 @@ export default class PersonDataSent implements IPersonDataSent, IAnalysis {
     @PrimaryColumn({ name: "person_data_sent_id" })
     id: string;
 
-    @ManyToOne((type) => Person)
+    @ManyToOne((type) => Person, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "person_id" })
     person: Person;
 
@@ -25,7 +25,7 @@ export default class PersonDataSent implements IPersonDataSent, IAnalysis {
     newValue: string;
 
     // TODO: Dados abaixo são para análise
-    @ManyToOne((type) => User)
+    @ManyToOne((type) => User, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "analyst_id" /* , referencedColumnName: "user_id" */ })
     analyst: User;
 

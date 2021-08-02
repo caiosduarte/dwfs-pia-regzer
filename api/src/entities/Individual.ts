@@ -1,22 +1,30 @@
 import { IsDate } from "class-validator";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { JoinAttribute } from "typeorm/query-builder/JoinAttribute";
 import IIndividual from "../modules/people/models/IIndividual";
 import IPerson from "../modules/people/models/IPerson";
 import CPF from "./CPF";
-import { ALL_PERSON_TYPES, ETHNICITY, GENDER } from "./Enum";
+import { ETHNICITY, GENDER } from "./Enum";
 import Person from "./Person";
+import User from "./User";
 
 @Entity("person_individual")
-export default class Individual extends Person implements IIndividual {
+export default class Individual implements IIndividual {
     @PrimaryColumn({ name: "person_individual_id" })
     id: string;
 
-    @OneToOne((type) => Person)
-    @JoinColumn({
-        name: "person_individual_id",
-        referencedColumnName: "person_id",
+    @OneToOne((type) => Person, (person) => person.individual, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
     })
-    person: IPerson;
+    @JoinColumn(
+        {
+            name: "person_individual_id",
+            referencedColumnName: "person_id",
+        }
+        // { referencedColumnName: "type" },
+    )
+    person: Person;
 
     @Column()
     @IsDate()
@@ -25,9 +33,7 @@ export default class Individual extends Person implements IIndividual {
     @Column({ enum: GENDER })
     gender: string;
 
-    @Column({
-        enum: ETHNICITY,
-    })
+    @Column({ enum: ETHNICITY })
     ethnicity: string;
 
     @Column({ name: "mother_name" })
@@ -49,10 +55,9 @@ export default class Individual extends Person implements IIndividual {
     })
     civilStatus: string;
 
-    @OneToOne((type) => CPF, (cpf) => cpf.person)
+    @OneToOne((type) => CPF, (cpf) => cpf.person, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
     cpf: CPF;
-
-    constructor() {
-        super(ALL_PERSON_TYPES.FISICA);
-    }
 }

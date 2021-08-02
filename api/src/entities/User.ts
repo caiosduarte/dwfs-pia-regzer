@@ -59,18 +59,23 @@ class User implements IUser {
 
     @OneToMany((type) => Token, (token) => token.user, {
         cascade: true,
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
     })
     tokens?: Token[];
 
-    @OneToOne((type) => Person, (person) => person.user, { cascade: true })
+    @OneToOne((type) => Person, (person) => person.user, {
+        cascade: true,
+    })
     person?: Person;
+
+    @Column({ name: "validated_at", nullable: true })
+    validatedAt: Date;
+
+    @Column({ name: "confirmed_at", nullable: true })
+    confirmedAt: Date;
 
     constructor() {
         if (!this.id) {
             this.id = uuidV4();
-            //this.user_id = this.id;
         }
     }
 }

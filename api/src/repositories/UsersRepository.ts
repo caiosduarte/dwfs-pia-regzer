@@ -82,17 +82,26 @@ export default class UsersRepository implements IUsersRepository {
         start = this.skip,
         offset = this.take,
     }: ISearchParams): Promise<User[] | undefined> {
-        const queryBuilder = this.repository
-            .createQueryBuilder("user")
-            // .leftJoinAndSelect("user.tokens", "token")
-            .orderBy("user.updatedAt", "DESC")
-            .addOrderBy("user.name", "ASC")
-            .cache(true);
+        // const queryBuilder = this.repository
+        //     .createQueryBuilder("user")
+        //     // .leftJoinAndSelect("user.tokens", "user_token")
+        //     // .leftJoinAndSelect(
+        //     //     "person",
+        //     //     "person",
+        //     //     "user.user_id = person.person_id"
+        //     // )
+        //     .orderBy("user.updated_at", "DESC")
+        //     .addOrderBy("user.name", "ASC")
+        //     .cache(true);
 
-        if (!isNaN(start) && !isNaN(offset)) {
-            queryBuilder.skip(this.skip).take(this.take);
-        }
+        // if (!isNaN(start) && !isNaN(offset)) {
+        //     queryBuilder.skip(this.skip).take(this.take);
+        // }
 
-        return queryBuilder.getMany();
+        // return await queryBuilder.getMany();
+
+        return await this.repository.find({
+            relations: ["person"],
+        });
     }
 }

@@ -1,71 +1,123 @@
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    JoinTable,
-    OneToMany,
-    OneToOne,
-    PrimaryColumn,
-    TableInheritance,
-} from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import IPerson from "../modules/people/models/IPerson";
 import Document from "./PersonDocument";
 import { ALL_PERSON_TYPES } from "./Enum";
 import User from "./User";
 import PersonDocument from "./PersonDocument";
-import ICompany from "../modules/people/models/ICompany";
-import IIndividual from "../modules/people/models/IIndividual";
+
 import Individual from "./Individual";
 import Company from "./Company";
-import IUser from "../modules/users/models/IUser";
+
+type PersonType = Individual | Company;
+
+interface IPersonType {
+    person: Individual | Company;
+}
+
+type PersonType2 = Individual & Company;
 
 @Entity()
 export default class Person implements IPerson {
     // @PrimaryColumn({ name: "person_id" })
     id: string;
 
-    @Column({ primary: true })
+    @Column({ name: "person_id", primary: true })
     person_id: string;
 
-    // @OneToOne((type) => User, (user) => user.person)
-    @OneToOne((type) => User)
-    @JoinColumn({ name: "person_id" })
+    @OneToOne((type) => User, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+    @JoinColumn({ name: "person_id", referencedColumnName: "id" })
     user: User;
 
-    @Column({ name: "type", enum: ALL_PERSON_TYPES })
-    type: string;
+    private createPersonType(type: string): void {
+        if (type) {
+            const id = this.person_id || this.id || this.user?.id;
+            let personType: PersonType;
+            switch (type) {
+                case ALL_PERSON_TYPES.FISICA:
+                    personType = new Individual();
+                    break;
+                default:
+                    personType = new Company();
+                    break;
+            }
+            this.personType = Object.assign(personType, {
+                id,
+            });
 
-    // public set type(value: string) {
-    //     switch (value) {
-    //         case ALL_PERSON_TYPES.FISICA:
-    //             this._personType = Individual;
-    //     }
+            console.log("criando o  personType... ", this.personType);
+        }
+
+        console.log("criando com o type... ", type);
+    }
+
+    private _type: string;
+    @Column({ name: "type", enum: ALL_PERSON_TYPES })
+    public get type() {
+        return this._type;
+    }
+
+    public set type(type: string) {
+        this._type = type;
+        this.createPersonType(type);
+    }
+
+    @OneToOne((type) => Individual, (individual) => individual.person, {
+        cascade: true,
+        eager: true,
+    })
+    individual: Individual;
+
+    @OneToOne((type) => Company, (company) => company.person, {
+        cascade: true,
+        eager: true,
+    })
+    company: Company;
+
+    // @OneToOne(() => Individual<IIndividual>)
+    public get personType() {
+        return this.individual || this.company;
+    }
+
+    public set personType(value: PersonType) {
+        if (value instanceof Individual) {
+            this.individual = value;
+        } else {
+            this.company = value;
+        }
+    }
+
+    // private _personType: PersonType;
+    // @OneToOne(
+    //     (type: PersonType) => {
+    //         if (type instanceof Individual) {
+    //             return Individual;
+    //         }
+    //         return Company;
+    //     },
+    //     { cascade: true }
+    // )
+    // public get personType() {
+    //     return this._personType;
     // }
 
-    private _personType: IIndividual | ICompany;
-    public get personType(): IIndividual | ICompany {
-        return this._personType;
-    }
-    public set personType(value: IIndividual | ICompany) {
-        this._personType = value;
-    }
+    // public set personType(value: PersonType) {
+    //     this._personType = value;
+    // }
 
-    @Column()
+    @Column({ nullable: true })
     cellphone: string;
 
-    @Column()
+    @Column({ nullable: true })
     telephone: string;
 
     @Column({ name: "is_valid", default: false })
     isValid: boolean;
 
-    @Column({ name: "valid_at" })
+    @Column({ name: "valid_at", nullable: true })
     validAt: Date;
 
-    @OneToMany((type) => Document, (document) => document.person)
+    @OneToMany((type) => Document, (document) => document.person, {
+        cascade: true,
+    })
     documents?: PersonDocument[];
-
-    constructor(type: ALL_PERSON_TYPES) {
-        this.type = type;
-    }
 }
