@@ -1,11 +1,7 @@
 import { IsDate } from "class-validator";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import ICompany from "../modules/people/models/ICompany";
-import IPerson from "../modules/people/models/IPerson";
-import CPF from "./CPF";
-import { ALL_PERSON_TYPES } from "./Enum";
 import Person from "./Person";
-import User from "./User";
 
 @Entity("person_company")
 export default class Company implements ICompany {
@@ -18,7 +14,7 @@ export default class Company implements ICompany {
     })
     @JoinColumn({
         name: "person_company_id",
-        referencedColumnName: "person_id",
+        referencedColumnName: "id",
     })
     person: Person;
 
