@@ -1,11 +1,13 @@
 import {
     Column,
+    CreateDateColumn,
     Entity,
     JoinColumn,
     JoinTable,
     OneToMany,
     OneToOne,
     PrimaryColumn,
+    UpdateDateColumn,
 } from "typeorm";
 import {
     Contains,
@@ -54,8 +56,11 @@ class User implements IUser {
     @Column({ name: "is_valid", default: true })
     isValid: boolean;
 
-    @Column((type) => Dated, { prefix: false })
-    dated: Dated;
+    @CreateDateColumn({ name: "created_at" })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: "updated_at" })
+    updatedAt: Date;
 
     @OneToMany((type) => Token, (token) => token.user, {
         cascade: true,
