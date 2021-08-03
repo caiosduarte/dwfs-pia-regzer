@@ -13,24 +13,23 @@ import DocumentType from "./DocumentType";
 import DocumentFile from "./DocumentFile";
 import { CreatedTimestamp } from "./Embedded";
 import Person from "./Person";
-import IPerson from "../modules/people/models/IPerson";
 
 @Entity({ name: "person_document" })
 export default class PersonDocument implements IDocument {
-    /* @PrimaryColumn({ name: "person_document_id" }) */
+    @PrimaryColumn({ name: "person_document_id" })
     id: string;
 
-    @Column({ primary: true })
-    person_document_id: string;
+    @Column()
+    person_id: string;
 
     @ManyToOne((type) => Person, (person) => person.documents)
-    @JoinColumn({ name: "person_id", referencedColumnName: "person_id" })
-    person: IPerson;
+    @JoinColumn({ name: "person_id", referencedColumnName: "id" })
+    person: Person;
 
     @OneToOne((type) => DocumentType)
     @JoinColumn({
         name: "document_type_id",
-        referencedColumnName: "document_type_id",
+        referencedColumnName: "id",
     })
     protected type: DocumentType;
 

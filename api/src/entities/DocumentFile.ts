@@ -7,10 +7,16 @@ export default class DocumentFile implements IDocumentFile {
     @PrimaryColumn({ name: "person_document_file_id" })
     id: string;
 
-    @ManyToOne((type) => Document, (document) => document.files)
+    @Column()
+    person_document_id: string;
+
+    @ManyToOne((type) => Document, (document) => document.files, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
     @JoinColumn({
         name: "person_document_id",
-        referencedColumnName: "person_document_id",
+        referencedColumnName: "id",
     })
     document: Document;
 

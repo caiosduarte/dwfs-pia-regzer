@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToMany,
+    OneToMany,
+    OneToOne,
+    PrimaryColumn,
+} from "typeorm";
 import IPerson from "../modules/people/models/IPerson";
 import Document from "./PersonDocument";
 import { ALL_PERSON_TYPES } from "./Enum";
@@ -18,11 +26,8 @@ type PersonType2 = Individual & Company;
 
 @Entity()
 export default class Person implements IPerson {
-    // @PrimaryColumn({ name: "person_id" })
+    @PrimaryColumn({ name: "person_id" })
     id: string;
-
-    @Column({ name: "person_id", primary: true })
-    person_id: string;
 
     @OneToOne((type) => User, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "person_id", referencedColumnName: "id" })
@@ -30,7 +35,7 @@ export default class Person implements IPerson {
 
     private createPersonType(type: string): void {
         if (type) {
-            const id = this.person_id || this.id || this.user?.id;
+            const id = this.id || this.user?.id;
             let personType: PersonType;
             switch (type) {
                 case ALL_PERSON_TYPES.FISICA:
@@ -58,7 +63,7 @@ export default class Person implements IPerson {
 
     public set type(type: string) {
         this._type = type;
-        this.createPersonType(type);
+        // this.createPersonType(type);
     }
 
     @OneToOne((type) => Individual, (individual) => individual.person, {
@@ -74,7 +79,7 @@ export default class Person implements IPerson {
     company: Company;
 
     // @OneToOne(() => Individual<IIndividual>)
-    public get personType() {
+    public get personType(): PersonType {
         return this.individual || this.company;
     }
 
