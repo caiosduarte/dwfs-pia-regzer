@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Document_1 = __importDefault(require("./Document"));
+var PersonDocument_1 = __importDefault(require("./PersonDocument"));
 var DocumentFile = (function () {
     function DocumentFile() {
     }
@@ -22,12 +22,19 @@ var DocumentFile = (function () {
         __metadata("design:type", String)
     ], DocumentFile.prototype, "id", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function (type) { return Document_1.default; }, function (document) { return document.files; }),
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], DocumentFile.prototype, "person_document_id", void 0);
+    __decorate([
+        typeorm_1.ManyToOne(function (type) { return PersonDocument_1.default; }, function (document) { return document.files; }, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        }),
         typeorm_1.JoinColumn({
             name: "person_document_id",
-            referencedColumnName: "person_document_id",
+            referencedColumnName: "id",
         }),
-        __metadata("design:type", Document_1.default)
+        __metadata("design:type", PersonDocument_1.default)
     ], DocumentFile.prototype, "document", void 0);
     __decorate([
         typeorm_1.Column(),

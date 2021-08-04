@@ -28,7 +28,7 @@ var PersonDataSent = (function () {
         __metadata("design:type", String)
     ], PersonDataSent.prototype, "id", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function (type) { return Person_1.default; }, { eager: true }),
+        typeorm_1.ManyToOne(function (type) { return Person_1.default; }, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
         typeorm_1.JoinColumn({ name: "person_id" }),
         __metadata("design:type", Person_1.default)
     ], PersonDataSent.prototype, "person", void 0);
@@ -45,7 +45,7 @@ var PersonDataSent = (function () {
         __metadata("design:type", String)
     ], PersonDataSent.prototype, "newValue", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function (type) { return User_1.default; }, { eager: true }),
+        typeorm_1.ManyToOne(function (type) { return User_1.default; }, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
         typeorm_1.JoinColumn({ name: "analyst_id" }),
         __metadata("design:type", User_1.default)
     ], PersonDataSent.prototype, "analyst", void 0);

@@ -28,7 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Document_1 = __importDefault(require("./Document"));
+var PersonDocument_1 = __importDefault(require("./PersonDocument"));
 var DocumentType_1 = __importDefault(require("./DocumentType"));
 var CPFDocumentType = (function (_super) {
     __extends(CPFDocumentType, _super);
@@ -60,5 +60,5 @@ var CPF = (function (_super) {
         __metadata("design:paramtypes", [])
     ], CPF);
     return CPF;
-}(Document_1.default));
+}(PersonDocument_1.default));
 exports.default = CPF;

@@ -1,5 +1,5 @@
 import { getRepository, Repository } from "typeorm";
-import Document from "../entities/PersonDocument";
+// import Document from "../entities/PersonDocument";
 import ICreateDocumentDTO from "../modules/people/dtos/ICreateDocumentDTO";
 import IDocument from "../modules/people/models/IDocument";
 import IDocumentsRepository from "../modules/people/repositories/IDocumentsRepository";

@@ -3,7 +3,7 @@ import AppError from "../errors/AppError";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { createUserController } from "../modules/users/controllers";
 import IUserResponseDTO from "../modules/users/dtos/IUserResponseDTO";
-import UserMap from "../modules/users/mappers/UserMap";
+import UserMap from "../modules/users/mappers";
 import IUser from "../modules/users/models/IUser";
 import ConfirmUserService from "../modules/users/services/ConfirmUserService";
 import SendConfirmMailService from "../modules/users/services/SendConfirmMailService";
@@ -55,13 +55,10 @@ usersRouter.get("/", ensureAuthenticated, async (request, response) => {
     const query = request.query as IUserSearch;
 
     const users = await findUsers(query, repository).then((users) =>
-        users?.reduce(
-            (dtos: IUserResponseDTO[], user: IUser) => [
-                ...dtos,
-                UserMap.toDTO(user),
-            ],
-            []
-        )
+        users?.reduce((dtos: IUserResponseDTO[], user: IUser) => {
+            console.log("Users with find: ", user);
+            return [...dtos, UserMap.toDTO(user)];
+        }, [])
     );
 
     if (!users) {

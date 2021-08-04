@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Document_1 = __importDefault(require("../entities/Document"));
+var PersonDocument_1 = __importDefault(require("../entities/PersonDocument"));
 var DocumentsRepository = (function () {
     function DocumentsRepository(repository) {
         this.repository = repository;
@@ -20,7 +20,7 @@ var DocumentsRepository = (function () {
     };
     DocumentsRepository.getInstance = function () {
         if (!this.INSTANCE) {
-            this.INSTANCE = new DocumentsRepository(typeorm_1.getRepository(Document_1.default));
+            this.INSTANCE = new DocumentsRepository(typeorm_1.getRepository(PersonDocument_1.default));
         }
         return this.INSTANCE;
     };

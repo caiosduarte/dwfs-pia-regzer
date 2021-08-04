@@ -44,6 +44,8 @@ var Person_1 = __importDefault(require("../entities/Person"));
 var PeopleRepository = (function () {
     function PeopleRepository(repository) {
         this.repository = repository;
+        this.skip = 0;
+        this.take = 10;
     }
     PeopleRepository.getInstance = function () {
         if (!this.INSTANCE) {
@@ -52,13 +54,16 @@ var PeopleRepository = (function () {
         return this.INSTANCE;
     };
     PeopleRepository.prototype.create = function (_a) {
-        var name = _a.name;
+        var userId = _a.userId, type = _a.type;
         return __awaiter(this, void 0, void 0, function () {
             var person;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        person = this.repository.create({});
+                        person = this.repository.create({
+                            id: userId,
+                            type: type,
+                        });
                         return [4, this.repository.save(person)];
                     case 1: return [2, _b.sent()];
                 }
@@ -77,15 +82,36 @@ var PeopleRepository = (function () {
     };
     PeopleRepository.prototype.findById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var person;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.repository.findOne(id, {
-                            relations: ["documents"],
+                            relations: ["user", "individual", "company"],
                         })];
-                    case 1:
-                        person = _a.sent();
-                        return [2, person];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    PeopleRepository.prototype.find = function (_a) {
+        var _b = _a.start, start = _b === void 0 ? this.skip : _b, _c = _a.offset, offset = _c === void 0 ? this.take : _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var queryBuilder;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        queryBuilder = this.repository
+                            .createQueryBuilder("person")
+                            .innerJoinAndSelect("person.user", "user")
+                            .orderBy({
+                            "user.updatedAt": "DESC",
+                            "user.name": "ASC",
+                        })
+                            .cache(true);
+                        if (!isNaN(start) && !isNaN(offset)) {
+                            queryBuilder.skip(this.skip).take(this.take);
+                        }
+                        return [4, queryBuilder.getMany()];
+                    case 1: return [2, _d.sent()];
                 }
             });
         });

@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var multer_1 = __importDefault(require("multer"));
 var upload_1 = __importDefault(require("../config/upload"));
+var AppError_1 = __importDefault(require("../errors/AppError"));
 var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
 var ensureConfirmed_1 = __importDefault(require("../middlewares/ensureConfirmed"));
 var CreateDocumentController_1 = __importDefault(require("../modules/people/controllers/CreateDocumentController"));
@@ -65,32 +66,46 @@ function diskStorage() {
     }
 }
 peopleRoutes.post("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var name, repository, person;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, userId, type, repository, person;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                name = request.body.name;
+                _a = request.body, userId = _a.userId, type = _a.type;
+                if (!userId || !type) {
+                    throw new AppError_1.default("Wrong parameters.", 403);
+                }
                 repository = PeopleRepository_1.default.getInstance();
-                return [4, repository.create({ name: name })];
+                return [4, repository.create({ userId: userId, type: type })];
             case 1:
-                person = _a.sent();
+                person = _b.sent();
                 console.log("Person saved ", person);
                 return [2, response.status(201).json(person)];
         }
     });
 }); });
-peopleRoutes.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, repository, person, storageProvider;
+peopleRoutes.get("/:id", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, person;
     return __generator(this, function (_a) {
-        switch (_a.label) {
+        id = request.params.id;
+        console.log("People get/:id");
+        person = {};
+        return [2, response.json(person)];
+    });
+}); });
+peopleRoutes.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, startInQuery, offsetInQuery, repository, people;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                id = request.user.id;
+                _a = request.query, startInQuery = _a.start, offsetInQuery = _a.offset;
                 repository = PeopleRepository_1.default.getInstance();
-                return [4, repository.findById(id)];
+                return [4, repository.find({
+                        start: Number(offsetInQuery),
+                        offset: Number(offsetInQuery),
+                    })];
             case 1:
-                person = _a.sent();
-                storageProvider = diskStorage();
-                return [2, response.json(person)];
+                people = _b.sent();
+                return [2, response.json(people)];
         }
     });
 }); });

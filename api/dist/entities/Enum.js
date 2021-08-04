@@ -17,6 +17,7 @@ var GENDER;
 (function (GENDER) {
     GENDER["MASCULINO"] = "M";
     GENDER["FEMININO"] = "F";
+    GENDER["OUTRO"] = "O";
 })(GENDER = exports.GENDER || (exports.GENDER = {}));
 var CIVIL_STATUS;
 (function (CIVIL_STATUS) {

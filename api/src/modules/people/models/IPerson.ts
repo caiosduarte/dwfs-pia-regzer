@@ -10,7 +10,7 @@ export default interface IPerson {
 
     type: string;
 
-    personType?: IIndividual | ICompany;
+    // personType?: IIndividual | ICompany;
 
     cellphone?: string;
 

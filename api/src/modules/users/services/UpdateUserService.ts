@@ -45,7 +45,7 @@ class UpdateUserService {
         await this.repository.save(updatedUser);
 
         console.log("Person: ", updatedUser.person);
-        console.log("Person type: ", updatedUser.person?.personType);
+        // console.log("Person type: ", updatedUser.person?.personType);
     }
 }
 

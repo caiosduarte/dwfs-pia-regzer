@@ -1,6 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
-import IDocumentFile from "../modules/people/models/IDocumentFile";
-import Individual from "./Individual";
+
 import Document from "./PersonDocument";
 import DocumentType from "./DocumentType";
 

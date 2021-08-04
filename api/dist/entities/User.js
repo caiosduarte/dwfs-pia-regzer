@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var class_validator_1 = require("class-validator");
 var uuid_1 = require("uuid");
-var Embedded_1 = require("./Embedded");
 var Token_1 = __importDefault(require("./Token"));
+var Person_1 = __importDefault(require("./Person"));
 var User = (function () {
     function User() {
         if (!this.id) {
@@ -37,7 +37,7 @@ var User = (function () {
     ], User.prototype, "document", void 0);
     __decorate([
         typeorm_1.Column(),
-        class_validator_1.IsEmail(),
+        class_validator_1.IsEmail({ allow_display_name: true }, { message: "Email address invalid." }),
         __metadata("design:type", String)
     ], User.prototype, "email", void 0);
     __decorate([
@@ -61,17 +61,33 @@ var User = (function () {
         __metadata("design:type", Boolean)
     ], User.prototype, "isValid", void 0);
     __decorate([
-        typeorm_1.Column(function (type) { return Embedded_1.Dated; }, { prefix: false }),
-        __metadata("design:type", Embedded_1.Dated)
-    ], User.prototype, "dated", void 0);
+        typeorm_1.CreateDateColumn({ name: "created_at" }),
+        __metadata("design:type", Date)
+    ], User.prototype, "createdAt", void 0);
+    __decorate([
+        typeorm_1.UpdateDateColumn({ name: "updated_at" }),
+        __metadata("design:type", Date)
+    ], User.prototype, "updatedAt", void 0);
     __decorate([
         typeorm_1.OneToMany(function (type) { return Token_1.default; }, function (token) { return token.user; }, {
             cascade: true,
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
         }),
         __metadata("design:type", Array)
     ], User.prototype, "tokens", void 0);
+    __decorate([
+        typeorm_1.OneToOne(function (type) { return Person_1.default; }, {
+            cascade: true,
+        }),
+        __metadata("design:type", Person_1.default)
+    ], User.prototype, "person", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "validated_at", nullable: true }),
+        __metadata("design:type", Date)
+    ], User.prototype, "validatedAt", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "confirmed_at", nullable: true }),
+        __metadata("design:type", Date)
+    ], User.prototype, "confirmedAt", void 0);
     User = __decorate([
         typeorm_1.Entity(),
         __metadata("design:paramtypes", [])

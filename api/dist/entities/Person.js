@@ -13,20 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Document_1 = __importDefault(require("./Document"));
+var PersonDocument_1 = __importDefault(require("./PersonDocument"));
 var Enum_1 = require("./Enum");
 var User_1 = __importDefault(require("./User"));
+var Individual_1 = __importDefault(require("./Individual"));
+var Company_1 = __importDefault(require("./Company"));
 var Person = (function () {
-    function Person(type) {
-        this.type = type;
+    function Person() {
     }
     __decorate([
-        typeorm_1.Column({ primary: true }),
+        typeorm_1.PrimaryColumn({ name: "person_id" }),
         __metadata("design:type", String)
-    ], Person.prototype, "person_id", void 0);
+    ], Person.prototype, "id", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return User_1.default; }, { primary: true }),
-        typeorm_1.JoinColumn({ name: "person_id" }),
+        typeorm_1.OneToOne(function (type) { return User_1.default; }, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
+        typeorm_1.JoinColumn({ name: "user_id", referencedColumnName: "user_id" }),
         __metadata("design:type", User_1.default)
     ], Person.prototype, "user", void 0);
     __decorate([
@@ -34,11 +35,25 @@ var Person = (function () {
         __metadata("design:type", String)
     ], Person.prototype, "type", void 0);
     __decorate([
-        typeorm_1.Column(),
+        typeorm_1.OneToOne(function (type) { return Individual_1.default; }, function (individual) { return individual.person; }, {
+            cascade: true,
+            eager: true,
+        }),
+        __metadata("design:type", Individual_1.default)
+    ], Person.prototype, "individual", void 0);
+    __decorate([
+        typeorm_1.OneToOne(function (type) { return Company_1.default; }, function (company) { return company.person; }, {
+            cascade: true,
+            eager: true,
+        }),
+        __metadata("design:type", Company_1.default)
+    ], Person.prototype, "company", void 0);
+    __decorate([
+        typeorm_1.Column({ nullable: true }),
         __metadata("design:type", String)
     ], Person.prototype, "cellphone", void 0);
     __decorate([
-        typeorm_1.Column(),
+        typeorm_1.Column({ nullable: true }),
         __metadata("design:type", String)
     ], Person.prototype, "telephone", void 0);
     __decorate([
@@ -46,16 +61,18 @@ var Person = (function () {
         __metadata("design:type", Boolean)
     ], Person.prototype, "isValid", void 0);
     __decorate([
-        typeorm_1.Column({ name: "valid_at" }),
+        typeorm_1.Column({ name: "valid_at", nullable: true }),
         __metadata("design:type", Date)
     ], Person.prototype, "validAt", void 0);
     __decorate([
-        typeorm_1.OneToMany(function (type) { return Document_1.default; }, function (document) { return document.person; }),
+        typeorm_1.OneToMany(function (type) { return PersonDocument_1.default; }, function (document) { return document.person; }, {
+            cascade: true,
+        }),
         __metadata("design:type", Array)
     ], Person.prototype, "documents", void 0);
     Person = __decorate([
         typeorm_1.Entity(),
-        __metadata("design:paramtypes", [String])
+        __metadata("design:paramtypes", [])
     ], Person);
     return Person;
 }());

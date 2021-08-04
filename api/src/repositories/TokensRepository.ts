@@ -43,7 +43,7 @@ export default class TokensRepository implements ITokensRepository {
     async findByEncoded(encoded: string): Promise<Token | undefined> {
         return await this.repository.findOne({
             where: { token: encoded },
-            relations: ["user"],
+            // relations: ["user"],
         });
     }
 
@@ -57,7 +57,7 @@ export default class TokensRepository implements ITokensRepository {
     ): Promise<Token | undefined> {
         return await this.repository.findOne({
             where: { token: encoded, userId },
-            relations: ["user"],
+            // relations: ["user"],
         });
     }
 }

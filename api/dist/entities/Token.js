@@ -28,15 +28,12 @@ var Token = (function () {
     ], Token.prototype, "id", void 0);
     __decorate([
         typeorm_1.ManyToOne(function (type) { return User_1.default; }, function (user) { return user.tokens; }, {
-            cascade: ["update"],
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
         }),
-        typeorm_1.JoinColumn({ name: "user_id" }),
+        typeorm_1.JoinColumn({ name: "user_id", referencedColumnName: "user_id" }),
         __metadata("design:type", Object)
     ], Token.prototype, "user", void 0);
-    __decorate([
-        typeorm_1.Column({ name: "user_id" }),
-        __metadata("design:type", String)
-    ], Token.prototype, "userId", void 0);
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", String)

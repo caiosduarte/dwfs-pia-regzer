@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import upload from "../config/upload";
+import AppError from "../errors/AppError";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import ensureConfirmed from "../middlewares/ensureConfirmed";
 import CreateDocumentController from "../modules/people/controllers/CreateDocumentController";
@@ -31,6 +32,10 @@ function diskStorage() {
 peopleRoutes.post("/", async (request, response) => {
     const { userId, type } = request.body;
 
+    if (!userId || !type) {
+        throw new AppError("Wrong parameters.", 403);
+    }
+
     const repository = PeopleRepository.getInstance();
 
     const person = await repository.create({ userId, type });
@@ -40,20 +45,38 @@ peopleRoutes.post("/", async (request, response) => {
     return response.status(201).json(person);
 });
 
-peopleRoutes.get("/", async (request, response) => {
-    const { id } = request.user;
+peopleRoutes.get("/:id", async (request, response) => {
+    const { id } = request.params;
 
     const repository = PeopleRepository.getInstance();
 
     const person = await repository.findById(id);
 
+    /*     
     const storageProvider = diskStorage();
-
-    /*     const documentsUrl = person?.documents?.map((doc) =>
+    const documentsUrl = person?.documents?.map((doc) =>
         storageProvider.getUrl("documents", doc.filename)
     ); */
 
+    console.log(`People [${id}] get/ ${person}`);
     return response.json(person);
+});
+
+// peopleRoutes.use(ensurePermission);
+
+peopleRoutes.get("/" /*, ensurePermissions*/, async (request, response) => {
+    const { start: startInQuery, offset: offsetInQuery } = request.query;
+
+    const repository = PeopleRepository.getInstance();
+
+    const people = await repository.find({
+        start: Number(offsetInQuery),
+        offset: Number(offsetInQuery),
+    });
+
+    console.log("People ", people);
+
+    return response.json(people);
 });
 
 peopleRoutes.post(

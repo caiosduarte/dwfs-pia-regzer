@@ -12,7 +12,7 @@ export default class PersonDataSent implements IPersonDataSent, IAnalysis {
     id: string;
 
     @ManyToOne((type) => Person, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: "person_id" })
+    @JoinColumn({ name: "person_id", referencedColumnName: "id" })
     person: Person;
 
     @Column({ name: "field_name" })
@@ -26,7 +26,7 @@ export default class PersonDataSent implements IPersonDataSent, IAnalysis {
 
     // TODO: Dados abaixo são para análise
     @ManyToOne((type) => User, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: "analyst_id" /* , referencedColumnName: "user_id" */ })
+    @JoinColumn({ name: "analyst_id", referencedColumnName: "id" })
     analyst: User;
 
     @Column({ name: "user_message", type: "text" })

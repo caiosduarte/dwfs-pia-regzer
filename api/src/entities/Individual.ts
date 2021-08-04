@@ -1,29 +1,25 @@
 import { IsDate } from "class-validator";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
-import { JoinAttribute } from "typeorm/query-builder/JoinAttribute";
+
 import IIndividual from "../modules/people/models/IIndividual";
-import IPerson from "../modules/people/models/IPerson";
-import CPF from "./CPF";
+
 import { ETHNICITY, GENDER } from "./Enum";
 import Person from "./Person";
-import User from "./User";
 
 @Entity("person_individual")
 export default class Individual implements IIndividual {
     @PrimaryColumn({ name: "person_individual_id" })
     id: string;
 
-    @OneToOne((type) => Person, (person) => person.individual, {
+    @OneToOne((type) => Person, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
+        primary: true,
     })
-    @JoinColumn(
-        {
-            name: "person_individual_id",
-            referencedColumnName: "person_id",
-        }
-        // { referencedColumnName: "type" },
-    )
+    @JoinColumn({
+        name: "person_individual_id",
+        referencedColumnName: "id",
+    })
     person: Person;
 
     @Column()
@@ -33,13 +29,13 @@ export default class Individual implements IIndividual {
     @Column({ enum: GENDER })
     gender: string;
 
-    @Column({ enum: ETHNICITY })
+    @Column({ enum: ETHNICITY, default: ETHNICITY.NAO_DECLARADA })
     ethnicity: string;
 
-    @Column({ name: "mother_name" })
+    @Column({ name: "mother_name", nullable: true })
     motherName: string;
 
-    @Column({ name: "father_name" })
+    @Column({ name: "father_name", nullable: true })
     fatherName: string;
 
     @Column({
@@ -55,9 +51,6 @@ export default class Individual implements IIndividual {
     })
     civilStatus: string;
 
-    @OneToOne((type) => CPF, (cpf) => cpf.person, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    cpf: CPF;
+    // @OneToOne((type) => CPF, (cpf) => cpf.person)
+    // cpf: CPF;
 }

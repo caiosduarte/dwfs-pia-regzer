@@ -105,7 +105,7 @@ var CreateUsers1594592667317 = (function () {
                                     default: "CURRENT_TIMESTAMP",
                                 },
                             ],
-                        }))];
+                        }), false, false, true)];
                     case 1:
                         _j.sent();
                         _b = (_a = queryRunner).query;

@@ -46,57 +46,46 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserIdsFromRequest = exports.getTokenFromRequest = exports.findUsers = exports.hasAnyId = void 0;
-var hasAnyId = function (_a) {
-    var email = _a.email, document = _a.document, cellphone = _a.cellphone, id = _a.id;
-    return !!email || !!document || !!cellphone || !!id;
-};
-exports.hasAnyId = hasAnyId;
-var findUsers = function (query, repository) { return __awaiter(void 0, void 0, void 0, function () {
-    var startInQuery, offsetInQuery, start, offset;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (!exports.hasAnyId(query)) return [3, 2];
-                return [4, repository.findByIds(__assign({}, query))];
-            case 1: return [2, _a.sent()];
-            case 2:
-                startInQuery = query.start, offsetInQuery = query.offset;
-                start = Number(startInQuery);
-                offset = Number(offsetInQuery);
-                console.log("Start ", start);
-                console.log("Offset ", offset);
-                return [4, repository.find({
-                        start: Number(offsetInQuery),
-                        offset: Number(offsetInQuery),
-                    })];
-            case 3: return [2, _a.sent()];
-        }
-    });
-}); };
-exports.findUsers = findUsers;
-var getTokenFromRequest = function (request) {
-    var valueInBody = function () {
-        var token = request.body.token ||
-            request.query.token ||
-            request.headers["x-access-token"] ||
-            request.headers["x-access"];
-        if (token) {
-            return String(token);
-        }
+var AppError_1 = __importDefault(require("../../../errors/AppError"));
+var UpdateUserService = (function () {
+    function UpdateUserService(repository) {
+        this.repository = repository;
+    }
+    UpdateUserService.prototype.execute = function (values) {
+        return __awaiter(this, void 0, void 0, function () {
+            var id, email, type, user, person, updatedUser;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        id = values.id, email = values.email, type = values.type;
+                        return [4, this.repository.findById(id)];
+                    case 1:
+                        user = _a.sent();
+                        if (!user) {
+                            throw new AppError_1.default("User not found.", 404);
+                        }
+                        person = {
+                            type: type,
+                            user: user,
+                            id: user.id,
+                        };
+                        if (email && user.email !== email) {
+                            user.isConfirmed = false;
+                        }
+                        updatedUser = Object.assign(user, __assign(__assign({}, values), { person: person }));
+                        return [4, this.repository.save(updatedUser)];
+                    case 2:
+                        _a.sent();
+                        console.log("Person: ", updatedUser.person);
+                        return [2];
+                }
+            });
+        });
     };
-    var valueInAuthorizationBeared = function () {
-        var authorization = request.headers.authorization;
-        if (authorization) {
-            var _a = authorization.split(" "), token = _a[1];
-            return token;
-        }
-    };
-    return valueInAuthorizationBeared() || valueInBody();
-};
-exports.getTokenFromRequest = getTokenFromRequest;
-var getUserIdsFromRequest = function (request) {
-    return request.query.id || request.body.id || request.params.id;
-};
-exports.getUserIdsFromRequest = getUserIdsFromRequest;
+    return UpdateUserService;
+}());
+exports.default = UpdateUserService;

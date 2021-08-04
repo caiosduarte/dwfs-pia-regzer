@@ -19,14 +19,16 @@ export default class PersonDocument implements IDocument {
     @PrimaryColumn({ name: "person_document_id" })
     id: string;
 
-    @Column()
-    person_id: string;
-
-    @ManyToOne((type) => Person, (person) => person.documents)
+    @ManyToOne((type) => Person, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "person_id", referencedColumnName: "id" })
     person: Person;
 
-    @OneToOne((type) => DocumentType)
+    personId: string;
+
+    @OneToOne((type) => DocumentType, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
     @JoinColumn({
         name: "document_type_id",
         referencedColumnName: "id",

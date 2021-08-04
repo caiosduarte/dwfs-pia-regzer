@@ -8,13 +8,13 @@ import {
 } from "../modules/users/repositories/IUsersRepository";
 
 export default class UsersRepository implements IUsersRepository {
-    skip = 0;
-    take = 10;
-
     readonly INSTANCE: IUsersRepository;
     private static INSTANCE: UsersRepository;
 
     private repository: Repository<User>;
+
+    skip = 0;
+    take = 10;
 
     private constructor() {
         this.repository = getRepository(User);
@@ -29,7 +29,10 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async findByDocument(document: string): Promise<User | undefined> {
-        return await this.repository.findOne({ document });
+        return await this.repository.findOne({
+            where: { document },
+            relations: ["tokens"],
+        });
     }
 
     async findByEmail(email: string): Promise<User | undefined> {
@@ -61,10 +64,10 @@ export default class UsersRepository implements IUsersRepository {
             .createQueryBuilder("user")
             .innerJoinAndSelect("user.tokens", "token")
             .where("token.token = :token", { token })
+            .cache(true)
             .getOne();
     }
 
-    // TODO: Acrescentar os demais parâmetros se não forem nulos
     async findByIds({
         id,
         email,
@@ -84,12 +87,12 @@ export default class UsersRepository implements IUsersRepository {
     }: ISearchParams): Promise<User[] | undefined> {
         const queryBuilder = this.repository
             .createQueryBuilder("user")
-            .leftJoinAndSelect("user.person", "person")
-            .orderBy({
-                "user.updatedAt": "DESC",
-                "user.name": "ASC",
-            });
-        // .cache(true);
+            // .leftJoinAndSelect("user.person", "person")
+            // .orderBy({
+            //     "user.updatedAt": "DESC",
+            //     "user.name": "ASC",
+            // })
+            .cache(true);
 
         if (!isNaN(start) && !isNaN(offset)) {
             queryBuilder.skip(this.skip).take(this.take);

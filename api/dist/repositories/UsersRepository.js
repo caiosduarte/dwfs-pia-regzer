@@ -43,6 +43,8 @@ var typeorm_1 = require("typeorm");
 var User_1 = __importDefault(require("../entities/User"));
 var UsersRepository = (function () {
     function UsersRepository() {
+        this.skip = 0;
+        this.take = 10;
         this.repository = typeorm_1.getRepository(User_1.default);
         this.INSTANCE = this;
     }
@@ -95,7 +97,9 @@ var UsersRepository = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.repository.findOne(id, { relations: ["tokens"] })];
+                    case 0: return [4, this.repository.findOne(id, {
+                            relations: ["tokens", "person"],
+                        })];
                     case 1: return [2, _a.sent()];
                 }
             });
@@ -132,7 +136,7 @@ var UsersRepository = (function () {
                 switch (_b.label) {
                     case 0: return [4, this.repository.find({
                             where: [{ id: id }, { email: email }, { document: document }, { cellphone: cellphone }],
-                            relations: ["tokens"],
+                            relations: ["tokens", "person"],
                             cache: true,
                         })];
                     case 1: return [2, _b.sent()];
@@ -141,18 +145,24 @@ var UsersRepository = (function () {
         });
     };
     UsersRepository.prototype.find = function (_a) {
-        var _b = _a.start, start = _b === void 0 ? 0 : _b, _c = _a.offset, offset = _c === void 0 ? 10 : _c;
+        var _b = _a.start, start = _b === void 0 ? this.skip : _b, _c = _a.offset, offset = _c === void 0 ? this.take : _c;
         return __awaiter(this, void 0, void 0, function () {
+            var queryBuilder;
             return __generator(this, function (_d) {
                 switch (_d.label) {
-                    case 0: return [4, this.repository
+                    case 0:
+                        queryBuilder = this.repository
                             .createQueryBuilder("user")
-                            .orderBy("user.updatedAt", "DESC")
-                            .addOrderBy("user.name", "ASC")
-                            .skip(start)
-                            .take(offset)
-                            .cache(true)
-                            .getMany()];
+                            .leftJoinAndSelect("user.person", "person")
+                            .orderBy({
+                            "user.updatedAt": "DESC",
+                            "user.name": "ASC",
+                        })
+                            .cache(true);
+                        if (!isNaN(start) && !isNaN(offset)) {
+                            queryBuilder.skip(this.skip).take(this.take);
+                        }
+                        return [4, queryBuilder.getMany()];
                     case 1: return [2, _d.sent()];
                 }
             });

@@ -2,7 +2,7 @@ import { hash } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import ICreateUserDTO from "../dtos/ICreateUserDTO";
 import IUserResponseDTO from "../dtos/IUserResponseDTO";
-import UserMap from "../mappers/UserMap";
+import UserMap from "../mappers";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 
 class CreateUserService {

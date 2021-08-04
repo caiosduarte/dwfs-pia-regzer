@@ -14,9 +14,9 @@ var DocumentType = (function () {
     function DocumentType() {
     }
     __decorate([
-        typeorm_1.Column({ primary: true }),
+        typeorm_1.PrimaryColumn({ name: "document_type_id" }),
         __metadata("design:type", String)
-    ], DocumentType.prototype, "document_type_id", void 0);
+    ], DocumentType.prototype, "id", void 0);
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", String)

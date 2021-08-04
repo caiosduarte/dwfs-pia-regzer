@@ -116,7 +116,7 @@ authenticateRoutes.get("/sessions", function (request, response) { return __awai
                 if (!user) {
                     throw new AppError_1.default("User not found.", 404);
                 }
-                return [2, response.json(UserMap_1.default.toDTO(user))];
+                return [2, response.json({ user: UserMap_1.default.toDTO(user) })];
         }
     });
 }); });

@@ -8,7 +8,7 @@ export default class Company implements ICompany {
     @PrimaryColumn({ name: "person_company_id" })
     id: string;
 
-    @OneToOne((type) => Person, (person) => person.company, {
+    @OneToOne((type) => Person, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })

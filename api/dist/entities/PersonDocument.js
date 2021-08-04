@@ -18,8 +18,8 @@ var DocumentType_1 = __importDefault(require("./DocumentType"));
 var DocumentFile_1 = __importDefault(require("./DocumentFile"));
 var Embedded_1 = require("./Embedded");
 var Person_1 = __importDefault(require("./Person"));
-var Document = (function () {
-    function Document(type) {
+var PersonDocument = (function () {
+    function PersonDocument(type) {
         var _a;
         if (this.id) {
             this.id = uuid_1.v4();
@@ -29,21 +29,21 @@ var Document = (function () {
             this.isMain = false;
         }
     }
-    Object.defineProperty(Document.prototype, "name", {
+    Object.defineProperty(PersonDocument.prototype, "name", {
         get: function () {
             return this.initials || this.type.description;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Document.prototype, "initials", {
+    Object.defineProperty(PersonDocument.prototype, "initials", {
         get: function () {
             return this.type.initials;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Document.prototype, "numberWithMask", {
+    Object.defineProperty(PersonDocument.prototype, "numberWithMask", {
         get: function () {
             return this.number;
         },
@@ -51,56 +51,60 @@ var Document = (function () {
         configurable: true
     });
     __decorate([
-        typeorm_1.Column({ primary: true }),
+        typeorm_1.PrimaryColumn({ name: "person_document_id" }),
         __metadata("design:type", String)
-    ], Document.prototype, "person_document_id", void 0);
+    ], PersonDocument.prototype, "id", void 0);
+    __decorate([
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], PersonDocument.prototype, "person_id", void 0);
     __decorate([
         typeorm_1.ManyToOne(function (type) { return Person_1.default; }, function (person) { return person.documents; }),
-        typeorm_1.JoinColumn({ name: "person_id", referencedColumnName: "person_id" }),
+        typeorm_1.JoinColumn({ name: "person_id", referencedColumnName: "id" }),
         __metadata("design:type", Person_1.default)
-    ], Document.prototype, "person", void 0);
+    ], PersonDocument.prototype, "person", void 0);
     __decorate([
         typeorm_1.OneToOne(function (type) { return DocumentType_1.default; }),
         typeorm_1.JoinColumn({
             name: "document_type_id",
-            referencedColumnName: "document_type_id",
+            referencedColumnName: "id",
         }),
         __metadata("design:type", DocumentType_1.default)
-    ], Document.prototype, "type", void 0);
+    ], PersonDocument.prototype, "type", void 0);
     __decorate([
         typeorm_1.Column({ name: "document_number" }),
         __metadata("design:type", String)
-    ], Document.prototype, "number", void 0);
+    ], PersonDocument.prototype, "number", void 0);
     __decorate([
         typeorm_1.Column({ name: "dispatch_date", type: "date" }),
         __metadata("design:type", Date)
-    ], Document.prototype, "dispatchDate", void 0);
+    ], PersonDocument.prototype, "dispatchDate", void 0);
     __decorate([
         typeorm_1.Column({ name: "issuing_agency" }),
         __metadata("design:type", String)
-    ], Document.prototype, "issuingAgency", void 0);
+    ], PersonDocument.prototype, "issuingAgency", void 0);
     __decorate([
         typeorm_1.Column({ name: "person_name" }),
         __metadata("design:type", String)
-    ], Document.prototype, "personName", void 0);
+    ], PersonDocument.prototype, "personName", void 0);
     __decorate([
         typeorm_1.Column({ name: "is_main", default: false }),
         __metadata("design:type", Boolean)
-    ], Document.prototype, "isMain", void 0);
+    ], PersonDocument.prototype, "isMain", void 0);
     __decorate([
         typeorm_1.OneToMany(function (type) { return DocumentFile_1.default; }, function (file) { return file.document; }, {
             cascade: true,
         }),
         __metadata("design:type", Array)
-    ], Document.prototype, "files", void 0);
+    ], PersonDocument.prototype, "files", void 0);
     __decorate([
         typeorm_1.Column(function (type) { return Embedded_1.CreatedTimestamp; }),
         __metadata("design:type", Embedded_1.CreatedTimestamp)
-    ], Document.prototype, "createdAt", void 0);
-    Document = __decorate([
+    ], PersonDocument.prototype, "createdAt", void 0);
+    PersonDocument = __decorate([
         typeorm_1.Entity({ name: "person_document" }),
         __metadata("design:paramtypes", [DocumentType_1.default])
-    ], Document);
-    return Document;
+    ], PersonDocument);
+    return PersonDocument;
 }());
-exports.default = Document;
+exports.default = PersonDocument;

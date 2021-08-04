@@ -10,12 +10,12 @@ export default class Token implements IToken {
     @PrimaryColumn({ name: "user_token_id" })
     id: string;
 
-    @ManyToOne((type) => User, (user) => user.tokens, {
+    @ManyToOne((type) => User, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })
-    @JoinColumn({ name: "user_id" })
-    user: IUser;
+    @JoinColumn({ name: "user_id", referencedColumnName: "id" })
+    user: User;
 
     @Column({ name: "user_id" })
     userId: string;
