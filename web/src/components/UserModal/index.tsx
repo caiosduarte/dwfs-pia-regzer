@@ -90,7 +90,7 @@ export function UserModal(props: UserModalProps) {
             await withAuth(
                 {},
                 toPublic,
-                api.put(`users/${user?.id}`, { ...user }),
+                api.put(`people/${user?.id}`, { ...user }),
                 signOut
             );
             onRequestClose();
