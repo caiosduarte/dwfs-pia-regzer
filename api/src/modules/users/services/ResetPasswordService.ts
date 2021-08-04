@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import IUserResponseDTO from "../dtos/IUserResponseDTO";
-import UserMap from "../mappers";
+import UserMap from "../../../mappers";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 import { isTokenExpired } from "../utils/token";

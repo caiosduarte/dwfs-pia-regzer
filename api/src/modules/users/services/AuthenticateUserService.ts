@@ -3,7 +3,7 @@ import { compare } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
 import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
-import UserMap from "../mappers";
+import UserMap from "../../../mappers";
 
 import IToken from "../models/IToken";
 

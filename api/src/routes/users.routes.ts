@@ -1,9 +1,10 @@
 import { Router } from "express";
 import AppError from "../errors/AppError";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
+import { UserMapper } from "../mappers/PersonMap";
 import { createUserController } from "../modules/users/controllers";
 import IUserResponseDTO from "../modules/users/dtos/IUserResponseDTO";
-import UserMap from "../modules/users/mappers";
+import UserMap from "../mappers";
 import IUser from "../modules/users/models/IUser";
 import ConfirmUserService from "../modules/users/services/ConfirmUserService";
 import SendConfirmMailService from "../modules/users/services/SendConfirmMailService";
@@ -46,7 +47,7 @@ usersRouter.get("/:id", ensureAuthenticated, async (request, response) => {
         throw new AppError("User not found!", 404);
     }
 
-    return response.json(UserMap.toDTO(user));
+    return response.json(UserMapper.toDTO(user));
 });
 
 usersRouter.get("/", ensureAuthenticated, async (request, response) => {
@@ -54,18 +55,20 @@ usersRouter.get("/", ensureAuthenticated, async (request, response) => {
 
     const query = request.query as IUserSearch;
 
-    const users = await findUsers(query, repository).then((users) =>
-        users?.reduce((dtos: IUserResponseDTO[], user: IUser) => {
-            console.log("Users with find: ", user);
-            return [...dtos, UserMap.toDTO(user)];
-        }, [])
-    );
+    // const users = await findUsers(query, repository).then((users) =>
+    //     users?.reduce((dtos: IUserResponseDTO[], user: IUser) => {
+    //         console.log("Users with find: ", user);
+    //         return [...dtos, UserMap.toDTO(user)];
+    //     }, [])
+    // );
+
+    const users = await findUsers(query, repository);
 
     if (!users) {
         throw new AppError("User not found.", 404);
     }
 
-    return response.json(users);
+    return response.json(UserMapper.toDTO(users));
 });
 
 usersRouter.put("/:id", ensureAuthenticated, async (request, response) => {
@@ -75,10 +78,7 @@ usersRouter.put("/:id", ensureAuthenticated, async (request, response) => {
 
     const repository = UsersRepository.getInstance();
 
-    const service = new UpdateUserService(
-        repository
-        // PeopleRepository.getInstance()
-    );
+    const service = new UpdateUserService(repository);
 
     await service.execute({ id, ...values });
 

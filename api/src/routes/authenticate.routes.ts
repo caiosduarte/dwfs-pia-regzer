@@ -5,7 +5,7 @@ import {
     authenticateUserController,
     refreshTokenController,
 } from "../modules/users/controllers";
-import UserMap from "../modules/users/mappers";
+import UserMap from "../mappers";
 import {
     createRefreshToken,
     createToken,

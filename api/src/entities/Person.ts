@@ -28,7 +28,7 @@ export default class Person implements IPerson {
     id: string;
 
     @OneToOne((type) => User, {
-        // eager: true,
+        eager: true,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
         primary: true,

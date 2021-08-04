@@ -51,7 +51,7 @@ export default class UsersRepository implements IUsersRepository {
 
     async findById(id: string): Promise<User | undefined> {
         return await this.repository.findOne(id, {
-            relations: ["tokens", "person"],
+            relations: ["tokens"],
         });
     }
 
@@ -76,7 +76,7 @@ export default class UsersRepository implements IUsersRepository {
     }: IUserQueryParams): Promise<User[] | undefined> {
         return await this.repository.find({
             where: [{ id }, { email }, { document }, { cellphone }],
-            relations: ["tokens", "person"],
+            relations: ["tokens"],
             cache: true,
         });
     }
@@ -87,11 +87,11 @@ export default class UsersRepository implements IUsersRepository {
     }: ISearchParams): Promise<User[] | undefined> {
         const queryBuilder = this.repository
             .createQueryBuilder("user")
-            // .leftJoinAndSelect("user.person", "person")
-            // .orderBy({
-            //     "user.updatedAt": "DESC",
-            //     "user.name": "ASC",
-            // })
+            .leftJoinAndSelect("user.person", "person")
+            .orderBy({
+                "user.updatedAt": "DESC",
+                "user.name": "ASC",
+            })
             .cache(true);
 
         if (!isNaN(start) && !isNaN(offset)) {

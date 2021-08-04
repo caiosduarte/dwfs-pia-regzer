@@ -1,5 +1,6 @@
-import IUserResponseDTO from "../dtos/IUserResponseDTO";
-import IUser from "../models/IUser";
+import IPerson from "../modules/people/models/IPerson";
+import IUserResponseDTO from "../modules/users/dtos/IUserResponseDTO";
+import IUser from "../modules/users/models/IUser";
 
 export default class UserMap {
     static toDTO({

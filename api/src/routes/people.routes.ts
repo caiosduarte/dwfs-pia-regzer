@@ -5,7 +5,10 @@ import AppError from "../errors/AppError";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import ensureConfirmed from "../middlewares/ensureConfirmed";
 import CreateDocumentController from "../modules/people/controllers/CreateDocumentController";
+import { PersonMapper } from "../mappers/PersonMap";
+
 import CreateDocumentService from "../modules/people/services/CreateDocumentService";
+
 import AWSS3StorageProvider from "../providers/StorageProvider/implementations/AWSS3StorageProvider";
 import { LocalStorageProvider } from "../providers/StorageProvider/implementations/LocalStorageProvider";
 import DocumentsRepository from "../repositories/DocumentsRepository";
@@ -58,8 +61,8 @@ peopleRoutes.get("/:id", async (request, response) => {
         storageProvider.getUrl("documents", doc.filename)
     ); */
 
-    console.log(`People [${id}] get/ ${person}`);
-    return response.json(person);
+    console.log(`People [${id}] get/`, person);
+    return response.json(PersonMapper.toDTO(person));
 });
 
 // peopleRoutes.use(ensurePermission);
@@ -76,7 +79,7 @@ peopleRoutes.get("/" /*, ensurePermissions*/, async (request, response) => {
 
     console.log("People ", people);
 
-    return response.json(people);
+    return response.json(PersonMapper.toDTO(people));
 });
 
 peopleRoutes.post(
