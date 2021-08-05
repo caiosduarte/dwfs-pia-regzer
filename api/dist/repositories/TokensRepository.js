@@ -94,7 +94,6 @@ var TokensRepository = (function () {
                 switch (_a.label) {
                     case 0: return [4, this.repository.findOne({
                             where: { token: encoded },
-                            relations: ["user"],
                         })];
                     case 1: return [2, _a.sent()];
                 }
@@ -117,7 +116,6 @@ var TokensRepository = (function () {
                 switch (_a.label) {
                     case 0: return [4, this.repository.findOne({
                             where: { token: encoded, userId: userId },
-                            relations: ["user"],
                         })];
                     case 1: return [2, _a.sent()];
                 }

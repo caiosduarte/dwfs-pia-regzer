@@ -10,7 +10,7 @@
     "license": "MIT",
     "scripts": {
         "clean": "rimraf dist/",
-        "copy-files": "copyfiles -e src/**/*.ts -as -u 1 src/**/*.* dist/",
+        "copy-files": "copyfiles -e src/**/*.ts -e *.log -as -u 1 src/**/*.* dist/",
         "typeorm:migrations": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js migration:run",
         "typeorm:cache": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js schema:sync",
         "build-w-tsc": "yarn clean && cross-env NODE_OPTIONS=--max-old-space-size=768 tsc && yarn copy-files",

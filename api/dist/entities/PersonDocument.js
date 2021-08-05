@@ -55,16 +55,15 @@ var PersonDocument = (function () {
         __metadata("design:type", String)
     ], PersonDocument.prototype, "id", void 0);
     __decorate([
-        typeorm_1.Column(),
-        __metadata("design:type", String)
-    ], PersonDocument.prototype, "person_id", void 0);
-    __decorate([
-        typeorm_1.ManyToOne(function (type) { return Person_1.default; }, function (person) { return person.documents; }),
+        typeorm_1.ManyToOne(function (type) { return Person_1.default; }, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
         typeorm_1.JoinColumn({ name: "person_id", referencedColumnName: "id" }),
         __metadata("design:type", Person_1.default)
     ], PersonDocument.prototype, "person", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return DocumentType_1.default; }),
+        typeorm_1.OneToOne(function (type) { return DocumentType_1.default; }, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        }),
         typeorm_1.JoinColumn({
             name: "document_type_id",
             referencedColumnName: "id",

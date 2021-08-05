@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var UserMap_1 = __importDefault(require("../mappers/UserMap"));
+var mappers_1 = __importDefault(require("../../../mappers"));
 var CreateUserService = (function () {
     function CreateUserService(repository) {
         this.repository = repository;
@@ -80,7 +80,7 @@ var CreateUserService = (function () {
                             })];
                     case 5:
                         user = _b.sent();
-                        return [2, UserMap_1.default.toDTO(user)];
+                        return [2, mappers_1.default.toDTO(user)];
                 }
             });
         });

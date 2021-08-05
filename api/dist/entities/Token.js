@@ -27,13 +27,17 @@ var Token = (function () {
         __metadata("design:type", String)
     ], Token.prototype, "id", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function (type) { return User_1.default; }, function (user) { return user.tokens; }, {
+        typeorm_1.ManyToOne(function (type) { return User_1.default; }, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
         }),
-        typeorm_1.JoinColumn({ name: "user_id", referencedColumnName: "user_id" }),
-        __metadata("design:type", Object)
+        typeorm_1.JoinColumn({ name: "user_id", referencedColumnName: "id" }),
+        __metadata("design:type", User_1.default)
     ], Token.prototype, "user", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "user_id" }),
+        __metadata("design:type", String)
+    ], Token.prototype, "userId", void 0);
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", String)

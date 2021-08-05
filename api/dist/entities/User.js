@@ -61,21 +61,13 @@ var User = (function () {
         __metadata("design:type", Boolean)
     ], User.prototype, "isValid", void 0);
     __decorate([
-        typeorm_1.CreateDateColumn({ name: "created_at" }),
-        __metadata("design:type", Date)
-    ], User.prototype, "createdAt", void 0);
-    __decorate([
-        typeorm_1.UpdateDateColumn({ name: "updated_at" }),
-        __metadata("design:type", Date)
-    ], User.prototype, "updatedAt", void 0);
-    __decorate([
         typeorm_1.OneToMany(function (type) { return Token_1.default; }, function (token) { return token.user; }, {
             cascade: true,
         }),
         __metadata("design:type", Array)
     ], User.prototype, "tokens", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return Person_1.default; }, {
+        typeorm_1.OneToOne(function (type) { return Person_1.default; }, function (person) { return person.user; }, {
             cascade: true,
         }),
         __metadata("design:type", Person_1.default)
@@ -88,8 +80,16 @@ var User = (function () {
         typeorm_1.Column({ name: "confirmed_at", nullable: true }),
         __metadata("design:type", Date)
     ], User.prototype, "confirmedAt", void 0);
+    __decorate([
+        typeorm_1.CreateDateColumn({ name: "created_at" }),
+        __metadata("design:type", Date)
+    ], User.prototype, "createdAt", void 0);
+    __decorate([
+        typeorm_1.UpdateDateColumn({ name: "updated_at" }),
+        __metadata("design:type", Date)
+    ], User.prototype, "updatedAt", void 0);
     User = __decorate([
-        typeorm_1.Entity(),
+        typeorm_1.Entity({}),
         __metadata("design:paramtypes", [])
     ], User);
     return User;

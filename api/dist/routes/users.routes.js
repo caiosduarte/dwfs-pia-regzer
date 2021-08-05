@@ -46,11 +46,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -58,8 +53,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var AppError_1 = __importDefault(require("../errors/AppError"));
 var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
+var PersonMap_1 = require("../mappers/PersonMap");
 var controllers_1 = require("../modules/users/controllers");
-var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
 var ConfirmUserService_1 = __importDefault(require("../modules/users/services/ConfirmUserService"));
 var SendConfirmMailService_1 = __importDefault(require("../modules/users/services/SendConfirmMailService"));
 var UpdateUserService_1 = __importDefault(require("../modules/users/services/UpdateUserService"));
@@ -88,7 +83,7 @@ usersRouter.get("/:id", ensureAuthenticated_1.ensureAuthenticated, function (req
                 if (!user) {
                     throw new AppError_1.default("User not found!", 404);
                 }
-                return [2, response.json(UserMap_1.default.toDTO(user))];
+                return [2, response.json(PersonMap_1.UserMapper.toDTO(user))];
         }
     });
 }); });
@@ -99,18 +94,13 @@ usersRouter.get("/", ensureAuthenticated_1.ensureAuthenticated, function (reques
             case 0:
                 repository = UsersRepository_1.default.getInstance();
                 query = request.query;
-                return [4, request_1.findUsers(query, repository).then(function (users) {
-                        return users === null || users === void 0 ? void 0 : users.reduce(function (dtos, user) {
-                            console.log("Users with find: ", user);
-                            return __spreadArray(__spreadArray([], dtos), [UserMap_1.default.toDTO(user)]);
-                        }, []);
-                    })];
+                return [4, request_1.findUsers(query, repository)];
             case 1:
                 users = _a.sent();
                 if (!users) {
                     throw new AppError_1.default("User not found.", 404);
                 }
-                return [2, response.json(users)];
+                return [2, response.json(PersonMap_1.UserMapper.toDTO(users))];
         }
     });
 }); });

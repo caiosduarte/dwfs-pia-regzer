@@ -23,7 +23,7 @@ var Company = (function () {
         __metadata("design:type", String)
     ], Company.prototype, "id", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return Person_1.default; }, function (person) { return person.company; }, {
+        typeorm_1.OneToOne(function (type) { return Person_1.default; }, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
         }),

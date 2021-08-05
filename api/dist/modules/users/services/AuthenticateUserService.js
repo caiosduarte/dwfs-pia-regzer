@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt_1 = require("bcrypt");
 var AppError_1 = __importDefault(require("../../../errors/AppError"));
-var UserMap_1 = __importDefault(require("../mappers/UserMap"));
+var mappers_1 = __importDefault(require("../../../mappers"));
 var createJwt_1 = require("../utils/createJwt");
 var token_1 = require("../utils/token");
 var hasRefreshTokenValid = function (ids, tokens) {
@@ -92,7 +92,7 @@ var AuthenticateUserService = (function () {
                             expiresAt: this.dateProvider.addDays(refreshTokenDays),
                         });
                         return [2, {
-                                user: UserMap_1.default.toDTO(user),
+                                user: mappers_1.default.toDTO(user),
                                 token: token,
                                 refreshToken: refreshToken,
                             }];

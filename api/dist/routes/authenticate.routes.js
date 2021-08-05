@@ -53,7 +53,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var AppError_1 = __importDefault(require("../errors/AppError"));
 var controllers_1 = require("../modules/users/controllers");
-var UserMap_1 = __importDefault(require("../modules/users/mappers/UserMap"));
+var mappers_1 = __importDefault(require("../mappers"));
 var request_1 = require("../modules/users/utils/request");
 var request_2 = require("../modules/users/utils/request");
 var token_1 = require("../modules/users/utils/token");
@@ -116,7 +116,7 @@ authenticateRoutes.get("/sessions", function (request, response) { return __awai
                 if (!user) {
                     throw new AppError_1.default("User not found.", 404);
                 }
-                return [2, response.json({ user: UserMap_1.default.toDTO(user) })];
+                return [2, response.json({ user: mappers_1.default.toDTO(user) })];
         }
     });
 }); });

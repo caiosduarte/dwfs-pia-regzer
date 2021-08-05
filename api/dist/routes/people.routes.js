@@ -46,6 +46,7 @@ var AppError_1 = __importDefault(require("../errors/AppError"));
 var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
 var ensureConfirmed_1 = __importDefault(require("../middlewares/ensureConfirmed"));
 var CreateDocumentController_1 = __importDefault(require("../modules/people/controllers/CreateDocumentController"));
+var PersonMap_1 = require("../mappers/PersonMap");
 var CreateDocumentService_1 = __importDefault(require("../modules/people/services/CreateDocumentService"));
 var AWSS3StorageProvider_1 = __importDefault(require("../providers/StorageProvider/implementations/AWSS3StorageProvider"));
 var LocalStorageProvider_1 = require("../providers/StorageProvider/implementations/LocalStorageProvider");
@@ -84,12 +85,18 @@ peopleRoutes.post("/", function (request, response) { return __awaiter(void 0, v
     });
 }); });
 peopleRoutes.get("/:id", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, person;
+    var id, repository, person;
     return __generator(this, function (_a) {
-        id = request.params.id;
-        console.log("People get/:id");
-        person = {};
-        return [2, response.json(person)];
+        switch (_a.label) {
+            case 0:
+                id = request.params.id;
+                repository = PeopleRepository_1.default.getInstance();
+                return [4, repository.findById(id)];
+            case 1:
+                person = _a.sent();
+                console.log("People [" + id + "] get/", person);
+                return [2, response.json(PersonMap_1.PersonMapper.toDTO(person))];
+        }
     });
 }); });
 peopleRoutes.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
@@ -105,7 +112,8 @@ peopleRoutes.get("/", function (request, response) { return __awaiter(void 0, vo
                     })];
             case 1:
                 people = _b.sent();
-                return [2, response.json(people)];
+                console.log("People ", people);
+                return [2, response.json(PersonMap_1.PersonMapper.toDTO(people))];
         }
     });
 }); });

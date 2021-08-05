@@ -58,7 +58,10 @@ var UsersRepository = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.repository.findOne({ document: document })];
+                    case 0: return [4, this.repository.findOne({
+                            where: { document: document },
+                            relations: ["tokens"],
+                        })];
                     case 1: return [2, _a.sent()];
                 }
             });
@@ -98,7 +101,7 @@ var UsersRepository = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.repository.findOne(id, {
-                            relations: ["tokens", "person"],
+                            relations: ["tokens"],
                         })];
                     case 1: return [2, _a.sent()];
                 }
@@ -123,6 +126,7 @@ var UsersRepository = (function () {
                             .createQueryBuilder("user")
                             .innerJoinAndSelect("user.tokens", "token")
                             .where("token.token = :token", { token: token })
+                            .cache(true)
                             .getOne()];
                     case 1: return [2, _a.sent()];
                 }
@@ -136,7 +140,7 @@ var UsersRepository = (function () {
                 switch (_b.label) {
                     case 0: return [4, this.repository.find({
                             where: [{ id: id }, { email: email }, { document: document }, { cellphone: cellphone }],
-                            relations: ["tokens", "person"],
+                            relations: ["tokens"],
                             cache: true,
                         })];
                     case 1: return [2, _b.sent()];

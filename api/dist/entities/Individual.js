@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var class_validator_1 = require("class-validator");
 var typeorm_1 = require("typeorm");
-var CPF_1 = __importDefault(require("./CPF"));
 var Enum_1 = require("./Enum");
 var Person_1 = __importDefault(require("./Person"));
 var Individual = (function () {
@@ -25,9 +24,10 @@ var Individual = (function () {
         __metadata("design:type", String)
     ], Individual.prototype, "id", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return Person_1.default; }, function (person) { return person.individual; }, {
+        typeorm_1.OneToOne(function (type) { return Person_1.default; }, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
+            primary: true,
         }),
         typeorm_1.JoinColumn({
             name: "person_individual_id",
@@ -70,10 +70,6 @@ var Individual = (function () {
         }),
         __metadata("design:type", String)
     ], Individual.prototype, "civilStatus", void 0);
-    __decorate([
-        typeorm_1.OneToOne(function (type) { return CPF_1.default; }, function (cpf) { return cpf.person; }),
-        __metadata("design:type", CPF_1.default)
-    ], Individual.prototype, "cpf", void 0);
     Individual = __decorate([
         typeorm_1.Entity("person_individual")
     ], Individual);

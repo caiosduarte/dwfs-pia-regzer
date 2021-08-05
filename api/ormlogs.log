@@ -5788,3 +5788,324 @@
 [2021-08-04T18:48:36.689Z][QUERY]: DROP TABLE "person_data_sent"
 [2021-08-04T18:48:36.690Z][QUERY]: ALTER TABLE "temporary_person_data_sent" RENAME TO "person_data_sent"
 [2021-08-04T18:48:36.693Z][QUERY]: COMMIT
+[2021-08-05T19:35:30.523Z][QUERY]: PRAGMA foreign_keys = OFF;
+[2021-08-05T19:35:30.530Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T19:35:30.531Z][QUERY]: SELECT 'DROP VIEW "' || name || '";' as query FROM "sqlite_master" WHERE "type" = 'view'
+[2021-08-05T19:35:30.534Z][QUERY]: SELECT 'DROP TABLE "' || name || '";' as query FROM "sqlite_master" WHERE "type" = 'table' AND "name" != 'sqlite_sequence'
+[2021-08-05T19:35:30.535Z][QUERY]: DROP TABLE "migrations";
+[2021-08-05T19:35:30.536Z][QUERY]: DROP TABLE "document_type";
+[2021-08-05T19:35:30.536Z][QUERY]: DROP TABLE "query-result-cache";
+[2021-08-05T19:35:30.537Z][QUERY]: DROP TABLE "person_document_file";
+[2021-08-05T19:35:30.538Z][QUERY]: DROP TABLE "user_token";
+[2021-08-05T19:35:30.538Z][QUERY]: DROP TABLE "user";
+[2021-08-05T19:35:30.539Z][QUERY]: DROP TABLE "person_individual";
+[2021-08-05T19:35:30.540Z][QUERY]: DROP TABLE "person_company";
+[2021-08-05T19:35:30.540Z][QUERY]: DROP TABLE "person_document";
+[2021-08-05T19:35:30.541Z][QUERY]: DROP TABLE "person";
+[2021-08-05T19:35:30.542Z][QUERY]: DROP TABLE "person_data_sent";
+[2021-08-05T19:35:30.546Z][QUERY]: COMMIT
+[2021-08-05T19:35:30.566Z][QUERY]: PRAGMA foreign_keys = ON;
+[2021-08-05T19:36:03.270Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:36:03.275Z][QUERY]: CREATE TABLE "migrations" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "timestamp" bigint NOT NULL, "name" varchar NOT NULL)
+[2021-08-05T19:36:03.305Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:36:03.307Z]0 migrations are already loaded in the database.
+[2021-08-05T19:36:03.307Z]2 migrations were found in the source code.
+[2021-08-05T19:36:03.308Z]2 migrations are new migrations that needs to be executed.
+[2021-08-05T19:36:03.309Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T19:36:03.357Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$B6eqCSQtT2ILew65TM3nW.GokURKjg4VfOjUjb7x0U.jz18MCBkgS",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$Ien9I/I54Qty.OUjMKA98.ZxxuuTJOf1wEdyEKIyPvVUV3g9wjMGG",false,true,true]]
+[2021-08-05T19:36:03.360Z][FAILED QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$B6eqCSQtT2ILew65TM3nW.GokURKjg4VfOjUjb7x0U.jz18MCBkgS",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$Ien9I/I54Qty.OUjMKA98.ZxxuuTJOf1wEdyEKIyPvVUV3g9wjMGG",false,true,true]]
+[2021-08-05T19:36:03.360Z][QUERY ERROR]: Error: SQLITE_ERROR: no such table: user
+[2021-08-05T19:36:03.361Z][QUERY]: ROLLBACK
+[2021-08-05T19:37:08.902Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:37:08.909Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:37:08.910Z] [ ] CreateUsers1594592667317
+[2021-08-05T19:37:08.911Z] [ ] DefaultEntities1628190483723
+[2021-08-05T19:54:38.136Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:54:38.146Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:54:38.147Z]0 migrations are already loaded in the database.
+[2021-08-05T19:54:38.148Z]2 migrations were found in the source code.
+[2021-08-05T19:54:38.149Z]2 migrations are new migrations that needs to be executed.
+[2021-08-05T19:54:38.150Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T19:54:38.196Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$I.VXI4E1creh/btKVBnrxudj5Fc67WiWWGv1hRoevc9JND0kZzyr6",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$BVKtvTWdIl9SiK6EXOWY4.asBY8ntW2o5NoDu7yMfGXIK514Dk5eW",false,true,true]]
+[2021-08-05T19:54:38.198Z][FAILED QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$I.VXI4E1creh/btKVBnrxudj5Fc67WiWWGv1hRoevc9JND0kZzyr6",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$BVKtvTWdIl9SiK6EXOWY4.asBY8ntW2o5NoDu7yMfGXIK514Dk5eW",false,true,true]]
+[2021-08-05T19:54:38.198Z][QUERY ERROR]: Error: SQLITE_ERROR: no such table: user
+[2021-08-05T19:54:38.200Z][QUERY]: ROLLBACK
+[2021-08-05T19:55:05.283Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:55:05.292Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:55:05.295Z] [ ] CreateUsers1594592667317
+[2021-08-05T19:55:05.295Z] [ ] DefaultEntities1628193006702
+[2021-08-05T19:55:28.337Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:55:28.344Z][QUERY]: CREATE TABLE "migrations" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "timestamp" bigint NOT NULL, "name" varchar NOT NULL)
+[2021-08-05T19:55:28.379Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:55:28.381Z]0 migrations are already loaded in the database.
+[2021-08-05T19:55:28.381Z]2 migrations were found in the source code.
+[2021-08-05T19:55:28.382Z]2 migrations are new migrations that needs to be executed.
+[2021-08-05T19:55:28.383Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T19:55:28.431Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$SYL0M4qai0942NIqvRP.IO2XDeot1HpwimOYNkYqKqIvwHy3JCwpC",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$fpX.YzRS/HlCcIanTLrKRe/oxwKbAmNJmrNRFaJrCxpcSFVf68gmG",false,true,true]]
+[2021-08-05T19:55:28.434Z][FAILED QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$SYL0M4qai0942NIqvRP.IO2XDeot1HpwimOYNkYqKqIvwHy3JCwpC",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$fpX.YzRS/HlCcIanTLrKRe/oxwKbAmNJmrNRFaJrCxpcSFVf68gmG",false,true,true]]
+[2021-08-05T19:55:28.434Z][QUERY ERROR]: Error: SQLITE_ERROR: no such table: user
+[2021-08-05T19:55:28.435Z][QUERY]: ROLLBACK
+[2021-08-05T19:55:50.086Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:55:50.094Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:55:50.096Z] [ ] CreateUsers1594592667317
+[2021-08-05T19:55:50.096Z] [ ] DefaultEntities1628193006702
+[2021-08-05T19:56:49.516Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:56:49.523Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:56:49.525Z]0 migrations are already loaded in the database.
+[2021-08-05T19:56:49.525Z]2 migrations were found in the source code.
+[2021-08-05T19:56:49.526Z]2 migrations are new migrations that needs to be executed.
+[2021-08-05T19:56:49.527Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T19:56:49.573Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$4JWJ6/sqnbqRT4.cnJelr.lznXLeMRnK5QWrMRsfV30Zg6jd25HVS",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$pCXJ6lnAeSAXBIfcIjMrqehcARMWMpKkw3iEIRvT26LiPkDZMnUga",false,true,true]]
+[2021-08-05T19:56:49.576Z][FAILED QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$4JWJ6/sqnbqRT4.cnJelr.lznXLeMRnK5QWrMRsfV30Zg6jd25HVS",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$pCXJ6lnAeSAXBIfcIjMrqehcARMWMpKkw3iEIRvT26LiPkDZMnUga",false,true,true]]
+[2021-08-05T19:56:49.576Z][QUERY ERROR]: Error: SQLITE_ERROR: no such table: user
+[2021-08-05T19:56:49.577Z][QUERY]: ROLLBACK
+[2021-08-05T19:57:32.602Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:57:32.609Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:57:32.611Z]0 migrations are already loaded in the database.
+[2021-08-05T19:57:32.611Z]2 migrations were found in the source code.
+[2021-08-05T19:57:32.612Z]2 migrations are new migrations that needs to be executed.
+[2021-08-05T19:57:32.613Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T19:57:32.617Z][QUERY]: INSERT INTO "migrations"("timestamp", "name") VALUES (?, ?) -- PARAMETERS: [1594592667317,"CreateUsers1594592667317"]
+[2021-08-05T19:57:32.624Z]Migration CreateUsers1594592667317 has been executed successfully.
+[2021-08-05T19:57:32.626Z][QUERY]: CREATE TABLE "user_token" ("user_token_id" varchar PRIMARY KEY NOT NULL, "user_id" varchar NOT NULL, "token" varchar NOT NULL, "expires_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T19:57:32.627Z][QUERY]: CREATE TABLE "user" ("user_id" varchar PRIMARY KEY NOT NULL, "name" varchar NOT NULL, "document" varchar, "email" varchar NOT NULL, "cellphone" varchar, "password" varchar NOT NULL, "is_admin" boolean NOT NULL DEFAULT (0), "is_confirmed" boolean NOT NULL DEFAULT (0), "is_valid" boolean NOT NULL DEFAULT (1), "validated_at" datetime, "confirmed_at" datetime, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T19:57:32.628Z][QUERY]: CREATE TABLE "person_individual" ("person_individual_id" varchar PRIMARY KEY NOT NULL, "birthday" datetime NOT NULL, "gender" varchar CHECK( gender IN ('M','F','O') ) NOT NULL, "ethnicity" varchar CHECK( ethnicity IN ('AFRODESCENDENTE','BRANCO','ASIÁTICO','AMERÍNDIO','MULATO','MULTIRRACIAL/PARDO','NÃO DECLARADA') ) NOT NULL DEFAULT ('NÃO DECLARADA'), "mother_name" varchar, "father_name" varchar, "civil_status" varchar CHECK( civil_status IN ('SOLTEIRO','UNIÃO ESTÁVEL','CASADO','SEPARADO','DIVORCIADO','VIÚVO') ) NOT NULL, CONSTRAINT "REL_6ffe10839f581769aa80188285" UNIQUE ("person_individual_id"))
+[2021-08-05T19:57:32.629Z][QUERY]: CREATE TABLE "document_type" ("document_type_id" varchar PRIMARY KEY NOT NULL, "initials" varchar NOT NULL, "description" varchar NOT NULL, "person_type" varchar CHECK( person_type IN ('F','J','T') ) NOT NULL, "mask" varchar NOT NULL, "is_main" boolean NOT NULL)
+[2021-08-05T19:57:32.630Z][QUERY]: CREATE TABLE "person_document_file" ("person_document_file_id" varchar PRIMARY KEY NOT NULL, "person_document_id" varchar NOT NULL, "filename" varchar NOT NULL, "mimetype" varchar NOT NULL)
+[2021-08-05T19:57:32.631Z][QUERY]: CREATE TABLE "person_document" ("person_document_id" varchar PRIMARY KEY NOT NULL, "document_number" varchar NOT NULL, "dispatch_date" date NOT NULL, "issuing_agency" varchar NOT NULL, "person_name" varchar NOT NULL, "is_main" boolean NOT NULL DEFAULT (0), "person_id" varchar, "document_type_id" varchar, "createdAtCreated_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "REL_06d08640b21137b4a4ac77fa9b" UNIQUE ("document_type_id"))
+[2021-08-05T19:57:32.633Z][QUERY]: CREATE TABLE "person" ("person_id" varchar PRIMARY KEY NOT NULL, "type" varchar CHECK( type IN ('F','J','O','A') ) NOT NULL, "cellphone" varchar, "telephone" varchar, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime, CONSTRAINT "REL_403c951c5e9b776c16385a8940" UNIQUE ("person_id"))
+[2021-08-05T19:57:32.634Z][QUERY]: CREATE TABLE "person_company" ("person_company_id" varchar PRIMARY KEY NOT NULL, "fantasy_name" varchar NOT NULL, "open_date" date NOT NULL, "end_date" date, "responsible_name" varchar NOT NULL, CONSTRAINT "REL_7da75ef700b766ecea3b1a7f0c" UNIQUE ("person_company_id"))
+[2021-08-05T19:57:32.634Z][QUERY]: CREATE TABLE "person_data_sent" ("person_data_sent_id" varchar PRIMARY KEY NOT NULL, "field_name" varchar NOT NULL, "old_value" text NOT NULL, "new_value" text NOT NULL, "user_message" text NOT NULL, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime NOT NULL, "person_id" varchar, "analyst_id" varchar, "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "created_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T19:57:32.636Z][QUERY]: CREATE TABLE "temporary_user_token" ("user_token_id" varchar PRIMARY KEY NOT NULL, "user_id" varchar NOT NULL, "token" varchar NOT NULL, "expires_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "FK_79ac751931054ef450a2ee47778" FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T19:57:32.638Z][QUERY]: INSERT INTO "temporary_user_token"("user_token_id", "user_id", "token", "expires_at", "created_at") SELECT "user_token_id", "user_id", "token", "expires_at", "created_at" FROM "user_token"
+[2021-08-05T19:57:32.639Z][QUERY]: DROP TABLE "user_token"
+[2021-08-05T19:57:32.640Z][QUERY]: ALTER TABLE "temporary_user_token" RENAME TO "user_token"
+[2021-08-05T19:57:32.643Z][QUERY]: CREATE TABLE "temporary_person_individual" ("person_individual_id" varchar PRIMARY KEY NOT NULL, "birthday" datetime NOT NULL, "gender" varchar CHECK( gender IN ('M','F','O') ) NOT NULL, "ethnicity" varchar CHECK( ethnicity IN ('AFRODESCENDENTE','BRANCO','ASIÁTICO','AMERÍNDIO','MULATO','MULTIRRACIAL/PARDO','NÃO DECLARADA') ) NOT NULL DEFAULT ('NÃO DECLARADA'), "mother_name" varchar, "father_name" varchar, "civil_status" varchar CHECK( civil_status IN ('SOLTEIRO','UNIÃO ESTÁVEL','CASADO','SEPARADO','DIVORCIADO','VIÚVO') ) NOT NULL, CONSTRAINT "REL_6ffe10839f581769aa80188285" UNIQUE ("person_individual_id"), CONSTRAINT "FK_6ffe10839f581769aa801882859" FOREIGN KEY ("person_individual_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T19:57:32.644Z][QUERY]: INSERT INTO "temporary_person_individual"("person_individual_id", "birthday", "gender", "ethnicity", "mother_name", "father_name", "civil_status") SELECT "person_individual_id", "birthday", "gender", "ethnicity", "mother_name", "father_name", "civil_status" FROM "person_individual"
+[2021-08-05T19:57:32.645Z][QUERY]: DROP TABLE "person_individual"
+[2021-08-05T19:57:32.646Z][QUERY]: ALTER TABLE "temporary_person_individual" RENAME TO "person_individual"
+[2021-08-05T19:57:32.648Z][QUERY]: CREATE TABLE "temporary_person_document_file" ("person_document_file_id" varchar PRIMARY KEY NOT NULL, "person_document_id" varchar NOT NULL, "filename" varchar NOT NULL, "mimetype" varchar NOT NULL, CONSTRAINT "FK_ddb085eb95c0591462de4f706a3" FOREIGN KEY ("person_document_id") REFERENCES "person_document" ("person_document_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T19:57:32.649Z][QUERY]: INSERT INTO "temporary_person_document_file"("person_document_file_id", "person_document_id", "filename", "mimetype") SELECT "person_document_file_id", "person_document_id", "filename", "mimetype" FROM "person_document_file"
+[2021-08-05T19:57:32.650Z][QUERY]: DROP TABLE "person_document_file"
+[2021-08-05T19:57:32.651Z][QUERY]: ALTER TABLE "temporary_person_document_file" RENAME TO "person_document_file"
+[2021-08-05T19:57:32.654Z][QUERY]: CREATE TABLE "temporary_person_document" ("person_document_id" varchar PRIMARY KEY NOT NULL, "document_number" varchar NOT NULL, "dispatch_date" date NOT NULL, "issuing_agency" varchar NOT NULL, "person_name" varchar NOT NULL, "is_main" boolean NOT NULL DEFAULT (0), "person_id" varchar, "document_type_id" varchar, "createdAtCreated_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "REL_06d08640b21137b4a4ac77fa9b" UNIQUE ("document_type_id"), CONSTRAINT "FK_3d2eefc8668f687831146947b31" FOREIGN KEY ("person_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_06d08640b21137b4a4ac77fa9b1" FOREIGN KEY ("document_type_id") REFERENCES "document_type" ("document_type_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T19:57:32.656Z][QUERY]: INSERT INTO "temporary_person_document"("person_document_id", "document_number", "dispatch_date", "issuing_agency", "person_name", "is_main", "person_id", "document_type_id", "createdAtCreated_at") SELECT "person_document_id", "document_number", "dispatch_date", "issuing_agency", "person_name", "is_main", "person_id", "document_type_id", "createdAtCreated_at" FROM "person_document"
+[2021-08-05T19:57:32.657Z][QUERY]: DROP TABLE "person_document"
+[2021-08-05T19:57:32.658Z][QUERY]: ALTER TABLE "temporary_person_document" RENAME TO "person_document"
+[2021-08-05T19:57:32.660Z][QUERY]: CREATE TABLE "temporary_person" ("person_id" varchar PRIMARY KEY NOT NULL, "type" varchar CHECK( type IN ('F','J','O','A') ) NOT NULL, "cellphone" varchar, "telephone" varchar, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime, CONSTRAINT "REL_403c951c5e9b776c16385a8940" UNIQUE ("person_id"), CONSTRAINT "FK_403c951c5e9b776c16385a8940f" FOREIGN KEY ("person_id") REFERENCES "user" ("user_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T19:57:32.661Z][QUERY]: INSERT INTO "temporary_person"("person_id", "type", "cellphone", "telephone", "is_valid", "valid_at") SELECT "person_id", "type", "cellphone", "telephone", "is_valid", "valid_at" FROM "person"
+[2021-08-05T19:57:32.662Z][QUERY]: DROP TABLE "person"
+[2021-08-05T19:57:32.663Z][QUERY]: ALTER TABLE "temporary_person" RENAME TO "person"
+[2021-08-05T19:57:32.666Z][QUERY]: CREATE TABLE "temporary_person_company" ("person_company_id" varchar PRIMARY KEY NOT NULL, "fantasy_name" varchar NOT NULL, "open_date" date NOT NULL, "end_date" date, "responsible_name" varchar NOT NULL, CONSTRAINT "REL_7da75ef700b766ecea3b1a7f0c" UNIQUE ("person_company_id"), CONSTRAINT "FK_7da75ef700b766ecea3b1a7f0ca" FOREIGN KEY ("person_company_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T19:57:32.667Z][QUERY]: INSERT INTO "temporary_person_company"("person_company_id", "fantasy_name", "open_date", "end_date", "responsible_name") SELECT "person_company_id", "fantasy_name", "open_date", "end_date", "responsible_name" FROM "person_company"
+[2021-08-05T19:57:32.668Z][QUERY]: DROP TABLE "person_company"
+[2021-08-05T19:57:32.669Z][QUERY]: ALTER TABLE "temporary_person_company" RENAME TO "person_company"
+[2021-08-05T19:57:32.672Z][QUERY]: CREATE TABLE "temporary_person_data_sent" ("person_data_sent_id" varchar PRIMARY KEY NOT NULL, "field_name" varchar NOT NULL, "old_value" text NOT NULL, "new_value" text NOT NULL, "user_message" text NOT NULL, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime NOT NULL, "person_id" varchar, "analyst_id" varchar, "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "created_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "FK_110699897ddf3d01e9ae708e8e9" FOREIGN KEY ("person_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_cffb270571916505dcf84d8f250" FOREIGN KEY ("analyst_id") REFERENCES "user" ("user_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T19:57:32.673Z][QUERY]: INSERT INTO "temporary_person_data_sent"("person_data_sent_id", "field_name", "old_value", "new_value", "user_message", "is_valid", "valid_at", "person_id", "analyst_id", "updated_at", "created_at") SELECT "person_data_sent_id", "field_name", "old_value", "new_value", "user_message", "is_valid", "valid_at", "person_id", "analyst_id", "updated_at", "created_at" FROM "person_data_sent"
+[2021-08-05T19:57:32.674Z][QUERY]: DROP TABLE "person_data_sent"
+[2021-08-05T19:57:32.675Z][QUERY]: ALTER TABLE "temporary_person_data_sent" RENAME TO "person_data_sent"
+[2021-08-05T19:57:32.678Z][QUERY]: INSERT INTO "migrations"("timestamp", "name") VALUES (?, ?) -- PARAMETERS: [1628193006702,"DefaultEntities1628193006702"]
+[2021-08-05T19:57:32.679Z]Migration DefaultEntities1628193006702 has been executed successfully.
+[2021-08-05T19:57:32.680Z][QUERY]: COMMIT
+[2021-08-05T19:58:01.723Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T19:58:01.730Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T19:58:01.732Z] [X] CreateUsers1594592667317
+[2021-08-05T19:58:01.733Z] [X] DefaultEntities1628193006702
+[2021-08-05T20:03:15.598Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:03:15.608Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:03:15.610Z]2 migrations are already loaded in the database.
+[2021-08-05T20:03:15.611Z]3 migrations were found in the source code.
+[2021-08-05T20:03:15.612Z]DefaultEntities1628193006702 is the last executed migration. It was executed on Thu Aug 05 2021 16:50:06 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:03:15.613Z]1 migrations are new migrations that needs to be executed.
+[2021-08-05T20:03:15.614Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:03:15.661Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$FrBduIt5KYGgqGflqE/x0.fT4RNtU2p1hxOrjcO2VG0FVL99PHhya",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$PDOiCwAuwSzZEAZkzZ9UUO14Tno6v56mgduhAoyX.kNXKSrzWhvF6",false,true,true]]
+[2021-08-05T20:03:15.666Z][FAILED QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: [["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$FrBduIt5KYGgqGflqE/x0.fT4RNtU2p1hxOrjcO2VG0FVL99PHhya",true,true,true],["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$PDOiCwAuwSzZEAZkzZ9UUO14Tno6v56mgduhAoyX.kNXKSrzWhvF6",false,true,true]]
+[2021-08-05T20:03:15.666Z][QUERY ERROR]: Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: user.email
+[2021-08-05T20:03:15.667Z][QUERY]: ROLLBACK
+[2021-08-05T20:05:20.474Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:05:20.484Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:05:20.486Z]2 migrations are already loaded in the database.
+[2021-08-05T20:05:20.487Z]3 migrations were found in the source code.
+[2021-08-05T20:05:20.489Z]DefaultEntities1628193006702 is the last executed migration. It was executed on Thu Aug 05 2021 16:50:06 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:05:20.489Z]1 migrations are new migrations that needs to be executed.
+[2021-08-05T20:05:20.490Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:05:20.514Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$n8IdeN0HNZg4hq1VIwk7XeU7Btti2mdgFVLe43R/ufefGGGMpXtX.",true,true,true]
+[2021-08-05T20:05:20.555Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$IGoNV7XabhJKIOhF7jvPH.2WS9eF.VktnU4MtY3zKwvYQ9XnL3Ip2",false,true,true]
+[2021-08-05T20:05:20.556Z][QUERY]: INSERT INTO person (person_id, type) VALUES (?, ?); -- PARAMETERS: [["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","F"],["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","J"]]
+[2021-08-05T20:05:20.557Z][FAILED QUERY]: INSERT INTO person (person_id, type) VALUES (?, ?); -- PARAMETERS: [["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","F"],["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","J"]]
+[2021-08-05T20:05:20.557Z][QUERY ERROR]: Error: SQLITE_CONSTRAINT: CHECK constraint failed: type IN ('F','J','O','A')
+[2021-08-05T20:05:20.559Z][QUERY]: ROLLBACK
+[2021-08-05T20:25:54.367Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:25:54.378Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:25:54.380Z]2 migrations are already loaded in the database.
+[2021-08-05T20:25:54.380Z]2 migrations were found in the source code.
+[2021-08-05T20:25:54.383Z]DefaultEntities1628193006702 is the last executed migration. It was executed on Thu Aug 05 2021 16:50:06 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:25:54.384Z]1 migrations are new migrations that needs to be executed.
+[2021-08-05T20:25:54.385Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:25:54.391Z][QUERY]: ROLLBACK
+[2021-08-05T20:27:25.685Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:27:25.694Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:27:25.696Z]2 migrations are already loaded in the database.
+[2021-08-05T20:27:25.697Z]2 migrations were found in the source code.
+[2021-08-05T20:27:25.698Z]DefaultEntities1628193006702 is the last executed migration. It was executed on Thu Aug 05 2021 16:50:06 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:27:25.699Z]1 migrations are new migrations that needs to be executed.
+[2021-08-05T20:27:25.700Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:27:25.702Z][QUERY]: ROLLBACK
+[2021-08-05T20:28:44.029Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:28:44.038Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:28:44.040Z]2 migrations are already loaded in the database.
+[2021-08-05T20:28:44.040Z]2 migrations were found in the source code.
+[2021-08-05T20:28:44.042Z]DefaultEntities1628193006702 is the last executed migration. It was executed on Thu Aug 05 2021 16:50:06 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:28:44.042Z]1 migrations are new migrations that needs to be executed.
+[2021-08-05T20:28:44.043Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:28:44.046Z][QUERY]: ROLLBACK
+[2021-08-05T20:29:35.638Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:29:35.645Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:29:35.647Z]2 migrations are already loaded in the database.
+[2021-08-05T20:29:35.648Z]2 migrations were found in the source code.
+[2021-08-05T20:29:35.649Z]DefaultEntities1628193006702 is the last executed migration. It was executed on Thu Aug 05 2021 16:50:06 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:29:35.649Z]1 migrations are new migrations that needs to be executed.
+[2021-08-05T20:29:35.650Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:29:35.674Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$e2ERgvW1xMatK4Txl.aMb.HfKauxg2Q/Epxd9dGg.BjRF6vo6L2XW",true,true,true]
+[2021-08-05T20:29:35.680Z][QUERY]: INSERT INTO person (person_id, type) VALUES (?, ?); -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","J"]
+[2021-08-05T20:29:35.681Z][QUERY]: INSERT INTO person_company(person_company_id, fantasy_name, open_date, responsible_name) VALUES (?, ?, ?, ?); -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","Regzer","2021-08-01 23:34:19","Caio"]
+[2021-08-05T20:29:35.705Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$UvX7LXlSuPkghoUV.3Y7NuHGL8yYwq/O3VIGqe9NMibInUKNA7sRu",false,true,true]
+[2021-08-05T20:29:35.707Z][QUERY]: INSERT INTO person (person_id, type) VALUES (?, ?); -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","F"]
+[2021-08-05T20:29:35.708Z][QUERY]: INSERT INTO person_individual(person_individual_id, birthday, gender, ethnicity, father_name, mother_name, civil_status)  VALUES (?, ?, ?, ?, ?,?,?); -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","2021-08-01 23:34:19","M","BRANCO","P","R","SOLTEIRO"]
+[2021-08-05T20:29:35.711Z][QUERY]: INSERT INTO "migrations"("timestamp", "name") VALUES (?, ?) -- PARAMETERS: [1628193638409,"InsertDefaultUsers1628193638409"]
+[2021-08-05T20:29:35.713Z]Migration InsertDefaultUsers1628193638409 has been executed successfully.
+[2021-08-05T20:29:35.714Z][QUERY]: COMMIT
+[2021-08-05T20:30:29.572Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:30:29.579Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:30:29.581Z]3 migrations are already loaded in the database.
+[2021-08-05T20:30:29.583Z]InsertDefaultUsers1628193638409 is the last executed migration. It was executed on Thu Aug 05 2021 17:00:38 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:30:29.583Z]Now reverting it...
+[2021-08-05T20:30:29.584Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:30:29.586Z][QUERY]: DELETE FROM person_company WHERE person_company_id IN (?) -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548"]
+[2021-08-05T20:30:29.592Z][QUERY]: DELETE FROM person_individual WHERE person_company_id IN (?) -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209"]
+[2021-08-05T20:30:29.605Z][FAILED QUERY]: DELETE FROM person_individual WHERE person_company_id IN (?) -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209"]
+[2021-08-05T20:30:29.605Z][QUERY ERROR]: Error: SQLITE_ERROR: no such column: person_company_id
+[2021-08-05T20:30:29.607Z][QUERY]: ROLLBACK
+[2021-08-05T20:31:13.983Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:31:13.990Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:31:13.992Z]3 migrations are already loaded in the database.
+[2021-08-05T20:31:13.994Z]InsertDefaultUsers1628193638409 is the last executed migration. It was executed on Thu Aug 05 2021 17:00:38 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:31:13.994Z]Now reverting it...
+[2021-08-05T20:31:13.995Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:31:13.996Z][QUERY]: DELETE FROM person_company WHERE person_company_id IN (?) -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548"]
+[2021-08-05T20:31:14.002Z][QUERY]: DELETE FROM person_individual WHERE person_individual_id IN (?) -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209"]
+[2021-08-05T20:31:14.004Z][QUERY]: DELETE FROM person WHERE person_id IN (?, ?) -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","ba8e4a63-9a01-4bc9-aef9-1e0793bb2548"]
+[2021-08-05T20:31:14.005Z][QUERY]: DELETE FROM user WHERE user_id IN (?, ?) -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","ba8e4a63-9a01-4bc9-aef9-1e0793bb2548"]
+[2021-08-05T20:31:14.009Z][QUERY]: DELETE FROM "migrations" WHERE "timestamp" = ? AND "name" = ? -- PARAMETERS: [1628193638409,"InsertDefaultUsers1628193638409"]
+[2021-08-05T20:31:14.011Z]Migration InsertDefaultUsers1628193638409 has been reverted successfully.
+[2021-08-05T20:31:14.011Z][QUERY]: COMMIT
+[2021-08-05T20:31:55.548Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:31:55.557Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:31:55.559Z]2 migrations are already loaded in the database.
+[2021-08-05T20:31:55.561Z]DefaultEntities1628193006702 is the last executed migration. It was executed on Thu Aug 05 2021 16:50:06 GMT-0300 (Brasilia Standard Time).
+[2021-08-05T20:31:55.561Z]Now reverting it...
+[2021-08-05T20:31:55.562Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:31:55.564Z][QUERY]: ALTER TABLE "person_data_sent" RENAME TO "temporary_person_data_sent"
+[2021-08-05T20:31:55.570Z][QUERY]: CREATE TABLE "person_data_sent" ("person_data_sent_id" varchar PRIMARY KEY NOT NULL, "field_name" varchar NOT NULL, "old_value" text NOT NULL, "new_value" text NOT NULL, "user_message" text NOT NULL, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime NOT NULL, "person_id" varchar, "analyst_id" varchar, "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "created_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T20:31:55.571Z][QUERY]: INSERT INTO "person_data_sent"("person_data_sent_id", "field_name", "old_value", "new_value", "user_message", "is_valid", "valid_at", "person_id", "analyst_id", "updated_at", "created_at") SELECT "person_data_sent_id", "field_name", "old_value", "new_value", "user_message", "is_valid", "valid_at", "person_id", "analyst_id", "updated_at", "created_at" FROM "temporary_person_data_sent"
+[2021-08-05T20:31:55.572Z][QUERY]: DROP TABLE "temporary_person_data_sent"
+[2021-08-05T20:31:55.573Z][QUERY]: ALTER TABLE "person_company" RENAME TO "temporary_person_company"
+[2021-08-05T20:31:55.575Z][QUERY]: CREATE TABLE "person_company" ("person_company_id" varchar PRIMARY KEY NOT NULL, "fantasy_name" varchar NOT NULL, "open_date" date NOT NULL, "end_date" date, "responsible_name" varchar NOT NULL, CONSTRAINT "REL_7da75ef700b766ecea3b1a7f0c" UNIQUE ("person_company_id"))
+[2021-08-05T20:31:55.577Z][QUERY]: INSERT INTO "person_company"("person_company_id", "fantasy_name", "open_date", "end_date", "responsible_name") SELECT "person_company_id", "fantasy_name", "open_date", "end_date", "responsible_name" FROM "temporary_person_company"
+[2021-08-05T20:31:55.577Z][QUERY]: DROP TABLE "temporary_person_company"
+[2021-08-05T20:31:55.578Z][QUERY]: ALTER TABLE "person" RENAME TO "temporary_person"
+[2021-08-05T20:31:55.582Z][QUERY]: CREATE TABLE "person" ("person_id" varchar PRIMARY KEY NOT NULL, "type" varchar CHECK( type IN ('F','J','O','A') ) NOT NULL, "cellphone" varchar, "telephone" varchar, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime, CONSTRAINT "REL_403c951c5e9b776c16385a8940" UNIQUE ("person_id"))
+[2021-08-05T20:31:55.583Z][QUERY]: INSERT INTO "person"("person_id", "type", "cellphone", "telephone", "is_valid", "valid_at") SELECT "person_id", "type", "cellphone", "telephone", "is_valid", "valid_at" FROM "temporary_person"
+[2021-08-05T20:31:55.584Z][QUERY]: DROP TABLE "temporary_person"
+[2021-08-05T20:31:55.585Z][QUERY]: ALTER TABLE "person_document" RENAME TO "temporary_person_document"
+[2021-08-05T20:31:55.587Z][QUERY]: CREATE TABLE "person_document" ("person_document_id" varchar PRIMARY KEY NOT NULL, "document_number" varchar NOT NULL, "dispatch_date" date NOT NULL, "issuing_agency" varchar NOT NULL, "person_name" varchar NOT NULL, "is_main" boolean NOT NULL DEFAULT (0), "person_id" varchar, "document_type_id" varchar, "createdAtCreated_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "REL_06d08640b21137b4a4ac77fa9b" UNIQUE ("document_type_id"))
+[2021-08-05T20:31:55.588Z][QUERY]: INSERT INTO "person_document"("person_document_id", "document_number", "dispatch_date", "issuing_agency", "person_name", "is_main", "person_id", "document_type_id", "createdAtCreated_at") SELECT "person_document_id", "document_number", "dispatch_date", "issuing_agency", "person_name", "is_main", "person_id", "document_type_id", "createdAtCreated_at" FROM "temporary_person_document"
+[2021-08-05T20:31:55.589Z][QUERY]: DROP TABLE "temporary_person_document"
+[2021-08-05T20:31:55.591Z][QUERY]: ALTER TABLE "person_document_file" RENAME TO "temporary_person_document_file"
+[2021-08-05T20:31:55.593Z][QUERY]: CREATE TABLE "person_document_file" ("person_document_file_id" varchar PRIMARY KEY NOT NULL, "person_document_id" varchar NOT NULL, "filename" varchar NOT NULL, "mimetype" varchar NOT NULL)
+[2021-08-05T20:31:55.595Z][QUERY]: INSERT INTO "person_document_file"("person_document_file_id", "person_document_id", "filename", "mimetype") SELECT "person_document_file_id", "person_document_id", "filename", "mimetype" FROM "temporary_person_document_file"
+[2021-08-05T20:31:55.596Z][QUERY]: DROP TABLE "temporary_person_document_file"
+[2021-08-05T20:31:55.597Z][QUERY]: ALTER TABLE "person_individual" RENAME TO "temporary_person_individual"
+[2021-08-05T20:31:55.599Z][QUERY]: CREATE TABLE "person_individual" ("person_individual_id" varchar PRIMARY KEY NOT NULL, "birthday" datetime NOT NULL, "gender" varchar CHECK( gender IN ('M','F','O') ) NOT NULL, "ethnicity" varchar CHECK( ethnicity IN ('AFRODESCENDENTE','BRANCO','ASIÁTICO','AMERÍNDIO','MULATO','MULTIRRACIAL/PARDO','NÃO DECLARADA') ) NOT NULL DEFAULT ('NÃO DECLARADA'), "mother_name" varchar, "father_name" varchar, "civil_status" varchar CHECK( civil_status IN ('SOLTEIRO','UNIÃO ESTÁVEL','CASADO','SEPARADO','DIVORCIADO','VIÚVO') ) NOT NULL, CONSTRAINT "REL_6ffe10839f581769aa80188285" UNIQUE ("person_individual_id"))
+[2021-08-05T20:31:55.601Z][QUERY]: INSERT INTO "person_individual"("person_individual_id", "birthday", "gender", "ethnicity", "mother_name", "father_name", "civil_status") SELECT "person_individual_id", "birthday", "gender", "ethnicity", "mother_name", "father_name", "civil_status" FROM "temporary_person_individual"
+[2021-08-05T20:31:55.602Z][QUERY]: DROP TABLE "temporary_person_individual"
+[2021-08-05T20:31:55.603Z][QUERY]: ALTER TABLE "user_token" RENAME TO "temporary_user_token"
+[2021-08-05T20:31:55.606Z][QUERY]: CREATE TABLE "user_token" ("user_token_id" varchar PRIMARY KEY NOT NULL, "user_id" varchar NOT NULL, "token" varchar NOT NULL, "expires_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T20:31:55.608Z][QUERY]: INSERT INTO "user_token"("user_token_id", "user_id", "token", "expires_at", "created_at") SELECT "user_token_id", "user_id", "token", "expires_at", "created_at" FROM "temporary_user_token"
+[2021-08-05T20:31:55.609Z][QUERY]: DROP TABLE "temporary_user_token"
+[2021-08-05T20:31:55.610Z][QUERY]: DROP TABLE "person_data_sent"
+[2021-08-05T20:31:55.611Z][QUERY]: DROP TABLE "person_company"
+[2021-08-05T20:31:55.612Z][QUERY]: DROP TABLE "person"
+[2021-08-05T20:31:55.613Z][QUERY]: DROP TABLE "person_document"
+[2021-08-05T20:31:55.614Z][QUERY]: DROP TABLE "person_document_file"
+[2021-08-05T20:31:55.615Z][QUERY]: DROP TABLE "document_type"
+[2021-08-05T20:31:55.616Z][QUERY]: DROP TABLE "person_individual"
+[2021-08-05T20:31:55.617Z][QUERY]: DROP TABLE "user"
+[2021-08-05T20:31:55.618Z][QUERY]: DROP TABLE "user_token"
+[2021-08-05T20:31:55.621Z][QUERY]: DELETE FROM "migrations" WHERE "timestamp" = ? AND "name" = ? -- PARAMETERS: [1628193006702,"DefaultEntities1628193006702"]
+[2021-08-05T20:31:55.623Z]Migration DefaultEntities1628193006702 has been reverted successfully.
+[2021-08-05T20:31:55.624Z][QUERY]: COMMIT
+[2021-08-05T20:33:05.603Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:33:05.610Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:33:28.132Z][QUERY]: PRAGMA foreign_keys = OFF;
+[2021-08-05T20:33:28.136Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:33:28.137Z][QUERY]: SELECT 'DROP VIEW "' || name || '";' as query FROM "sqlite_master" WHERE "type" = 'view'
+[2021-08-05T20:33:28.139Z][QUERY]: SELECT 'DROP TABLE "' || name || '";' as query FROM "sqlite_master" WHERE "type" = 'table' AND "name" != 'sqlite_sequence'
+[2021-08-05T20:33:28.140Z][QUERY]: DROP TABLE "migrations";
+[2021-08-05T20:33:28.145Z][QUERY]: COMMIT
+[2021-08-05T20:33:28.162Z][QUERY]: PRAGMA foreign_keys = ON;
+[2021-08-05T20:33:36.485Z][QUERY]: SELECT * FROM "sqlite_master" WHERE "type" = 'table' AND "name" = 'migrations'
+[2021-08-05T20:33:36.490Z][QUERY]: CREATE TABLE "migrations" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "timestamp" bigint NOT NULL, "name" varchar NOT NULL)
+[2021-08-05T20:33:36.527Z][QUERY]: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+[2021-08-05T20:33:36.529Z]0 migrations are already loaded in the database.
+[2021-08-05T20:33:36.529Z]2 migrations were found in the source code.
+[2021-08-05T20:33:36.530Z]2 migrations are new migrations that needs to be executed.
+[2021-08-05T20:33:36.531Z][QUERY]: BEGIN TRANSACTION
+[2021-08-05T20:33:36.533Z][QUERY]: CREATE TABLE "user_token" ("user_token_id" varchar PRIMARY KEY NOT NULL, "user_id" varchar NOT NULL, "token" varchar NOT NULL, "expires_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T20:33:36.535Z][QUERY]: CREATE TABLE "user" ("user_id" varchar PRIMARY KEY NOT NULL, "name" varchar NOT NULL, "document" varchar, "email" varchar NOT NULL, "cellphone" varchar, "password" varchar NOT NULL, "is_admin" boolean NOT NULL DEFAULT (0), "is_confirmed" boolean NOT NULL DEFAULT (0), "is_valid" boolean NOT NULL DEFAULT (1), "validated_at" datetime, "confirmed_at" datetime, "created_at" datetime NOT NULL DEFAULT (datetime('now')), "updated_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T20:33:36.536Z][QUERY]: CREATE TABLE "person_individual" ("person_individual_id" varchar PRIMARY KEY NOT NULL, "birthday" datetime NOT NULL, "gender" varchar CHECK( gender IN ('M','F','O') ) NOT NULL, "ethnicity" varchar CHECK( ethnicity IN ('AFRODESCENDENTE','BRANCO','ASIÁTICO','AMERÍNDIO','MULATO','MULTIRRACIAL/PARDO','NÃO DECLARADA') ) NOT NULL DEFAULT ('NÃO DECLARADA'), "mother_name" varchar, "father_name" varchar, "civil_status" varchar CHECK( civil_status IN ('SOLTEIRO','UNIÃO ESTÁVEL','CASADO','SEPARADO','DIVORCIADO','VIÚVO') ) NOT NULL, CONSTRAINT "REL_6ffe10839f581769aa80188285" UNIQUE ("person_individual_id"))
+[2021-08-05T20:33:36.537Z][QUERY]: CREATE TABLE "document_type" ("document_type_id" varchar PRIMARY KEY NOT NULL, "initials" varchar NOT NULL, "description" varchar NOT NULL, "person_type" varchar CHECK( person_type IN ('F','J','T') ) NOT NULL, "mask" varchar NOT NULL, "is_main" boolean NOT NULL)
+[2021-08-05T20:33:36.538Z][QUERY]: CREATE TABLE "person_document_file" ("person_document_file_id" varchar PRIMARY KEY NOT NULL, "person_document_id" varchar NOT NULL, "filename" varchar NOT NULL, "mimetype" varchar NOT NULL)
+[2021-08-05T20:33:36.539Z][QUERY]: CREATE TABLE "person_document" ("person_document_id" varchar PRIMARY KEY NOT NULL, "document_number" varchar NOT NULL, "dispatch_date" date NOT NULL, "issuing_agency" varchar NOT NULL, "person_name" varchar NOT NULL, "is_main" boolean NOT NULL DEFAULT (0), "person_id" varchar, "document_type_id" varchar, "createdAtCreated_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "REL_06d08640b21137b4a4ac77fa9b" UNIQUE ("document_type_id"))
+[2021-08-05T20:33:36.541Z][QUERY]: CREATE TABLE "person" ("person_id" varchar PRIMARY KEY NOT NULL, "type" varchar CHECK( type IN ('F','J','O','A') ) NOT NULL, "cellphone" varchar, "telephone" varchar, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime, CONSTRAINT "REL_403c951c5e9b776c16385a8940" UNIQUE ("person_id"))
+[2021-08-05T20:33:36.542Z][QUERY]: CREATE TABLE "person_company" ("person_company_id" varchar PRIMARY KEY NOT NULL, "fantasy_name" varchar NOT NULL, "open_date" date NOT NULL, "end_date" date, "responsible_name" varchar NOT NULL, CONSTRAINT "REL_7da75ef700b766ecea3b1a7f0c" UNIQUE ("person_company_id"))
+[2021-08-05T20:33:36.543Z][QUERY]: CREATE TABLE "person_data_sent" ("person_data_sent_id" varchar PRIMARY KEY NOT NULL, "field_name" varchar NOT NULL, "old_value" text NOT NULL, "new_value" text NOT NULL, "user_message" text NOT NULL, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime NOT NULL, "person_id" varchar, "analyst_id" varchar, "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "created_at" datetime NOT NULL DEFAULT (datetime('now')))
+[2021-08-05T20:33:36.544Z][QUERY]: CREATE TABLE "temporary_user_token" ("user_token_id" varchar PRIMARY KEY NOT NULL, "user_id" varchar NOT NULL, "token" varchar NOT NULL, "expires_at" datetime NOT NULL, "created_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "FK_79ac751931054ef450a2ee47778" FOREIGN KEY ("user_id") REFERENCES "user" ("user_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T20:33:36.545Z][QUERY]: INSERT INTO "temporary_user_token"("user_token_id", "user_id", "token", "expires_at", "created_at") SELECT "user_token_id", "user_id", "token", "expires_at", "created_at" FROM "user_token"
+[2021-08-05T20:33:36.546Z][QUERY]: DROP TABLE "user_token"
+[2021-08-05T20:33:36.546Z][QUERY]: ALTER TABLE "temporary_user_token" RENAME TO "user_token"
+[2021-08-05T20:33:36.549Z][QUERY]: CREATE TABLE "temporary_person_individual" ("person_individual_id" varchar PRIMARY KEY NOT NULL, "birthday" datetime NOT NULL, "gender" varchar CHECK( gender IN ('M','F','O') ) NOT NULL, "ethnicity" varchar CHECK( ethnicity IN ('AFRODESCENDENTE','BRANCO','ASIÁTICO','AMERÍNDIO','MULATO','MULTIRRACIAL/PARDO','NÃO DECLARADA') ) NOT NULL DEFAULT ('NÃO DECLARADA'), "mother_name" varchar, "father_name" varchar, "civil_status" varchar CHECK( civil_status IN ('SOLTEIRO','UNIÃO ESTÁVEL','CASADO','SEPARADO','DIVORCIADO','VIÚVO') ) NOT NULL, CONSTRAINT "REL_6ffe10839f581769aa80188285" UNIQUE ("person_individual_id"), CONSTRAINT "FK_6ffe10839f581769aa801882859" FOREIGN KEY ("person_individual_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T20:33:36.550Z][QUERY]: INSERT INTO "temporary_person_individual"("person_individual_id", "birthday", "gender", "ethnicity", "mother_name", "father_name", "civil_status") SELECT "person_individual_id", "birthday", "gender", "ethnicity", "mother_name", "father_name", "civil_status" FROM "person_individual"
+[2021-08-05T20:33:36.551Z][QUERY]: DROP TABLE "person_individual"
+[2021-08-05T20:33:36.552Z][QUERY]: ALTER TABLE "temporary_person_individual" RENAME TO "person_individual"
+[2021-08-05T20:33:36.554Z][QUERY]: CREATE TABLE "temporary_person_document_file" ("person_document_file_id" varchar PRIMARY KEY NOT NULL, "person_document_id" varchar NOT NULL, "filename" varchar NOT NULL, "mimetype" varchar NOT NULL, CONSTRAINT "FK_ddb085eb95c0591462de4f706a3" FOREIGN KEY ("person_document_id") REFERENCES "person_document" ("person_document_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T20:33:36.555Z][QUERY]: INSERT INTO "temporary_person_document_file"("person_document_file_id", "person_document_id", "filename", "mimetype") SELECT "person_document_file_id", "person_document_id", "filename", "mimetype" FROM "person_document_file"
+[2021-08-05T20:33:36.556Z][QUERY]: DROP TABLE "person_document_file"
+[2021-08-05T20:33:36.557Z][QUERY]: ALTER TABLE "temporary_person_document_file" RENAME TO "person_document_file"
+[2021-08-05T20:33:36.559Z][QUERY]: CREATE TABLE "temporary_person_document" ("person_document_id" varchar PRIMARY KEY NOT NULL, "document_number" varchar NOT NULL, "dispatch_date" date NOT NULL, "issuing_agency" varchar NOT NULL, "person_name" varchar NOT NULL, "is_main" boolean NOT NULL DEFAULT (0), "person_id" varchar, "document_type_id" varchar, "createdAtCreated_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "REL_06d08640b21137b4a4ac77fa9b" UNIQUE ("document_type_id"), CONSTRAINT "FK_3d2eefc8668f687831146947b31" FOREIGN KEY ("person_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_06d08640b21137b4a4ac77fa9b1" FOREIGN KEY ("document_type_id") REFERENCES "document_type" ("document_type_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T20:33:36.560Z][QUERY]: INSERT INTO "temporary_person_document"("person_document_id", "document_number", "dispatch_date", "issuing_agency", "person_name", "is_main", "person_id", "document_type_id", "createdAtCreated_at") SELECT "person_document_id", "document_number", "dispatch_date", "issuing_agency", "person_name", "is_main", "person_id", "document_type_id", "createdAtCreated_at" FROM "person_document"
+[2021-08-05T20:33:36.561Z][QUERY]: DROP TABLE "person_document"
+[2021-08-05T20:33:36.562Z][QUERY]: ALTER TABLE "temporary_person_document" RENAME TO "person_document"
+[2021-08-05T20:33:36.564Z][QUERY]: CREATE TABLE "temporary_person" ("person_id" varchar PRIMARY KEY NOT NULL, "type" varchar CHECK( type IN ('F','J','O','A') ) NOT NULL, "cellphone" varchar, "telephone" varchar, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime, CONSTRAINT "REL_403c951c5e9b776c16385a8940" UNIQUE ("person_id"), CONSTRAINT "FK_403c951c5e9b776c16385a8940f" FOREIGN KEY ("person_id") REFERENCES "user" ("user_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T20:33:36.566Z][QUERY]: INSERT INTO "temporary_person"("person_id", "type", "cellphone", "telephone", "is_valid", "valid_at") SELECT "person_id", "type", "cellphone", "telephone", "is_valid", "valid_at" FROM "person"
+[2021-08-05T20:33:36.566Z][QUERY]: DROP TABLE "person"
+[2021-08-05T20:33:36.567Z][QUERY]: ALTER TABLE "temporary_person" RENAME TO "person"
+[2021-08-05T20:33:36.569Z][QUERY]: CREATE TABLE "temporary_person_company" ("person_company_id" varchar PRIMARY KEY NOT NULL, "fantasy_name" varchar NOT NULL, "open_date" date NOT NULL, "end_date" date, "responsible_name" varchar NOT NULL, CONSTRAINT "REL_7da75ef700b766ecea3b1a7f0c" UNIQUE ("person_company_id"), CONSTRAINT "FK_7da75ef700b766ecea3b1a7f0ca" FOREIGN KEY ("person_company_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T20:33:36.570Z][QUERY]: INSERT INTO "temporary_person_company"("person_company_id", "fantasy_name", "open_date", "end_date", "responsible_name") SELECT "person_company_id", "fantasy_name", "open_date", "end_date", "responsible_name" FROM "person_company"
+[2021-08-05T20:33:36.571Z][QUERY]: DROP TABLE "person_company"
+[2021-08-05T20:33:36.572Z][QUERY]: ALTER TABLE "temporary_person_company" RENAME TO "person_company"
+[2021-08-05T20:33:36.574Z][QUERY]: CREATE TABLE "temporary_person_data_sent" ("person_data_sent_id" varchar PRIMARY KEY NOT NULL, "field_name" varchar NOT NULL, "old_value" text NOT NULL, "new_value" text NOT NULL, "user_message" text NOT NULL, "is_valid" boolean NOT NULL DEFAULT (0), "valid_at" datetime NOT NULL, "person_id" varchar, "analyst_id" varchar, "updated_at" datetime NOT NULL DEFAULT (datetime('now')), "created_at" datetime NOT NULL DEFAULT (datetime('now')), CONSTRAINT "FK_110699897ddf3d01e9ae708e8e9" FOREIGN KEY ("person_id") REFERENCES "person" ("person_id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_cffb270571916505dcf84d8f250" FOREIGN KEY ("analyst_id") REFERENCES "user" ("user_id") ON DELETE CASCADE ON UPDATE CASCADE)
+[2021-08-05T20:33:36.575Z][QUERY]: INSERT INTO "temporary_person_data_sent"("person_data_sent_id", "field_name", "old_value", "new_value", "user_message", "is_valid", "valid_at", "person_id", "analyst_id", "updated_at", "created_at") SELECT "person_data_sent_id", "field_name", "old_value", "new_value", "user_message", "is_valid", "valid_at", "person_id", "analyst_id", "updated_at", "created_at" FROM "person_data_sent"
+[2021-08-05T20:33:36.576Z][QUERY]: DROP TABLE "person_data_sent"
+[2021-08-05T20:33:36.577Z][QUERY]: ALTER TABLE "temporary_person_data_sent" RENAME TO "person_data_sent"
+[2021-08-05T20:33:36.582Z][QUERY]: INSERT INTO "migrations"("timestamp", "name") VALUES (?, ?) -- PARAMETERS: [1628193006702,"DefaultEntities1628193006702"]
+[2021-08-05T20:33:36.583Z]Migration DefaultEntities1628193006702 has been executed successfully.
+[2021-08-05T20:33:36.607Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","ADMIN",null,null,"admin@regzer.com.br","$2b$08$IErf64iG0yUp2epydZMHpevqcDFyqcehL2yVYOi4O4hftELQpYSSy",true,true,true]
+[2021-08-05T20:33:36.608Z][QUERY]: INSERT INTO person (person_id, type) VALUES (?, ?); -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","J"]
+[2021-08-05T20:33:36.609Z][QUERY]: INSERT INTO person_company(person_company_id, fantasy_name, open_date, responsible_name) VALUES (?, ?, ?, ?); -- PARAMETERS: ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548","Regzer","2021-08-01 23:34:19","Caio"]
+[2021-08-05T20:33:36.632Z][QUERY]: INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","Caio Duarte","01351676636","5531984227833","caiosduarte@gmail.com","$2b$08$fRFswP1gUoWEYK89AJQf6.peoU96pUlvVoIsKyMcjhr0IhXp4NtFO",false,true,true]
+[2021-08-05T20:33:36.634Z][QUERY]: INSERT INTO person (person_id, type) VALUES (?, ?); -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","F"]
+[2021-08-05T20:33:36.635Z][QUERY]: INSERT INTO person_individual(person_individual_id, birthday, gender, ethnicity, father_name, mother_name, civil_status)  VALUES (?, ?, ?, ?, ?,?,?); -- PARAMETERS: ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209","2021-08-01 23:34:19","M","BRANCO","P","R","SOLTEIRO"]
+[2021-08-05T20:33:36.636Z][QUERY]: INSERT INTO "migrations"("timestamp", "name") VALUES (?, ?) -- PARAMETERS: [1628193638409,"InsertDefaultUsers1628193638409"]
+[2021-08-05T20:33:36.637Z]Migration InsertDefaultUsers1628193638409 has been executed successfully.
+[2021-08-05T20:33:36.638Z][QUERY]: COMMIT

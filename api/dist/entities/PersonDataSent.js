@@ -29,7 +29,7 @@ var PersonDataSent = (function () {
     ], PersonDataSent.prototype, "id", void 0);
     __decorate([
         typeorm_1.ManyToOne(function (type) { return Person_1.default; }, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
-        typeorm_1.JoinColumn({ name: "person_id" }),
+        typeorm_1.JoinColumn({ name: "person_id", referencedColumnName: "id" }),
         __metadata("design:type", Person_1.default)
     ], PersonDataSent.prototype, "person", void 0);
     __decorate([
@@ -46,7 +46,7 @@ var PersonDataSent = (function () {
     ], PersonDataSent.prototype, "newValue", void 0);
     __decorate([
         typeorm_1.ManyToOne(function (type) { return User_1.default; }, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
-        typeorm_1.JoinColumn({ name: "analyst_id" }),
+        typeorm_1.JoinColumn({ name: "analyst_id", referencedColumnName: "id" }),
         __metadata("design:type", User_1.default)
     ], PersonDataSent.prototype, "analyst", void 0);
     __decorate([

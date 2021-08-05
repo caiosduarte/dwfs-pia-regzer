@@ -13,21 +13,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var PersonDocument_1 = __importDefault(require("./PersonDocument"));
 var Enum_1 = require("./Enum");
 var User_1 = __importDefault(require("./User"));
 var Individual_1 = __importDefault(require("./Individual"));
 var Company_1 = __importDefault(require("./Company"));
+var PersonDocument_1 = __importDefault(require("./PersonDocument"));
 var Person = (function () {
     function Person() {
+        this.personType = this.individual || this.company;
     }
     __decorate([
-        typeorm_1.PrimaryColumn({ name: "person_id" }),
+        typeorm_1.PrimaryColumn({ name: "person_id", update: true }),
         __metadata("design:type", String)
     ], Person.prototype, "id", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return User_1.default; }, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
-        typeorm_1.JoinColumn({ name: "user_id", referencedColumnName: "user_id" }),
+        typeorm_1.OneToOne(function (type) { return User_1.default; }, {
+            eager: true,
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            primary: true,
+        }),
+        typeorm_1.JoinColumn({ name: "person_id", referencedColumnName: "id" }),
         __metadata("design:type", User_1.default)
     ], Person.prototype, "user", void 0);
     __decorate([
@@ -65,9 +71,7 @@ var Person = (function () {
         __metadata("design:type", Date)
     ], Person.prototype, "validAt", void 0);
     __decorate([
-        typeorm_1.OneToMany(function (type) { return PersonDocument_1.default; }, function (document) { return document.person; }, {
-            cascade: true,
-        }),
+        typeorm_1.OneToMany(function (type) { return PersonDocument_1.default; }, function (doc) { return doc.person; }),
         __metadata("design:type", Array)
     ], Person.prototype, "documents", void 0);
     Person = __decorate([
