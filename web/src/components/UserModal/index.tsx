@@ -75,7 +75,8 @@ export function UserModal(props: UserModalProps) {
     const classes = useStyles();
 
     function handleOpen() {
-        setUser({ ...props });
+        const { id, type, email, document, isConfirmed, isValid } = props;
+        setUser({ id, type, email, document, isConfirmed, isValid });
     }
 
     async function handleSendConfirmMail(event: FormEvent) {
@@ -90,7 +91,7 @@ export function UserModal(props: UserModalProps) {
             await withAuth(
                 {},
                 toPublic,
-                api.put(`people/${user?.id}`, { ...user }),
+                api.post("people", { ...user }),
                 signOut
             );
             onRequestClose();
@@ -240,7 +241,6 @@ export function UserModal(props: UserModalProps) {
                         </Grid>
                     </Grid>
                 </form>
-                {console.log("user updated: ", user)}
             </Container>
         </Modal>
     );
