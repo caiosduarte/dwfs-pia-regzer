@@ -60,6 +60,8 @@ interface IFormData {
 }
 
 export default function Confirm(props: any) {
+    const hash: string = props.match.params?.hash;
+
     const { isConfirmed } = useContext(AuthContext);
 
     const { formState, handleSubmit, register, clearErrors, reset } =
@@ -72,8 +74,6 @@ export default function Confirm(props: any) {
     const [messageComponent, setMessageComponent] = useState<JSX.Element>();
 
     const params = queryParams(props.location.search) as IIDs;
-
-    const hash: string = props.match.params?.hash;
 
     const isConfirmation = !isConfirmed && isUuid(hash);
 
@@ -231,6 +231,7 @@ export default function Confirm(props: any) {
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
                                 required: "Email address is required.",
+                                shouldUnregister: true,
                             })}
                         />
 

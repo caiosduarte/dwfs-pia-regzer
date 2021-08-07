@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function PasswordForgot(props: any) {
-    const { _id } = props.location?.state;
+    const _id = props.location.state?._id;
+
     const [submitError, setSubmitError] = useState<string>();
     const { formState, handleSubmit, register, reset, clearErrors, getValues } =
         useForm();
@@ -133,7 +134,7 @@ export function PasswordForgot(props: any) {
                                     label="Email Address"
                                     type="text"
                                     id="ids"
-                                    defaultValue={_id}
+                                    value={_id}
                                     error={isError(formState.errors.ids)}
                                     helperText={errorMessage(
                                         formState.errors.ids
@@ -163,7 +164,7 @@ export function PasswordForgot(props: any) {
                 </form>
                 <Grid container justifyContent="flex-end">
                     <Grid item>
-                        <LinkWrapper to="/sign-in" id={getValues("email")}>
+                        <LinkWrapper to="/sign-in" id={getValues("ids")}>
                             Already have an account? Sign in
                         </LinkWrapper>
                     </Grid>

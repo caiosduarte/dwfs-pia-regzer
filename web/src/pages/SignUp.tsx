@@ -40,7 +40,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function SignUp(props: any) {
-    const { _email, _cellphone } = props.location?.state;
+    const _email = props.location.state?._email;
+    const _cellphone = props.location.state?._cellphone;
+
     const { signUp, isConfirmed } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
     const [confirmation, setConfirmation] = useState<string>();
@@ -170,11 +172,12 @@ export function SignUp(props: any) {
                                 id="email"
                                 label="Email Address"
                                 autoFocus
-                                defaultValue={_email}
+                                value={_email}
                                 error={isError("email")}
                                 helperText={errorMessage(errors.email)}
                                 {...register("email", {
                                     required: "Email address is required.",
+                                    shouldUnregister: true,
                                 })}
                             />
                         </Grid>
@@ -202,7 +205,7 @@ export function SignUp(props: any) {
                                 type="text"
                                 id="cellphone"
                                 autoComplete="cellphone"
-                                defaultValue={_cellphone}
+                                value={_cellphone}
                                 error={isError("cellphone")}
                                 helperText={errorMessage(errors.password)}
                                 {...register("cellphone")}

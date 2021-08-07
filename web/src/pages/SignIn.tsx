@@ -22,6 +22,7 @@ import {
     FieldError,
     Controller,
 } from "react-hook-form";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 
 import { Copyright } from "../components/Copyright";
 import LinkWrapper from "../components/LinkWrapper";
@@ -58,7 +59,8 @@ interface IFormData {
 }
 
 export default function SignIn(props: any) {
-    const { _id } = props.location.state;
+    const _id = props.location.state?._id;
+
     const hash = props.match.params?.hash;
     const isConfirmation = isUuid(hash);
     const { signIn, checkIn, isNewUser, toPrivate } = useContext(AuthContext);
@@ -182,7 +184,7 @@ export default function SignIn(props: any) {
                             type="text"
                             id="ids"
                             // defaultValue={props.match.params?.emailCheckin}
-                            defaultValue={_id}
+                            value={_id}
                             error={isError(formState.errors.ids)}
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
