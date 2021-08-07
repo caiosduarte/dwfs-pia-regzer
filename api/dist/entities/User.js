@@ -55,9 +55,7 @@ var User = (function () {
         __metadata("design:type", Boolean)
     ], User.prototype, "isAdmin", void 0);
     __decorate([
-        typeorm_1.OneToMany(function (type) { return Token_1.default; }, function (token) { return token.user; }, {
-            cascade: true,
-        }),
+        typeorm_1.OneToMany(function (type) { return Token_1.default; }, function (token) { return token.user; }),
         __metadata("design:type", Array)
     ], User.prototype, "tokens", void 0);
     __decorate([

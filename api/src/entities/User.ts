@@ -48,9 +48,7 @@ class User implements IUser {
     @Column({ name: "is_admin", default: false })
     isAdmin: boolean;
 
-    @OneToMany((type) => Token, (token) => token.user, {
-        cascade: true,
-    })
+    @OneToMany((type) => Token, (token) => token.user)
     tokens: Token[];
 
     @OneToOne((type) => Person, (person) => person.user)

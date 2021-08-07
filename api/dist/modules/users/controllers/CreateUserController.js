@@ -35,7 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var mappers_1 = __importDefault(require("../../../mappers"));
 var CreateUserController = (function () {
     function CreateUserController(createUserService, sendConfirmService) {
         this.createUserService = createUserService;
@@ -57,12 +61,12 @@ var CreateUserController = (function () {
                             })];
                     case 1:
                         user = _b.sent();
-                        if (!!user.isConfirmed) return [3, 3];
+                        if (!!user.confirmedAt) return [3, 3];
                         return [4, this.sendConfirmService.execute(email)];
                     case 2:
                         _b.sent();
                         _b.label = 3;
-                    case 3: return [2, response.status(201).json(user)];
+                    case 3: return [2, response.status(201).json(mappers_1.default.toDTO(user))];
                 }
             });
         });

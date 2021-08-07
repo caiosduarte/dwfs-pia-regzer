@@ -109,13 +109,14 @@ usersRouter.post("/confirm", async (request, response) => {
 
 usersRouter.patch("/confirm", async (request, response) => {
     const { token } = request.query;
-    console.log("Token request ", String(token));
+
+    const { email } = request.body;
 
     const repository = TokensRepository.getInstance();
 
     const service = new ConfirmUserService(repository);
 
-    await service.execute(String(token));
+    await service.execute(String(token), email);
 
     return response.status(204).send();
 });

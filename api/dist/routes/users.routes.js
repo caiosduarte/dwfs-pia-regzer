@@ -140,15 +140,15 @@ usersRouter.post("/confirm", function (request, response) { return __awaiter(voi
     });
 }); });
 usersRouter.patch("/confirm", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, repository, service;
+    var token, email, repository, service;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 token = request.query.token;
-                console.log("Token request ", String(token));
+                email = request.body.email;
                 repository = TokensRepository_1.default.getInstance();
                 service = new ConfirmUserService_1.default(repository);
-                return [4, service.execute(String(token))];
+                return [4, service.execute(String(token), email)];
             case 1:
                 _a.sent();
                 return [2, response.status(204).send()];

@@ -40,10 +40,21 @@ export default class TokensRepository implements ITokensRepository {
         return await this.repository.delete(id);
     }
 
-    async findByEncoded(encoded: string): Promise<Token | undefined> {
+    async findByEncoded(
+        encoded: string,
+        email?: string
+    ): Promise<Token | undefined> {
+        const whereWithEmail = email ? { user: { email: email } } : {};
         return await this.repository.findOne({
-            where: { token: encoded },
-            // relations: ["user"],
+            join: {
+                alias: "token",
+                innerJoinAndSelect: {
+                    users: "token.user",
+                },
+            },
+            where: {
+                token: encoded,
+            },
         });
     }
 
@@ -57,7 +68,7 @@ export default class TokensRepository implements ITokensRepository {
     ): Promise<Token | undefined> {
         return await this.repository.findOne({
             where: { token: encoded, userId },
-            // relations: ["user"],
+            relations: ["user"],
         });
     }
 }

@@ -6,7 +6,7 @@ export default interface ITokensRepository {
     create(data: ICreateTokenDTO): Promise<IToken>;
     findById(id: string): Promise<IToken | undefined>;
     deleteById(id: string): Promise<void>;
-    findByEncoded(encoded: string): Promise<IToken | undefined>;
+    findByEncoded(encoded: string, email?: string): Promise<IToken | undefined>;
     findByEncodedAndUserId(
         encoded: string,
         userId: string

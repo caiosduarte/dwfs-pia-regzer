@@ -88,13 +88,24 @@ var TokensRepository = (function () {
             });
         });
     };
-    TokensRepository.prototype.findByEncoded = function (encoded) {
+    TokensRepository.prototype.findByEncoded = function (encoded, email) {
         return __awaiter(this, void 0, void 0, function () {
+            var whereWithEmail;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.repository.findOne({
-                            where: { token: encoded },
-                        })];
+                    case 0:
+                        whereWithEmail = email ? { user: { email: email } } : {};
+                        return [4, this.repository.findOne({
+                                join: {
+                                    alias: "token",
+                                    innerJoinAndSelect: {
+                                        users: "token.user",
+                                    },
+                                },
+                                where: {
+                                    token: encoded,
+                                },
+                            })];
                     case 1: return [2, _a.sent()];
                 }
             });
@@ -116,6 +127,7 @@ var TokensRepository = (function () {
                 switch (_a.label) {
                     case 0: return [4, this.repository.findOne({
                             where: { token: encoded, userId: userId },
+                            relations: ["user"],
                         })];
                     case 1: return [2, _a.sent()];
                 }

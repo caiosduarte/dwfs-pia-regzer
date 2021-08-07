@@ -27,7 +27,8 @@ var Token = (function () {
         __metadata("design:type", String)
     ], Token.prototype, "id", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function (type) { return User_1.default; }, {
+        typeorm_1.ManyToOne(function (type) { return User_1.default; }, function (user) { return user.tokens; }, {
+            cascade: true,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
         }),

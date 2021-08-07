@@ -10,7 +10,8 @@ export default class Token implements IToken {
     @PrimaryColumn({ name: "user_token_id" })
     id: string;
 
-    @ManyToOne((type) => User, {
+    @ManyToOne((type) => User, (user) => user.tokens, {
+        cascade: true,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })

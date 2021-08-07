@@ -1,9 +1,8 @@
 import { hash } from "bcrypt";
 import AppError from "../../../errors/AppError";
 import ICreateUserDTO from "../dtos/ICreateUserDTO";
-import IUserResponseDTO from "../dtos/IUserResponseDTO";
-import UserMap from "../../../mappers";
 import { IUsersRepository } from "../repositories/IUsersRepository";
+import IUser from "../models/IUser";
 
 class CreateUserService {
     constructor(private repository: IUsersRepository) {}
@@ -14,7 +13,7 @@ class CreateUserService {
         cellphone,
         email,
         password,
-    }: ICreateUserDTO): Promise<IUserResponseDTO> {
+    }: ICreateUserDTO): Promise<IUser> {
         this.repository;
 
         const userExists = await this.repository.findByIds({
@@ -40,7 +39,7 @@ class CreateUserService {
             password: hashedPassword,
         });
 
-        return UserMap.toDTO(user);
+        return user;
     }
 }
 

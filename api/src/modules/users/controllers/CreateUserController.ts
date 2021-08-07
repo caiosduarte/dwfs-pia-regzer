@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import UserMap from "../../../mappers";
 import CreateUserService from "../services/CreateUserService";
 import SendConfirmMailService from "../services/SendConfirmMailService";
 
@@ -19,10 +20,10 @@ export default class CreateUserController {
             password,
         });
 
-        if (!user.isConfirmed) {
+        if (!user.confirmedAt) {
             await this.sendConfirmService.execute(email);
         }
 
-        return response.status(201).json(user);
+        return response.status(201).json(UserMap.toDTO(user));
     }
 }

@@ -45,31 +45,32 @@ var ConfirmUserService = (function () {
     function ConfirmUserService(repository) {
         this.repository = repository;
     }
-    ConfirmUserService.prototype.execute = function (tokenEncoded) {
+    ConfirmUserService.prototype.execute = function (tokenEncoded, email) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, user;
+            var token, user, expiresAt;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.repository.findByEncoded(tokenEncoded)];
+                    case 0: return [4, this.repository.findByEncoded(tokenEncoded, email)];
                     case 1:
                         token = _a.sent();
                         if (!token) {
                             throw new AppError_1.default("Token invalid.", 401);
                         }
                         user = token.user;
-                        return [4, this.repository.deleteById(token.id)];
-                    case 2:
-                        _a.sent();
+                        expiresAt = token.expiresAt;
                         if (!user) {
                             throw new AppError_1.default("Token invalid.", 401);
                         }
-                        if (user.isConfirmed) {
+                        return [4, this.repository.deleteById(token.id)];
+                    case 2:
+                        _a.sent();
+                        if (!!user.confirmedAt) {
                             throw new AppError_1.default("User already confirmed.", 403);
                         }
-                        if (token_1.isTokenExpired(token.expiresAt)) {
+                        if (token_1.isTokenExpired(expiresAt)) {
                             throw new AppError_1.default("Token expired.", 401);
                         }
-                        user.isConfirmed = true;
+                        user.confirmedAt = new Date();
                         return [4, this.repository.save(token)];
                     case 3:
                         _a.sent();
