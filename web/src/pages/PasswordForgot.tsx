@@ -140,8 +140,7 @@ export function PasswordForgot(props: any) {
                                         formState.errors.ids
                                     )}
                                     {...register("ids", {
-                                        required:
-                                            "O endereço de email é um campo obrigatório.",
+                                        required: "Email address is required.",
                                         shouldUnregister: true,
                                     })}
                                 />
