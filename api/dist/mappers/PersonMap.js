@@ -64,7 +64,7 @@ var PersonMap2 = (function () {
 }());
 exports.PersonMap2 = PersonMap2;
 var returnPersonMapped = function (_a) {
-    var id = _a.id, name = _a.name, type = _a.type, email = _a.email, document = _a.document, cellphone = _a.cellphone, isAdmin = _a.isAdmin, roles = _a.roles, permissions = _a.permissions, isConfirmed = _a.isConfirmed, isValid = _a.isValid;
+    var id = _a.id, name = _a.name, type = _a.type, email = _a.email, document = _a.document, cellphone = _a.cellphone, isAdmin = _a.isAdmin, roles = _a.roles, permissions = _a.permissions, validatedAt = _a.validatedAt, confirmedAt = _a.confirmedAt;
     return {
         id: id,
         name: name,
@@ -75,8 +75,8 @@ var returnPersonMapped = function (_a) {
         isAdmin: isAdmin,
         roles: roles,
         permissions: permissions,
-        isConfirmed: isConfirmed,
-        isValid: isValid,
+        validatedAt: validatedAt,
+        confirmedAt: confirmedAt,
     };
 };
 var PersonMapper = (function () {

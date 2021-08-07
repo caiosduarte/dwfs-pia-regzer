@@ -23,8 +23,6 @@ export default class PersonDocument implements IDocument {
     @JoinColumn({ name: "person_id", referencedColumnName: "id" })
     person: Person;
 
-    personId: string;
-
     @OneToOne((type) => DocumentType, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",

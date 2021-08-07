@@ -13,13 +13,16 @@ import AWSS3StorageProvider from "../providers/StorageProvider/implementations/A
 import { LocalStorageProvider } from "../providers/StorageProvider/implementations/LocalStorageProvider";
 import DocumentsRepository from "../repositories/DocumentsRepository";
 import PeopleRepository from "../repositories/PeopleRepository";
+import { getRepository } from "typeorm";
+import Individual from "../entities/Individual";
+import UsersRepository from "../repositories/UsersRepository";
 
 const peopleRoutes = Router();
 
 const uploadDocuments = multer(upload);
 
 peopleRoutes.use(ensureAuthenticated);
-peopleRoutes.use(ensureConfirmed);
+// peopleRoutes.use(ensureConfirmed);
 
 function diskStorage() {
     switch (process.env.STORAGE) {
@@ -33,19 +36,32 @@ function diskStorage() {
 }
 
 peopleRoutes.post("/", async (request, response) => {
-    const { userId, type } = request.body;
+    const { id, type } = request.body;
+    const { email, document, isAdmin } = request.body;
 
-    if (!userId || !type) {
+    if (!id || !type) {
         throw new AppError("Wrong parameters.", 403);
     }
 
+    const usersRepo = UsersRepository.getInstance();
+    const user = await usersRepo.findById(id);
+
+    if (!user) {
+        throw new AppError("User not found", 404);
+    }
+
+    if (email !== user.email) {
+        user.confirmedAt = undefined;
+    }
+
     const repository = PeopleRepository.getInstance();
+    const person = await repository.create({
+        id,
+        type,
+        user: { id, email, document, validatedAt: new Date() },
+    });
 
-    const person = await repository.create({ userId, type });
-
-    console.log("Person saved ", person);
-
-    return response.status(201).json(person);
+    return response.status(201).json(PersonMapper.toDTO(person));
 });
 
 peopleRoutes.get("/:id", async (request, response) => {
@@ -55,26 +71,23 @@ peopleRoutes.get("/:id", async (request, response) => {
 
     const person = await repository.findById(id);
 
-    /*     
-    const storageProvider = diskStorage();
-    const documentsUrl = person?.documents?.map((doc) =>
-        storageProvider.getUrl("documents", doc.filename)
-    ); */
+    // const repo = getRepository<Individual>(Individual);
 
-    console.log(`People [${id}] get/`, person);
+    // console.log(`Individual [${id}] get/`, await repo.findOne(id));
+
     return response.json(PersonMapper.toDTO(person));
 });
 
 // peopleRoutes.use(ensurePermission);
 
 peopleRoutes.get("/" /*, ensurePermissions*/, async (request, response) => {
-    const { start: startInQuery, offset: offsetInQuery } = request.query;
+    const { start, offset } = request.query;
 
     const repository = PeopleRepository.getInstance();
 
     const people = await repository.find({
-        start: Number(offsetInQuery),
-        offset: Number(offsetInQuery),
+        start: Number(start),
+        offset: Number(offset),
     });
 
     console.log("People ", people);

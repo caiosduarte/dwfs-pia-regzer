@@ -21,12 +21,7 @@ import IUser from "../modules/users/models/IUser";
 import Token from "./Token";
 import Person from "./Person";
 
-@Entity({
-    // orderBy: {
-    //     // updatedAt: { order: "DESC", nulls: "NULLS FIRST" },
-    //     // name: { order: "ASC", nulls: "NULLS FIRST" },
-    // },
-})
+@Entity()
 class User implements IUser {
     @PrimaryColumn({ name: "user_id" })
     id: string;
@@ -53,30 +48,23 @@ class User implements IUser {
     @Column({ name: "is_admin", default: false })
     isAdmin: boolean;
 
-    @Column({ name: "is_confirmed", default: false })
-    isConfirmed: boolean;
-
-    @Column({ name: "is_valid", default: true })
-    isValid: boolean;
-
     @OneToMany((type) => Token, (token) => token.user, {
         cascade: true,
     })
     tokens: Token[];
 
-    // @RelationId((user: User) => user.tokens)
-    // tokenIds: string[];
-
-    @OneToOne((type) => Person, (person) => person.user, {
-        cascade: true,
-    })
+    @OneToOne((type) => Person, (person) => person.user)
     person: Person;
 
     @Column({ name: "validated_at", nullable: true })
-    validatedAt: Date;
+    validatedAt?: Date;
+
+    isValid: boolean;
 
     @Column({ name: "confirmed_at", nullable: true })
-    confirmedAt: Date;
+    confirmedAt?: Date;
+
+    isConfirmed: boolean;
 
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date;
@@ -88,6 +76,8 @@ class User implements IUser {
         if (!this.id) {
             this.id = uuidV4();
         }
+        this.isValid = !!this.validatedAt;
+        this.isConfirmed = !!this.confirmedAt;
     }
 }
 

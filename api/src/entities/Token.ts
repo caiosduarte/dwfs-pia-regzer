@@ -18,7 +18,7 @@ export default class Token implements IToken {
     user: User;
 
     @Column({ name: "user_id" })
-    userId: string;
+    userId!: string;
 
     @Column()
     token: string;

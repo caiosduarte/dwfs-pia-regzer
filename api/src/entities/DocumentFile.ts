@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import IDocumentFile from "../modules/people/models/IDocumentFile";
+import PersonDocument from "./PersonDocument";
 import Document from "./PersonDocument";
 
 @Entity("person_document_file")
@@ -10,7 +11,7 @@ export default class DocumentFile implements IDocumentFile {
     @Column()
     person_document_id: string;
 
-    @ManyToOne((type) => Document, (document) => document.files, {
+    @ManyToOne((type) => PersonDocument, (document) => document.files, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })
@@ -18,7 +19,7 @@ export default class DocumentFile implements IDocumentFile {
         name: "person_document_id",
         referencedColumnName: "id",
     })
-    document: Document;
+    document: PersonDocument;
 
     @Column()
     filename: string;

@@ -36,20 +36,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InsertDefaultUsers1628193638409 = void 0;
+exports.InsertDefaultUsers1628288180516 = void 0;
 var bcrypt_1 = require("bcrypt");
-var InsertDefaultUsers1628193638409 = (function () {
-    function InsertDefaultUsers1628193638409() {
+var InsertDefaultUsers1628288180516 = (function () {
+    function InsertDefaultUsers1628288180516() {
     }
-    InsertDefaultUsers1628193638409.prototype.up = function (queryRunner) {
+    InsertDefaultUsers1628288180516.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             return __generator(this, function (_j) {
                 switch (_j.label) {
                     case 0:
                         _b = (_a = queryRunner).query;
-                        _c = ["INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) " +
-                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"];
+                        _c = ["INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, validated_at, confirmed_at) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'));"];
                         _d = ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548",
                             "ADMIN",
                             null,
@@ -58,45 +58,37 @@ var InsertDefaultUsers1628193638409 = (function () {
                         return [4, bcrypt_1.hash("root", 8)];
                     case 1: return [4, _b.apply(_a, _c.concat([_d.concat([
                                 _j.sent(),
-                                true,
-                                true,
                                 true
                             ])]))];
                     case 2:
                         _j.sent();
-                        return [4, queryRunner.query("INSERT INTO person (person_id, type) VALUES (?, ?);", ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548", "J"])];
-                    case 3:
-                        _j.sent();
-                        return [4, queryRunner.query("INSERT INTO person_company(person_company_id, fantasy_name, open_date, responsible_name) VALUES (?, ?, ?, ?);", [
+                        return [4, queryRunner.query("INSERT INTO person(person_id, type, fantasy_name, open_date, responsible_name) VALUES (?,?, ?, ?, ?);", [
                                 "ba8e4a63-9a01-4bc9-aef9-1e0793bb2548",
+                                "J",
                                 "Regzer",
                                 "2021-08-01 23:34:19",
                                 "Caio",
                             ])];
-                    case 4:
+                    case 3:
                         _j.sent();
                         _f = (_e = queryRunner).query;
-                        _g = ["INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, is_valid, is_confirmed) " +
-                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"];
+                        _g = ["INSERT INTO user (user_id, name, document, cellphone, email, password, is_admin, validated_at, confirmed_at) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?,  datetime('now'), datetime('now'));"];
                         _h = ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209",
                             "Caio Duarte",
                             "01351676636",
                             "5531984227833",
                             "caiosduarte@gmail.com"];
                         return [4, bcrypt_1.hash("password123", 8)];
-                    case 5: return [4, _f.apply(_e, _g.concat([_h.concat([
+                    case 4: return [4, _f.apply(_e, _g.concat([_h.concat([
                                 _j.sent(),
-                                false,
-                                true,
-                                true
+                                false
                             ])]))];
-                    case 6:
+                    case 5:
                         _j.sent();
-                        return [4, queryRunner.query("INSERT INTO person (person_id, type) VALUES (?, ?);", ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209", "F"])];
-                    case 7:
-                        _j.sent();
-                        return [4, queryRunner.query("INSERT INTO person_individual(person_individual_id, birthday, gender, ethnicity, father_name, mother_name, civil_status)  VALUES (?, ?, ?, ?, ?,?,?);", [
+                        return [4, queryRunner.query("INSERT INTO person(person_id, type, birthday, gender, ethnicity, father_name, mother_name, civil_status)  VALUES (?, ?, ?, ?, ?, ?,?,?);", [
                                 "ff9bf59a-70dc-4a80-a4b1-144fadfa8209",
+                                "F",
                                 "2021-08-01 23:34:19",
                                 "M",
                                 "BRANCO",
@@ -104,40 +96,34 @@ var InsertDefaultUsers1628193638409 = (function () {
                                 "R",
                                 "SOLTEIRO",
                             ])];
-                    case 8:
+                    case 6:
                         _j.sent();
                         return [2];
                 }
             });
         });
     };
-    InsertDefaultUsers1628193638409.prototype.down = function (queryRunner) {
+    InsertDefaultUsers1628288180516.prototype.down = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, queryRunner.query("DELETE FROM person_company WHERE person_company_id IN (?)", ["ba8e4a63-9a01-4bc9-aef9-1e0793bb2548"])];
+                    case 0: return [4, queryRunner.query("DELETE FROM person WHERE person_id IN (?, ?)", [
+                            "ba8e4a63-9a01-4bc9-aef9-1e0793bb2548",
+                            "ff9bf59a-70dc-4a80-a4b1-144fadfa8209",
+                        ])];
                     case 1:
-                        _a.sent();
-                        return [4, queryRunner.query("DELETE FROM person_individual WHERE person_individual_id IN (?)", ["ff9bf59a-70dc-4a80-a4b1-144fadfa8209"])];
-                    case 2:
-                        _a.sent();
-                        return [4, queryRunner.query("DELETE FROM person WHERE person_id IN (?, ?)", [
-                                "ff9bf59a-70dc-4a80-a4b1-144fadfa8209",
-                                "ba8e4a63-9a01-4bc9-aef9-1e0793bb2548",
-                            ])];
-                    case 3:
                         _a.sent();
                         return [4, queryRunner.query("DELETE FROM user WHERE user_id IN (?, ?)", [
                                 "ff9bf59a-70dc-4a80-a4b1-144fadfa8209",
                                 "ba8e4a63-9a01-4bc9-aef9-1e0793bb2548",
                             ])];
-                    case 4:
+                    case 2:
                         _a.sent();
                         return [2];
                 }
             });
         });
     };
-    return InsertDefaultUsers1628193638409;
+    return InsertDefaultUsers1628288180516;
 }());
-exports.InsertDefaultUsers1628193638409 = InsertDefaultUsers1628193638409;
+exports.InsertDefaultUsers1628288180516 = InsertDefaultUsers1628288180516;

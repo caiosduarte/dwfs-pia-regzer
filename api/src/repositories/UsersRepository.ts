@@ -13,8 +13,8 @@ export default class UsersRepository implements IUsersRepository {
 
     private repository: Repository<User>;
 
-    skip = 0;
-    take = 10;
+    readonly skip = 0;
+    readonly take = 10;
 
     private constructor() {
         this.repository = getRepository(User);
@@ -87,7 +87,8 @@ export default class UsersRepository implements IUsersRepository {
     }: ISearchParams): Promise<User[] | undefined> {
         const queryBuilder = this.repository
             .createQueryBuilder("user")
-            .leftJoinAndSelect("user.person", "person")
+            .leftJoin("user.person", "person")
+            .addSelect("person.type")
             .orderBy({
                 "user.updatedAt": "DESC",
                 "user.name": "ASC",

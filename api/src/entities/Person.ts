@@ -1,4 +1,6 @@
+import { NullableBoolean } from "aws-sdk/clients/glue";
 import {
+    ChildEntity,
     Column,
     Entity,
     JoinColumn,
@@ -6,53 +8,39 @@ import {
     OneToMany,
     OneToOne,
     PrimaryColumn,
+    TableInheritance,
 } from "typeorm";
 import IPerson from "../modules/people/models/IPerson";
 
-import { ALL_PERSON_TYPES } from "./Enum";
+import { ALL_PERSON_TYPES, enumValues } from "./Enum";
 import User from "./User";
 
-import Individual from "./Individual";
-import Company from "./Company";
-import PersonDocument from "./PersonDocument";
-
-// @Entity({
-//     orderBy: (user: User) => {
-//         const name = user.name;
-//         return { name: "DESC" };
-//     },
-// })
 @Entity()
-export default class Person implements IPerson {
+@TableInheritance({
+    pattern: "STI",
+    column: {
+        // select: true,
+        name: "type",
+        enum: ALL_PERSON_TYPES,
+        update: true,
+    },
+})
+export default abstract class Person implements IPerson {
     @PrimaryColumn({ name: "person_id", update: true })
     id: string;
 
     @OneToOne((type) => User, {
         eager: true,
+        cascade: ["update"],
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
         primary: true,
-        // createForeignKeyConstraints: false,
     })
     @JoinColumn({ name: "person_id", referencedColumnName: "id" })
     user: User;
 
     @Column({ enum: ALL_PERSON_TYPES })
-    type: string;
-
-    @OneToOne((type) => Individual, (individual) => individual.person, {
-        cascade: true,
-        eager: true,
-    })
-    individual: Individual;
-
-    @OneToOne((type) => Company, (company) => company.person, {
-        cascade: true,
-        eager: true,
-    })
-    company: Company;
-
-    personType: Individual | Company;
+    type!: string;
 
     @Column({ nullable: true })
     cellphone: string;
@@ -60,16 +48,15 @@ export default class Person implements IPerson {
     @Column({ nullable: true })
     telephone: string;
 
-    @Column({ name: "is_valid", default: false })
+    // @OneToMany((type) => PersonDocument, (doc) => doc.person)
+    // documents: PersonDocument[];
+
+    @Column({ name: "validated_at", nullable: true })
+    validatedAt?: Date;
+
     isValid: boolean;
 
-    @Column({ name: "valid_at", nullable: true })
-    validAt: Date;
-
-    @OneToMany((type) => PersonDocument, (doc) => doc.person)
-    documents: PersonDocument[];
-
     constructor() {
-        this.personType = this.individual || this.company;
+        this.isValid = !!this.validatedAt;
     }
 }

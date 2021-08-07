@@ -157,7 +157,8 @@ var UsersRepository = (function () {
                     case 0:
                         queryBuilder = this.repository
                             .createQueryBuilder("user")
-                            .leftJoinAndSelect("user.person", "person")
+                            .leftJoin("user.person", "person")
+                            .addSelect("person.type")
                             .orderBy({
                             "user.updatedAt": "DESC",
                             "user.name": "ASC",

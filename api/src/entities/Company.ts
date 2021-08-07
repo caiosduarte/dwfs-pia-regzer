@@ -1,23 +1,18 @@
 import { IsDate } from "class-validator";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import {
+    ChildEntity,
+    Column,
+    Entity,
+    JoinColumn,
+    OneToOne,
+    PrimaryColumn,
+} from "typeorm";
 import ICompany from "../modules/people/models/ICompany";
+import { ALL_PERSON_TYPES } from "./Enum";
 import Person from "./Person";
 
-@Entity("person_company")
-export default class Company implements ICompany {
-    @PrimaryColumn({ name: "person_company_id" })
-    id: string;
-
-    @OneToOne((type) => Person, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    @JoinColumn({
-        name: "person_company_id",
-        referencedColumnName: "id",
-    })
-    person: Person;
-
+@ChildEntity(ALL_PERSON_TYPES.JURIDICA)
+export default class Company extends Person implements ICompany {
     @Column({ name: "fantasy_name" })
     fantasyName: string;
 
@@ -38,4 +33,8 @@ export default class Company implements ICompany {
 
     @Column({ name: "responsible_name" })
     responsibleName: string;
+
+    constructor() {
+        super();
+    }
 }

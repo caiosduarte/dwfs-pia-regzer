@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -14,25 +29,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var class_validator_1 = require("class-validator");
 var typeorm_1 = require("typeorm");
+var Enum_1 = require("./Enum");
 var Person_1 = __importDefault(require("./Person"));
-var Company = (function () {
+var Company = (function (_super) {
+    __extends(Company, _super);
     function Company() {
+        return _super.call(this) || this;
     }
-    __decorate([
-        typeorm_1.PrimaryColumn({ name: "person_company_id" }),
-        __metadata("design:type", String)
-    ], Company.prototype, "id", void 0);
-    __decorate([
-        typeorm_1.OneToOne(function (type) { return Person_1.default; }, {
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-        }),
-        typeorm_1.JoinColumn({
-            name: "person_company_id",
-            referencedColumnName: "id",
-        }),
-        __metadata("design:type", Person_1.default)
-    ], Company.prototype, "person", void 0);
     __decorate([
         typeorm_1.Column({ name: "fantasy_name" }),
         __metadata("design:type", String)
@@ -52,8 +55,9 @@ var Company = (function () {
         __metadata("design:type", String)
     ], Company.prototype, "responsibleName", void 0);
     Company = __decorate([
-        typeorm_1.Entity("person_company")
+        typeorm_1.ChildEntity(Enum_1.ALL_PERSON_TYPES.JURIDICA),
+        __metadata("design:paramtypes", [])
     ], Company);
     return Company;
-}());
+}(Person_1.default));
 exports.default = Company;

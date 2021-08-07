@@ -44,7 +44,6 @@ var multer_1 = __importDefault(require("multer"));
 var upload_1 = __importDefault(require("../config/upload"));
 var AppError_1 = __importDefault(require("../errors/AppError"));
 var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
-var ensureConfirmed_1 = __importDefault(require("../middlewares/ensureConfirmed"));
 var CreateDocumentController_1 = __importDefault(require("../modules/people/controllers/CreateDocumentController"));
 var PersonMap_1 = require("../mappers/PersonMap");
 var CreateDocumentService_1 = __importDefault(require("../modules/people/services/CreateDocumentService"));
@@ -52,10 +51,10 @@ var AWSS3StorageProvider_1 = __importDefault(require("../providers/StorageProvid
 var LocalStorageProvider_1 = require("../providers/StorageProvider/implementations/LocalStorageProvider");
 var DocumentsRepository_1 = __importDefault(require("../repositories/DocumentsRepository"));
 var PeopleRepository_1 = __importDefault(require("../repositories/PeopleRepository"));
+var UsersRepository_1 = __importDefault(require("../repositories/UsersRepository"));
 var peopleRoutes = express_1.Router();
 var uploadDocuments = multer_1.default(upload_1.default);
 peopleRoutes.use(ensureAuthenticated_1.ensureAuthenticated);
-peopleRoutes.use(ensureConfirmed_1.default);
 function diskStorage() {
     switch (process.env.STORAGE) {
         case "local":
@@ -67,20 +66,34 @@ function diskStorage() {
     }
 }
 peopleRoutes.post("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, userId, type, repository, person;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, id, type, _b, email, document, isAdmin, usersRepo, user, repository, person;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _a = request.body, userId = _a.userId, type = _a.type;
-                if (!userId || !type) {
+                _a = request.body, id = _a.id, type = _a.type;
+                _b = request.body, email = _b.email, document = _b.document, isAdmin = _b.isAdmin;
+                if (!id || !type) {
                     throw new AppError_1.default("Wrong parameters.", 403);
                 }
-                repository = PeopleRepository_1.default.getInstance();
-                return [4, repository.create({ userId: userId, type: type })];
+                usersRepo = UsersRepository_1.default.getInstance();
+                return [4, usersRepo.findById(id)];
             case 1:
-                person = _b.sent();
-                console.log("Person saved ", person);
-                return [2, response.status(201).json(person)];
+                user = _c.sent();
+                if (!user) {
+                    throw new AppError_1.default("User not found", 404);
+                }
+                if (email !== user.email) {
+                    user.confirmedAt = undefined;
+                }
+                repository = PeopleRepository_1.default.getInstance();
+                return [4, repository.create({
+                        id: id,
+                        type: type,
+                        user: { id: id, email: email, document: document, validatedAt: new Date() },
+                    })];
+            case 2:
+                person = _c.sent();
+                return [2, response.status(201).json(PersonMap_1.PersonMapper.toDTO(person))];
         }
     });
 }); });
@@ -94,21 +107,20 @@ peopleRoutes.get("/:id", function (request, response) { return __awaiter(void 0,
                 return [4, repository.findById(id)];
             case 1:
                 person = _a.sent();
-                console.log("People [" + id + "] get/", person);
                 return [2, response.json(PersonMap_1.PersonMapper.toDTO(person))];
         }
     });
 }); });
 peopleRoutes.get("/", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, startInQuery, offsetInQuery, repository, people;
+    var _a, start, offset, repository, people;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = request.query, startInQuery = _a.start, offsetInQuery = _a.offset;
+                _a = request.query, start = _a.start, offset = _a.offset;
                 repository = PeopleRepository_1.default.getInstance();
                 return [4, repository.find({
-                        start: Number(offsetInQuery),
-                        offset: Number(offsetInQuery),
+                        start: Number(start),
+                        offset: Number(offset),
                     })];
             case 1:
                 people = _b.sent();

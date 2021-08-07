@@ -1,26 +1,23 @@
 import { IsDate } from "class-validator";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { ChildEntity, Column } from "typeorm";
 
 import IIndividual from "../modules/people/models/IIndividual";
 
-import { ETHNICITY, GENDER } from "./Enum";
+import { ALL_PERSON_TYPES, CIVIL_STATUS, ETHNICITY, GENDER } from "./Enum";
 import Person from "./Person";
 
-@Entity("person_individual")
-export default class Individual implements IIndividual {
-    @PrimaryColumn({ name: "person_individual_id" })
-    id: string;
-
-    @OneToOne((type) => Person, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-        primary: true,
-    })
-    @JoinColumn({
-        name: "person_individual_id",
-        referencedColumnName: "id",
-    })
-    person: Person;
+@ChildEntity(ALL_PERSON_TYPES.FISICA)
+export default class Individual extends Person implements IIndividual {
+    // @OneToOne((type) => Person, {
+    //     onDelete: "CASCADE",
+    //     onUpdate: "CASCADE",
+    //     primary: true,
+    // })
+    // @JoinColumn({
+    //     // name: "person_individual_id",
+    //     // referencedColumnName: "id",
+    // })
+    // person: Person;
 
     @Column()
     @IsDate()
@@ -40,17 +37,17 @@ export default class Individual implements IIndividual {
 
     @Column({
         name: "civil_status",
-        enum: [
-            "SOLTEIRO",
-            "UNIÃO ESTÁVEL",
-            "CASADO",
-            "SEPARADO",
-            "DIVORCIADO",
-            "VIÚVO",
-        ],
+        enum: CIVIL_STATUS,
     })
     civilStatus: string;
 
     // @OneToOne((type) => CPF, (cpf) => cpf.person)
     // cpf: CPF;
+
+    constructor() {
+        super();
+        // if (!this.type) {
+        //     this.type = ALL_PERSON_TYPES.FISICA;
+        // }
+    }
 }

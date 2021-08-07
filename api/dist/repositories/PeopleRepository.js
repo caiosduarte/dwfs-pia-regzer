@@ -40,6 +40,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
+var Company_1 = __importDefault(require("../entities/Company"));
+var Enum_1 = require("../entities/Enum");
+var Individual_1 = __importDefault(require("../entities/Individual"));
 var Person_1 = __importDefault(require("../entities/Person"));
 var PeopleRepository = (function () {
     function PeopleRepository(repository) {
@@ -54,19 +57,29 @@ var PeopleRepository = (function () {
         return this.INSTANCE;
     };
     PeopleRepository.prototype.create = function (_a) {
-        var userId = _a.userId, type = _a.type;
+        var id = _a.id, type = _a.type, user = _a.user;
         return __awaiter(this, void 0, void 0, function () {
-            var person;
+            var person, repository, repository;
             return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        person = this.repository.create({
-                            id: userId,
-                            type: type,
-                        });
-                        return [4, this.repository.save(person)];
-                    case 1: return [2, _b.sent()];
+                if (type === Enum_1.ALL_PERSON_TYPES.FISICA) {
+                    repository = typeorm_1.getRepository(Individual_1.default);
+                    person = repository.create({
+                        id: id,
+                        type: type,
+                        user: user,
+                    });
+                    return [2, repository.save(person)];
                 }
+                else {
+                    repository = typeorm_1.getRepository(Company_1.default);
+                    person = repository.create({
+                        id: id,
+                        type: type,
+                        user: user,
+                    });
+                    return [2, repository.save(person)];
+                }
+                return [2];
             });
         });
     };

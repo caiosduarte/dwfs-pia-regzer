@@ -99,8 +99,8 @@ const returnPersonMapped = ({
     isAdmin,
     roles,
     permissions,
-    isConfirmed,
-    isValid,
+    validatedAt,
+    confirmedAt,
 }: IPerson & IUser) => {
     return {
         id,
@@ -112,8 +112,8 @@ const returnPersonMapped = ({
         isAdmin,
         roles,
         permissions,
-        isConfirmed,
-        isValid,
+        validatedAt,
+        confirmedAt,
     };
 };
 
