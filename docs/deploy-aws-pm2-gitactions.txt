@@ -91,7 +91,7 @@ regzer.com.br
 
 sudo npm install pm2@latest -g
 
-NODE_ENV=production pm2 start ~/regzer_api/dist/server.js --name regzer_api --node-args="--max_old_space_size=500 --optimize_for_size --gc_interval=100"
+NODE_ENV=production pm2 start dist/server.js --name regzer_api --node-args="--max_old_space_size=500 --optimize_for_size --gc_interval=100"
 
 Arquivo ~/.pm2/ecosystem.config.js :
 
