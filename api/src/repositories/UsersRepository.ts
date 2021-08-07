@@ -28,21 +28,6 @@ export default class UsersRepository implements IUsersRepository {
         return UsersRepository.INSTANCE;
     }
 
-    async findByDocument(document: string): Promise<User | undefined> {
-        return await this.repository.findOne({
-            where: { document },
-            relations: ["tokens"],
-        });
-    }
-
-    async findByEmail(email: string): Promise<User | undefined> {
-        const user = await this.repository.findOne({
-            where: { email },
-            relations: ["tokens"],
-        });
-        return user;
-    }
-
     async create(data: ICreateUserDTO): Promise<User> {
         const user = this.repository.create(data);
 
@@ -73,8 +58,8 @@ export default class UsersRepository implements IUsersRepository {
         email,
         document,
         cellphone,
-    }: IUserQueryParams): Promise<User[] | undefined> {
-        return await this.repository.find({
+    }: IUserQueryParams): Promise<User | undefined> {
+        return await this.repository.findOne({
             where: [{ id }, { email }, { document }, { cellphone }],
             relations: ["tokens"],
             cache: true,
@@ -95,8 +80,10 @@ export default class UsersRepository implements IUsersRepository {
             })
             .cache(true);
 
-        if (!isNaN(start) && !isNaN(offset)) {
+        if (isNaN(start) || isNaN(offset)) {
             queryBuilder.skip(this.skip).take(this.take);
+        } else {
+            queryBuilder.skip(start).take(offset);
         }
 
         return await queryBuilder.getMany();

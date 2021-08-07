@@ -55,8 +55,7 @@ authenticateRoutes.get("/sessions", async (request, response) => {
     const user = id
         ? await repository.findById(id)
         : await repository
-              .findByIds({ id, email, cellphone, document })
-              .then((users) => users && users[0])
+              .findByIds({ email, cellphone, document })
               .then((user) => {
                   if (!user) throw new AppError("User not found.", 404);
                   const tokens = user?.tokens;

@@ -54,7 +54,7 @@ var SendForgotPasswordMailService = (function () {
             var user, token, variables, templatePath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.usersRepository.findByEmail(email)];
+                    case 0: return [4, this.usersRepository.findByIds({ email: email })];
                     case 1:
                         user = _a.sent();
                         if (!user) {

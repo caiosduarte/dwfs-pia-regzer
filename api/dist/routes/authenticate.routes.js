@@ -94,8 +94,7 @@ authenticateRoutes.get("/sessions", function (request, response) { return __awai
                 _a = _b.sent();
                 return [3, 4];
             case 2: return [4, repository
-                    .findByIds({ id: id, email: email, cellphone: cellphone, document: document })
-                    .then(function (users) { return users && users[0]; })
+                    .findByIds({ email: email, cellphone: cellphone, document: document })
                     .then(function (user) {
                     if (!user)
                         throw new AppError_1.default("User not found.", 404);

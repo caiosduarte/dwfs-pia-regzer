@@ -37,11 +37,11 @@ var Company = (function (_super) {
         return _super.call(this) || this;
     }
     __decorate([
-        typeorm_1.Column({ name: "fantasy_name" }),
+        typeorm_1.Column({ name: "fantasy_name", default: null }),
         __metadata("design:type", String)
     ], Company.prototype, "fantasyName", void 0);
     __decorate([
-        typeorm_1.Column({ name: "open_date", type: "date" }),
+        typeorm_1.Column({ name: "open_date", type: "date", default: null }),
         class_validator_1.IsDate(),
         __metadata("design:type", Date)
     ], Company.prototype, "openDate", void 0);
@@ -51,7 +51,7 @@ var Company = (function (_super) {
         __metadata("design:type", Date)
     ], Company.prototype, "endDate", void 0);
     __decorate([
-        typeorm_1.Column({ name: "responsible_name" }),
+        typeorm_1.Column({ name: "responsible_name", default: null }),
         __metadata("design:type", String)
     ], Company.prototype, "responsibleName", void 0);
     Company = __decorate([

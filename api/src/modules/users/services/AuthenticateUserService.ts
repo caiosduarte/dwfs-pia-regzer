@@ -41,9 +41,11 @@ class AuthenticateUserService {
         password,
         remember,
     }: ICredentials & { remember: boolean }): Promise<ITokenResponseDTO> {
-        const user = await this.usersRepository
-            .findByIds({ email, cellphone, document })
-            .then((result) => result && result[0]);
+        const user = await this.usersRepository.findByIds({
+            email,
+            cellphone,
+            document,
+        });
 
         if (!user) {
             throw new AppError("Email/password don't match.", 404);

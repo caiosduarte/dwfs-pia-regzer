@@ -17,20 +17,17 @@ class CreateUserService {
     }: ICreateUserDTO): Promise<IUserResponseDTO> {
         this.repository;
 
-        const checkEmailExists = await this.repository.findByEmail(email);
+        const userExists = await this.repository.findByIds({
+            email,
+            document,
+            cellphone,
+        });
 
-        if (checkEmailExists) {
-            throw new AppError("This email is already been used.", 403);
-        }
-
-        if (document) {
-            const checkDocument = await this.repository.findByDocument(
-                document
+        if (userExists) {
+            throw new AppError(
+                "Email or document or cellphone already been used.",
+                403
             );
-
-            if (checkDocument) {
-                throw new AppError("This document is already been used.", 403);
-            }
         }
 
         const hashedPassword = await hash(password, 8);

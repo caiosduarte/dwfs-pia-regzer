@@ -56,30 +56,29 @@ var PeopleRepository = (function () {
         }
         return this.INSTANCE;
     };
+    PeopleRepository.prototype.getPeopleRepository = function (type) {
+        var repository;
+        if (type === Enum_1.ALL_PERSON_TYPES.FISICA) {
+            repository = typeorm_1.getRepository(Individual_1.default);
+        }
+        else {
+            repository = typeorm_1.getRepository(Company_1.default);
+        }
+        return repository;
+    };
     PeopleRepository.prototype.create = function (_a) {
         var id = _a.id, type = _a.type, user = _a.user;
         return __awaiter(this, void 0, void 0, function () {
-            var person, repository, repository;
+            var repository, person;
             return __generator(this, function (_b) {
-                if (type === Enum_1.ALL_PERSON_TYPES.FISICA) {
-                    repository = typeorm_1.getRepository(Individual_1.default);
-                    person = repository.create({
-                        id: id,
-                        type: type,
-                        user: user,
-                    });
-                    return [2, repository.save(person)];
-                }
-                else {
-                    repository = typeorm_1.getRepository(Company_1.default);
-                    person = repository.create({
-                        id: id,
-                        type: type,
-                        user: user,
-                    });
-                    return [2, repository.save(person)];
-                }
-                return [2];
+                repository = this.getPeopleRepository(type);
+                person = repository.create({
+                    id: id,
+                    type: type,
+                    user: user,
+                });
+                console.log("Person create ", person);
+                return [2, repository.save(person)];
             });
         });
     };
@@ -87,7 +86,7 @@ var PeopleRepository = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.repository.save(person)];
+                    case 0: return [4, this.getPeopleRepository(person.type).save(person)];
                     case 1: return [2, _a.sent()];
                 }
             });
@@ -118,8 +117,11 @@ var PeopleRepository = (function () {
                             "user.name": "ASC",
                         })
                             .cache(true);
-                        if (!isNaN(start) && !isNaN(offset)) {
+                        if (isNaN(start) || isNaN(offset)) {
                             queryBuilder.skip(this.skip).take(this.take);
+                        }
+                        else {
+                            queryBuilder.skip(start).take(offset);
                         }
                         return [4, queryBuilder.getMany()];
                     case 1: return [2, _d.sent()];

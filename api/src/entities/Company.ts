@@ -13,10 +13,10 @@ import Person from "./Person";
 
 @ChildEntity(ALL_PERSON_TYPES.JURIDICA)
 export default class Company extends Person implements ICompany {
-    @Column({ name: "fantasy_name" })
+    @Column({ name: "fantasy_name", default: null })
     fantasyName: string;
 
-    @Column({ name: "open_date", type: "date" })
+    @Column({ name: "open_date", type: "date", default: null })
     @IsDate()
     openDate: Date;
 
@@ -31,7 +31,7 @@ export default class Company extends Person implements ICompany {
     // })
     // responsibleDocument: CPF;
 
-    @Column({ name: "responsible_name" })
+    @Column({ name: "responsible_name", default: null })
     responsibleName: string;
 
     constructor() {

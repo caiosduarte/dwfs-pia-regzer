@@ -1,6 +1,11 @@
 import { DescribeApplicableIndividualAssessmentsMessage } from "aws-sdk/clients/dms";
 import { PutAssetPropertyValueEntry } from "aws-sdk/clients/iot";
-import { getRepository, Repository } from "typeorm";
+import {
+    getCustomRepository,
+    getRepository,
+    ObjectLiteral,
+    Repository,
+} from "typeorm";
 import Company from "../entities/Company";
 import { ALL_PERSON_TYPES } from "../entities/Enum";
 import Individual from "../entities/Individual";
@@ -28,29 +33,33 @@ export default class PeopleRepository implements IPeopleRepository {
     readonly skip = 0;
     readonly take = 10;
 
-    async create({ id, type, user }: ICreatePersonDTO): Promise<People> {
-        let person: People;
+    private getPeopleRepository(type: string) {
+        let repository: Repository<People>;
         if (type === ALL_PERSON_TYPES.FISICA) {
-            const repository = getRepository<Individual>(Individual);
-            person = repository.create({
-                id,
-                type,
-                user,
-            });
-            return repository.save(person);
+            repository = getRepository<Individual>(Individual);
         } else {
-            const repository = getRepository<Company>(Company);
-            person = repository.create({
-                id,
-                type,
-                user,
-            });
-            return repository.save(person);
+            repository = getRepository<Company>(Company);
         }
+
+        return repository;
+    }
+
+    async create({ id, type, user }: ICreatePersonDTO): Promise<People> {
+        const repository = this.getPeopleRepository(type);
+
+        const person = repository.create({
+            id,
+            type,
+            user,
+        });
+
+        console.log("Person create ", person);
+
+        return repository.save(person);
     }
 
     async save(person: People): Promise<People> {
-        return await this.repository.save(person);
+        return await this.getPeopleRepository(person.type).save(person);
     }
 
     async findById(id: string): Promise<People | undefined> {
@@ -70,8 +79,10 @@ export default class PeopleRepository implements IPeopleRepository {
             })
             .cache(true);
 
-        if (!isNaN(start) && !isNaN(offset)) {
+        if (isNaN(start) || isNaN(offset)) {
             queryBuilder.skip(this.skip).take(this.take);
+        } else {
+            queryBuilder.skip(start).take(offset);
         }
 
         return await queryBuilder.getMany();

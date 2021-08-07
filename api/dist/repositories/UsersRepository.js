@@ -54,35 +54,6 @@ var UsersRepository = (function () {
         }
         return UsersRepository.INSTANCE;
     };
-    UsersRepository.prototype.findByDocument = function (document) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.repository.findOne({
-                            where: { document: document },
-                            relations: ["tokens"],
-                        })];
-                    case 1: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    UsersRepository.prototype.findByEmail = function (email) {
-        return __awaiter(this, void 0, void 0, function () {
-            var user;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.repository.findOne({
-                            where: { email: email },
-                            relations: ["tokens"],
-                        })];
-                    case 1:
-                        user = _a.sent();
-                        return [2, user];
-                }
-            });
-        });
-    };
     UsersRepository.prototype.create = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var user;
@@ -138,7 +109,7 @@ var UsersRepository = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4, this.repository.find({
+                    case 0: return [4, this.repository.findOne({
                             where: [{ id: id }, { email: email }, { document: document }, { cellphone: cellphone }],
                             relations: ["tokens"],
                             cache: true,
@@ -164,8 +135,11 @@ var UsersRepository = (function () {
                             "user.name": "ASC",
                         })
                             .cache(true);
-                        if (!isNaN(start) && !isNaN(offset)) {
+                        if (isNaN(start) || isNaN(offset)) {
                             queryBuilder.skip(this.skip).take(this.take);
+                        }
+                        else {
+                            queryBuilder.skip(start).take(offset);
                         }
                         return [4, queryBuilder.getMany()];
                     case 1: return [2, _d.sent()];

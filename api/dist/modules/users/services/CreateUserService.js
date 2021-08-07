@@ -49,27 +49,23 @@ var CreateUserService = (function () {
     CreateUserService.prototype.execute = function (_a) {
         var name = _a.name, document = _a.document, cellphone = _a.cellphone, email = _a.email, password = _a.password;
         return __awaiter(this, void 0, void 0, function () {
-            var checkEmailExists, checkDocument, hashedPassword, user;
+            var userExists, hashedPassword, user;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         this.repository;
-                        return [4, this.repository.findByEmail(email)];
+                        return [4, this.repository.findByIds({
+                                email: email,
+                                document: document,
+                                cellphone: cellphone,
+                            })];
                     case 1:
-                        checkEmailExists = _b.sent();
-                        if (checkEmailExists) {
-                            throw new AppError_1.default("This email is already been used.", 403);
+                        userExists = _b.sent();
+                        if (userExists) {
+                            throw new AppError_1.default("Email or document or cellphone already been used.", 403);
                         }
-                        if (!document) return [3, 3];
-                        return [4, this.repository.findByDocument(document)];
+                        return [4, bcrypt_1.hash(password, 8)];
                     case 2:
-                        checkDocument = _b.sent();
-                        if (checkDocument) {
-                            throw new AppError_1.default("This document is already been used.", 403);
-                        }
-                        _b.label = 3;
-                    case 3: return [4, bcrypt_1.hash(password, 8)];
-                    case 4:
                         hashedPassword = _b.sent();
                         return [4, this.repository.create({
                                 name: name,
@@ -78,7 +74,7 @@ var CreateUserService = (function () {
                                 email: email,
                                 password: hashedPassword,
                             })];
-                    case 5:
+                    case 3:
                         user = _b.sent();
                         return [2, mappers_1.default.toDTO(user)];
                 }

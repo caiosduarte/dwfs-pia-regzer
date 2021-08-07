@@ -27,14 +27,10 @@ export const findUsers = async (
             ...query,
         });
     } else {
-        const { start: startInQuery, offset: offsetInQuery } = query;
-        const start = Number(startInQuery);
-        const offset = Number(offsetInQuery);
-        console.log("Start ", start);
-        console.log("Offset ", offset);
+        const { start, offset } = query;
         return await repository.find({
-            start: Number(offsetInQuery),
-            offset: Number(offsetInQuery),
+            start: Number(start),
+            offset: Number(offset),
         });
     }
 };

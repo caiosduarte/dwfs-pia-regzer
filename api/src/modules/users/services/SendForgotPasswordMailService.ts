@@ -16,7 +16,7 @@ export default class SendForgotPasswordMailService {
     ) {}
 
     async execute(email: string): Promise<void> {
-        const user = await this.usersRepository.findByEmail(email);
+        const user = await this.usersRepository.findByIds({ email });
 
         if (!user) {
             throw new AppError("User/email does not exists!");

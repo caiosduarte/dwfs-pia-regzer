@@ -54,7 +54,7 @@ var hasAnyId = function (_a) {
 };
 exports.hasAnyId = hasAnyId;
 var findUsers = function (query, repository) { return __awaiter(void 0, void 0, void 0, function () {
-    var startInQuery, offsetInQuery, start, offset;
+    var start, offset;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -62,14 +62,10 @@ var findUsers = function (query, repository) { return __awaiter(void 0, void 0, 
                 return [4, repository.findByIds(__assign({}, query))];
             case 1: return [2, _a.sent()];
             case 2:
-                startInQuery = query.start, offsetInQuery = query.offset;
-                start = Number(startInQuery);
-                offset = Number(offsetInQuery);
-                console.log("Start ", start);
-                console.log("Offset ", offset);
+                start = query.start, offset = query.offset;
                 return [4, repository.find({
-                        start: Number(offsetInQuery),
-                        offset: Number(offsetInQuery),
+                        start: Number(start),
+                        offset: Number(offset),
                     })];
             case 3: return [2, _a.sent()];
         }
