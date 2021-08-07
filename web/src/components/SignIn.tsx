@@ -107,6 +107,8 @@ interface SignInProps {
     handleForgotPassword?: () => void;
 }
 
+type props = SignInProps & any;
+
 export default function SignIn({
     isSignIn,
     onSubmit,
@@ -114,7 +116,7 @@ export default function SignIn({
     afterSubmit,
     handleSignUp,
     handleForgotPassword,
-}: SignInProps) {
+}: props) {
     const classes = useStyles();
 
     const {
@@ -122,6 +124,7 @@ export default function SignIn({
         handleSubmit,
         formState: { errors },
         formState,
+        getValues,
     } = useForm();
 
     const [submitError, setSubmitError] = useState<string>();

@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function SignUp(props: any) {
+    const { _email, _cellphone } = props.location?.state;
     const { signUp, isConfirmed } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
     const [confirmation, setConfirmation] = useState<string>();
@@ -107,7 +108,9 @@ export function SignUp(props: any) {
                             : "Your registration is confirmed."
                     );
                     setMessageComponent(
-                        <LinkWrapper to="/sign-in">Sign in.</LinkWrapper>
+                        <LinkWrapper to="/sign-in" id={getValues("email")}>
+                            Sign in.
+                        </LinkWrapper>
                     );
                 });
         } catch (error) {
@@ -116,7 +119,7 @@ export function SignUp(props: any) {
             switch (status) {
                 case 403:
                     setMessageComponent(
-                        <LinkWrapper to="/sign-in">
+                        <LinkWrapper to="/sign-in" id={getValues("email")}>
                             Click to sign in.
                         </LinkWrapper>
                     );
@@ -167,7 +170,7 @@ export function SignUp(props: any) {
                                 id="email"
                                 label="Email Address"
                                 autoFocus
-                                // defaultValue={props.match.params?.emailCheckin}
+                                defaultValue={_email}
                                 error={isError("email")}
                                 helperText={errorMessage(errors.email)}
                                 {...register("email", {
@@ -199,6 +202,7 @@ export function SignUp(props: any) {
                                 type="text"
                                 id="cellphone"
                                 autoComplete="cellphone"
+                                defaultValue={_cellphone}
                                 error={isError("cellphone")}
                                 helperText={errorMessage(errors.password)}
                                 {...register("cellphone")}
@@ -274,13 +278,7 @@ export function SignUp(props: any) {
                     </FormControl>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <LinkWrapper
-                                // params={{
-                                //     emailCheckIn: getValues("email"),
-                                // }}
-                                to="/sign-in"
-                                variant="body2"
-                            >
+                            <LinkWrapper to="/sign-in" id={getValues("email")}>
                                 Already have an account? Sign in
                             </LinkWrapper>
                         </Grid>

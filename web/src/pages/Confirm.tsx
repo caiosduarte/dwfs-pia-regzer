@@ -6,6 +6,7 @@ import {
     CssBaseline,
     FormControl,
     FormHelperText,
+    Grid,
     Link,
     makeStyles,
     TextField,
@@ -130,7 +131,9 @@ export default function Confirm(props: any) {
 
             setConfirmMessage(`Registration confirmed by ${email}.`);
             setMessageComponent(
-                <LinkWrapper to="/sign-in">Sign in</LinkWrapper>
+                <LinkWrapper to="/sign-in " id={params.email}>
+                    Sign in
+                </LinkWrapper>
             );
 
             clearErrors();
@@ -245,6 +248,13 @@ export default function Confirm(props: any) {
                             className={classes.submit}
                         />
                     </FormControl>
+                    <Grid container justifyContent="flex-end">
+                        <Grid item>
+                            <LinkWrapper to="/sign-in" id={params.email}>
+                                Already have an account? Sign in
+                            </LinkWrapper>
+                        </Grid>
+                    </Grid>
                 </form>
             </div>
             <Box mt={8}>

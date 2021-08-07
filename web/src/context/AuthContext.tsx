@@ -173,7 +173,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 // 404 - user não existe
                 setIsNewUser(true);
                 setUser(undefined);
-                history.push("/sign-up", { emailCheckIn: email });
+                history.push("/sign-up", { _email: email });
             } else if (status != 401 && status != 403) {
                 throw err;
             }

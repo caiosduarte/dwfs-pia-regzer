@@ -1,15 +1,30 @@
 import { ReactChild } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { LocationDescriptor } from "history";
+import { Email, PanoramaFishEyeSharp } from "@material-ui/icons";
 
 interface LinkWrapperProps {
     to: string;
+    params?: {};
+    id?: string;
+    email?: string;
+    cellphone?: string;
     children: ReactChild;
-    variant?: "body1" | "body2";
 }
 
-const LinkWrapper = ({ to, variant, children }: LinkWrapperProps) => (
+const LinkWrapper = ({
+    to,
+    params,
+    id,
+    email,
+    cellphone,
+    children,
+}: LinkWrapperProps) => (
     <NavLink
-        to={to}
+        to={{
+            pathname: to,
+            state: { ...params, _id: id, _email: email, _cellphone: cellphone },
+        }}
         className={
             "MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-body2 MuiTypography-colorPrimary"
         }

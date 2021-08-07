@@ -43,8 +43,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function PasswordForgot(props: any) {
+    const { _id } = props.location?.state;
     const [submitError, setSubmitError] = useState<string>();
-    const { formState, handleSubmit, register, reset, clearErrors } = useForm();
+    const { formState, handleSubmit, register, reset, clearErrors, getValues } =
+        useForm();
 
     const [confirmation, setConfirmation] = useState<string>();
 
@@ -86,7 +88,9 @@ export function PasswordForgot(props: any) {
             !!confirmation && (
                 <>
                     {confirmation}{" "}
-                    <LinkWrapper to="/sign-in">Return to sign in</LinkWrapper>
+                    <LinkWrapper to="/sign-in" id={getValues("ids")}>
+                        Return to sign in
+                    </LinkWrapper>
                 </>
             )
         );
@@ -129,9 +133,7 @@ export function PasswordForgot(props: any) {
                                     label="Email Address"
                                     type="text"
                                     id="ids"
-                                    defaultValue={
-                                        props.match.params?.emailCheckin
-                                    }
+                                    defaultValue={_id}
                                     error={isError(formState.errors.ids)}
                                     helperText={errorMessage(
                                         formState.errors.ids
@@ -159,6 +161,13 @@ export function PasswordForgot(props: any) {
                         isInvalid={hasErrors}
                     />
                 </form>
+                <Grid container justifyContent="flex-end">
+                    <Grid item>
+                        <LinkWrapper to="/sign-in" id={getValues("email")}>
+                            Already have an account? Sign in
+                        </LinkWrapper>
+                    </Grid>
+                </Grid>
             </div>
             <Box mt={8}>
                 <Copyright />

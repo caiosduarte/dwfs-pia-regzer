@@ -58,11 +58,13 @@ interface IFormData {
 }
 
 export default function SignIn(props: any) {
+    const { _id } = props.location.state;
     const hash = props.match.params?.hash;
     const isConfirmation = isUuid(hash);
     const { signIn, checkIn, isNewUser, toPrivate } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
-    const { formState, handleSubmit, register, control } = useForm<IFormData>();
+    const { formState, handleSubmit, register, control, getValues } =
+        useForm<IFormData>();
 
     // TODO: Não precisa ser um isNewUser vindo do contexto?
     const isSignIn = !isNewUser;
@@ -180,6 +182,7 @@ export default function SignIn(props: any) {
                             type="text"
                             id="ids"
                             // defaultValue={props.match.params?.emailCheckin}
+                            defaultValue={_id}
                             error={isError(formState.errors.ids)}
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
@@ -252,10 +255,7 @@ export default function SignIn(props: any) {
                                 <Grid item xs>
                                     <LinkWrapper
                                         to="/password-forgot"
-                                        variant="body2"
-                                        // {...{
-                                        //     emailCheckIn: getValues("ids"),
-                                        // }}
+                                        id={getValues("ids")}
                                     >
                                         Forgot password?
                                     </LinkWrapper>
@@ -263,10 +263,7 @@ export default function SignIn(props: any) {
                                 <Grid item>
                                     <LinkWrapper
                                         to="/sign-up"
-                                        // variant="body2"
-                                        // {...{
-                                        //     emailCheckIn: getValues("ids"),
-                                        // }}
+                                        email={getValues("ids")}
                                     >
                                         {"Don't have an account? Sign Up"}
                                     </LinkWrapper>

@@ -68,10 +68,11 @@ export function PasswordReset(props: any) {
 
     const { toPublic } = useContext(AuthContext);
 
-    const { formState, register, handleSubmit, reset, clearErrors } = useForm<{
-        password: string;
-        confirm: string;
-    }>();
+    const { formState, register, handleSubmit, reset, clearErrors, getValues } =
+        useForm<{
+            password: string;
+            confirm: string;
+        }>();
 
     const hasErrors = !!submitError;
 
@@ -102,7 +103,9 @@ export function PasswordReset(props: any) {
             !!confirmation && (
                 <p>
                     {confirmation}{" "}
-                    <LinkWrapper to="/sign-in">Click to sign in.</LinkWrapper>
+                    <LinkWrapper to="/sign-in" id={hash}>
+                        Click to sign in.
+                    </LinkWrapper>
                 </p>
             )
         );
@@ -113,7 +116,9 @@ export function PasswordReset(props: any) {
             !!submitError && (
                 <p>
                     {submitError}{" "}
-                    <LinkWrapper to="/password-forgot">Ask again!</LinkWrapper>
+                    <LinkWrapper to="/password-forgot" id={hash}>
+                        Ask again!
+                    </LinkWrapper>
                     {"."}
                 </p>
             )
