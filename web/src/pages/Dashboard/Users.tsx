@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import { api } from "../../services/api";
 import { UserModal } from "../../components/UserModal";
 import { withAuth } from "../../utils/withAuth";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, User } from "../../context/AuthContext";
 
 const StyledTableCell = withStyles((theme: Theme) =>
     createStyles({
@@ -82,9 +82,9 @@ export default function Users({
     classSeeMore,
     onEdit,
 }: UsersProps) {
-    const [rows, setRows] = useState<IUser[]>([]);
+    const [rows, setRows] = useState<User[]>([]);
 
-    const [userToUpdate, setUserToUpdate] = useState<IUser>();
+    const [userToUpdate, setUserToUpdate] = useState<User>();
 
     const [isUserModalOpen, setUserModalOpen] = useState(false);
 
@@ -96,33 +96,6 @@ export default function Users({
 
     const classes = useStyles();
 
-    const usersMap = (array: IUser[]) =>
-        array?.map(
-            ({
-                id,
-                name,
-                type,
-                email,
-                document,
-                cellphone,
-                isConfirmed,
-                isValid,
-                isAdmin,
-            }: IUser) => {
-                return {
-                    id,
-                    name,
-                    type,
-                    email,
-                    document,
-                    cellphone,
-                    isConfirmed,
-                    isValid,
-                    isAdmin,
-                };
-            }
-        );
-
     useEffect(() => {
         try {
             withAuth(
@@ -132,9 +105,10 @@ export default function Users({
                 signOut
             )
                 .then((response) => {
-                    setRows(usersMap(response.data));
+                    const { data } = response;
+                    setRows(data);
 
-                    console.log(rows);
+                    console.log(data);
                 })
                 .catch((err) => {
                     throw err;
@@ -183,13 +157,13 @@ export default function Users({
                             <TableCell
                                 align="center"
                                 color={
-                                    row.isConfirmed ? "primary" : "secondary"
+                                    row.confirmedAt ? "primary" : "secondary"
                                 }
                             >
-                                {row.isConfirmed ? "Yes" : "No"}
+                                {row.confirmedAt ? "Yes" : "No"}
                             </TableCell>
                             <TableCell align="center">
-                                {row.isValid ? "Yes" : "No"}
+                                {row.validatedAt ? "Yes" : "No"}
                             </TableCell>
                         </TableRow>
                     ))}

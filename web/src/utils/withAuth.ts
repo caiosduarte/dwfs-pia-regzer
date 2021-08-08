@@ -19,9 +19,9 @@ export interface IAuthPermissions {
 
 export async function withAuth(
     options: IAuthPermissions,
-    toUnauthorized: () => void,
+    toUnauthorized: () => Promise<void>,
     fn?: Promise<any>,
-    signOut?: () => void
+    signOut?: () => Promise<void>
 ): Promise<any> {
     const { permissions, roles } = options;
     const user = options.user || getExistingPermissions<IUserPermissions>();
@@ -35,7 +35,7 @@ export async function withAuth(
             return await fn;
         } catch (error) {
             if (error instanceof AuthError) {
-                signOut();
+                await signOut();
             } else {
                 return await Promise.reject(error);
             }

@@ -20,31 +20,43 @@ interface ISignUpData extends IIds {
     password: string;
 }
 
-interface IUser extends IIds {
-    id: string;
-    name: string;
+export class User implements IIds {
+    id!: string;
+    name!: string;
+
+    type?: string;
+
+    email?: string;
+    document?: string;
+    cellphone?: string;
 
     isAdmin?: boolean;
     roles?: string[];
     permissions?: string[];
 
-    isValid?: boolean;
-    isConfirmed?: boolean;
-    expiresAt?: Date;
+    confirmedAt!: Date | null;
+    validatedAt!: Date | null;
+
+    public get isValidated() {
+        return !!this.validatedAt;
+    }
+
+    public get isConfirmed() {
+        return !!this.confirmedAt;
+    }
 }
 
 interface IAuthContextData {
     // canSignIn: (tmpUser: IUser | undefined) => boolean;
     signIn: (credentials: ISignInCredentials) => Promise<void>;
     signUp: (data: ISignUpData) => Promise<void>;
-    signOut: () => void;
+    signOut: () => Promise<void>;
     checkIn: (ids: IIds) => Promise<void>;
     isAuthenticated: boolean;
-    // isValid: boolean;
     isConfirmed: boolean;
-    toPrivate: () => void;
-    toPublic: () => void;
-    user?: IUser;
+    toPrivate: () => Promise<void>;
+    toPublic: () => Promise<void>;
+    user?: User;
     isNewUser: boolean;
 }
 
@@ -55,40 +67,40 @@ interface IAuthProviderProps {
 export const AuthContext = createContext({} as IAuthContextData);
 
 export function AuthProvider({ children }: IAuthProviderProps) {
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<User>();
     const [isNewUser, setIsNewUser] = useState(true);
     const history = useHistory();
     const authChannel = useRef<BroadcastChannel>(new BroadcastChannel("auth"));
 
     let isAuthenticated = !!user;
 
-    let isValid = !!user?.isValid;
+    let isValid = !!user?.validatedAt;
 
-    let isConfirmed = !!user && user.isConfirmed!;
+    let isConfirmed = !!user && !!user.validatedAt;
 
-    const canSignIn = (guestUser: IUser | undefined) => {
+    const canSignIn = (guestUser?: User) => {
         return !guestUser
             ? !isNewUser && isValid && isConfirmed
-            : isNewUser && !!guestUser?.isValid && !!guestUser?.isConfirmed;
+            : isNewUser && guestUser.isValidated && guestUser.isConfirmed;
     };
 
-    const reset = () => {
+    const reset = async () => {
         cookieProvider.deleteAll();
         setUser(undefined);
         setIsNewUser(true);
         history.push("/sign-in");
     };
 
-    const signOut = () => {
+    const signOut = async () => {
         reset();
         authChannel.current?.postMessage("signOut");
     };
 
-    const toPrivate = () => {
+    const toPrivate = async () => {
         history.push("/dashboard");
     };
 
-    const toPublic = () => {
+    const toPublic = async () => {
         history.push("/sign-in");
     };
 
@@ -137,8 +149,6 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         }
     }, []);
 
-    async function enter({ token, refreshToken, user }: any) {}
-
     async function signIn(params: ISignInCredentials) {
         const { data } = await api.post("sessions", params);
 
@@ -166,7 +176,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
             setIsNewUser(false);
             setUser(undefined);
             const { data } = await api.get(`sessions?email=${email}`);
-            history.push("/sign-in", { emailCheckIn: email });
+            history.push("/sign-in", { _id: email, _email: email });
         } catch (err) {
             const { status } = err.response;
             if (status === 404) {

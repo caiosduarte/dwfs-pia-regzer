@@ -17,7 +17,7 @@ import {
 import { AxiosError } from "axios";
 import { api } from "../../services/api";
 import { withAuth } from "../../utils/withAuth";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, User } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -55,7 +55,7 @@ interface IUser {
 
 Modal.setAppElement("#root");
 
-type UserInput = Partial<IUser>;
+type UserInput = Partial<User>;
 
 type UserModalProps = {
     isOpen: boolean;
@@ -67,16 +67,19 @@ export function UserModal(props: UserModalProps) {
     const [user, setUser] = useState<Exclude<UserInput, UserModalProps>>();
 
     const email = user?.email;
-    const isConfirmed = user?.isConfirmed;
+    const isConfirmed = !!user?.confirmedAt;
     const type = user?.type;
+
+    const canValidate =
+        !!email && !!user?.document && !!type && !user.validatedAt;
 
     const { toPublic, signOut } = useContext(AuthContext);
 
     const classes = useStyles();
 
     function handleOpen() {
-        const { id, type, email, document, isConfirmed, isValid } = props;
-        setUser({ id, type, email, document, isConfirmed, isValid });
+        const { id, type, email, document, confirmedAt, validatedAt } = props;
+        setUser({ id, type, email, document, confirmedAt, validatedAt });
     }
 
     async function handleSendConfirmMail(event: FormEvent) {
@@ -222,7 +225,7 @@ export function UserModal(props: UserModalProps) {
                                 variant="contained"
                                 color="default"
                                 // size="small"
-                                // fullWidth
+                                fullWidth
                                 disabled={isConfirmed || !email}
                                 startIcon={isConfirmed ? "" : <Icon>send</Icon>}
                             >
@@ -234,9 +237,9 @@ export function UserModal(props: UserModalProps) {
                                 color="primary"
                                 disabled={!type || !email}
                                 // size="small"
-                                // fullWidth
+                                fullWidth
                             >
-                                Save
+                                Save{canValidate ? " and validate" : ""}
                             </Button>
                         </Grid>
                     </Grid>

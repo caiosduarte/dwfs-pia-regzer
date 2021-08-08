@@ -64,7 +64,7 @@ export default function Confirm(props: any) {
 
     const { isConfirmed } = useContext(AuthContext);
 
-    const { formState, handleSubmit, register, clearErrors, reset } =
+    const { formState, handleSubmit, register, clearErrors, reset, getValues } =
         useForm<{ ids: string }>();
 
     const [submitError, setSubmitError] = useState<string>();
@@ -131,7 +131,7 @@ export default function Confirm(props: any) {
 
             setConfirmMessage(`Registration confirmed by ${email}.`);
             setMessageComponent(
-                <LinkWrapper to="/sign-in " id={params.email}>
+                <LinkWrapper to="/sign-in " id={getValues("ids")}>
                     Sign in
                 </LinkWrapper>
             );
@@ -226,7 +226,7 @@ export default function Confirm(props: any) {
                             label="Email Address"
                             type="text"
                             id="ids"
-                            defaultValue={params.email}
+                            value={params.email}
                             error={isError(formState.errors.ids)}
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
@@ -251,8 +251,8 @@ export default function Confirm(props: any) {
                     </FormControl>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <LinkWrapper to="/sign-in" id={params.email}>
-                                Already have an account? Sign in
+                            <LinkWrapper to="/sign-in" id={getValues("ids")}>
+                                Or Sign in!
                             </LinkWrapper>
                         </Grid>
                     </Grid>
