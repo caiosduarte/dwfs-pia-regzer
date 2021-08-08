@@ -50,12 +50,12 @@ interface IAuthContextData {
     // canSignIn: (tmpUser: IUser | undefined) => boolean;
     signIn: (credentials: ISignInCredentials) => Promise<void>;
     signUp: (data: ISignUpData) => Promise<void>;
-    signOut: () => Promise<void>;
+    signOut: () => void;
     checkIn: (ids: IIds) => Promise<void>;
     isAuthenticated: boolean;
     isConfirmed: boolean;
-    toPrivate: () => Promise<void>;
-    toPublic: () => Promise<void>;
+    toPrivate: () => void;
+    toPublic: () => void;
     user?: User;
     isNewUser: boolean;
 }
@@ -67,7 +67,7 @@ interface IAuthProviderProps {
 export const AuthContext = createContext({} as IAuthContextData);
 
 export function AuthProvider({ children }: IAuthProviderProps) {
-    const [user, setUser] = useState<User>();
+    const [user, setUser] = useState<User | undefined>();
     const [isNewUser, setIsNewUser] = useState(true);
     const history = useHistory();
     const authChannel = useRef<BroadcastChannel>(new BroadcastChannel("auth"));
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
     let isValid = !!user?.validatedAt;
 
-    let isConfirmed = !!user && !!user.validatedAt;
+    let isConfirmed = !!user?.validatedAt;
 
     const canSignIn = (guestUser?: User) => {
         return !guestUser
@@ -84,23 +84,30 @@ export function AuthProvider({ children }: IAuthProviderProps) {
             : isNewUser && guestUser.isValidated && guestUser.isConfirmed;
     };
 
-    const reset = async () => {
+    const callBackRemoveToken = ({ name = "regzer.token" }) => {
+        console.log("Listener do cookie");
+        setUser(undefined);
+        setIsNewUser(true);
+        history.push("/sign-in");
+    };
+
+    const reset = () => {
         cookieProvider.deleteAll();
         setUser(undefined);
         setIsNewUser(true);
         history.push("/sign-in");
     };
 
-    const signOut = async () => {
+    const signOut = () => {
         reset();
         authChannel.current?.postMessage("signOut");
     };
 
-    const toPrivate = async () => {
+    const toPrivate = () => {
         history.push("/dashboard");
     };
 
-    const toPublic = async () => {
+    const toPublic = () => {
         history.push("/sign-in");
     };
 

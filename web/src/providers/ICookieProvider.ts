@@ -3,7 +3,10 @@ export interface ICookieProvider {
     set token(value: string);
     get refreshToken(): string;
     set refreshToken(value: string);
-    deleteAll(): void;
+    deleteAll(): Promise<void>;
+    deleteAllCallback(
+        callback: (options: { name: string }) => void
+    ): Promise<void>;
     withContext(context: any): any;
     isAllPresent(): boolean;
     isAuthPresent(): boolean;

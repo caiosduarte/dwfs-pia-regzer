@@ -1,8 +1,9 @@
 import { Cookies } from "react-cookie";
+import { CookieChangeListener } from "universal-cookie";
 import { ICookieProvider } from "../ICookieProvider";
 
 export class ReactCookieProvider implements ICookieProvider {
-    readonly names = {
+    public readonly names = {
         token: "regzer.token",
         refreshToken: "regzer.refreshToken",
     };
@@ -32,7 +33,14 @@ export class ReactCookieProvider implements ICookieProvider {
         });
     }
 
-    deleteAll() {
+    async deleteAll() {
+        this.namesArray().forEach((name: string) => {
+            this.cookies.remove(name);
+        });
+    }
+
+    async deleteAllCallback(callback: CookieChangeListener) {
+        this.cookies.addChangeListener(callback);
         this.namesArray().forEach((name: string) => {
             this.cookies.remove(name);
         });

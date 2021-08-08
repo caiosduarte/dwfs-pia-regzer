@@ -49,7 +49,7 @@ import { mainListItems, secondaryListItems } from "./listItem";
 import { AuthContext } from "../../context/AuthContext";
 import { UserModal } from "../../components/UserModal";
 import Users from "./Users";
-import { withAuth } from "../../utils/withAuth";
+import { withAuth, withAuth2 } from "../../utils/withAuth";
 import { api } from "../../services/api";
 
 // para acessibilidade
@@ -137,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
-    const { user, toPublic, signOut } = useContext(AuthContext);
+    const { user, signOut } = useContext(AuthContext);
 
     const validRoles = ["administrator"];
 
@@ -151,10 +151,6 @@ export default function Dashboard() {
 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-    useEffect(() => {
-        // withAuth({ user }, toPublic, api.get(`users/${user?.id}`), signOut);
-    }, []);
-
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -162,6 +158,10 @@ export default function Dashboard() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    useEffect(() => {
+        withAuth2({ user, roles: ["administrator"] }, signOut);
+    }, []);
 
     return (
         <div className={classes.root}>

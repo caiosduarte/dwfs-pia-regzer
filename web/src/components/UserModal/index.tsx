@@ -13,11 +13,13 @@ import {
     Radio,
     Icon,
     Typography,
+    FormHelperText,
 } from "@material-ui/core";
 import { AxiosError } from "axios";
 import { api } from "../../services/api";
 import { withAuth } from "../../utils/withAuth";
 import { AuthContext, User } from "../../context/AuthContext";
+import { SubmitButton } from "../SubmitButton";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -73,8 +75,6 @@ export function UserModal(props: UserModalProps) {
     const canValidate =
         !!email && !!user?.document && !!type && !user.validatedAt;
 
-    const { toPublic, signOut } = useContext(AuthContext);
-
     const classes = useStyles();
 
     function handleOpen() {
@@ -91,29 +91,12 @@ export function UserModal(props: UserModalProps) {
         event.preventDefault();
 
         try {
-            await withAuth(
-                {},
-                toPublic,
-                api.post("people", { ...user }),
-                signOut
-            );
+            const response = await api.post("people", { ...user });
+            setUser({ ...response.data });
             onRequestClose();
-        } catch (error) {
-            if (error.constructor.name === "AxiosError") {
-                console.error("Error axios => ", error.response.data.message);
-            } else {
-                console.error("Error => ", error.message);
-            }
+        } catch (err) {
+            console.error(err.message);
         }
-    }
-
-    async function handleCreate(event: FormEvent) {
-        event.preventDefault();
-        //await createUser({ email, cellphone, document });
-        // setType("deposit");
-        // setAmount(0);
-        // setCategory("");
-        onRequestClose();
     }
 
     function handleRadio(event: any) {
@@ -131,11 +114,12 @@ export function UserModal(props: UserModalProps) {
             overlayClassName="react-modal-overlay"
             className="react-modal-content"
         >
-            <Container component="main" maxWidth="sm">
+            <div
+            // className={classes.paper}
+            >
                 <Typography component="h1" variant="h5">
                     User
                 </Typography>
-
                 <form onSubmit={handleEdit} className={classes.form} noValidate>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
@@ -147,6 +131,8 @@ export function UserModal(props: UserModalProps) {
                                 id="email"
                                 label="Email Address"
                                 autoFocus
+                                // error={isError("email")}
+                                // helperText={errorMessage(errors.email)}
                                 value={user?.email}
                                 onChange={(event) =>
                                     setUser({
@@ -156,14 +142,29 @@ export function UserModal(props: UserModalProps) {
                                 }
                             />
                         </Grid>
+
+                        <Grid item xs={12}>
+                            <Button
+                                onClick={handleSendConfirmMail}
+                                variant="contained"
+                                color="default"
+                                fullWidth
+                                disabled={isConfirmed || !email}
+                                startIcon={isConfirmed ? "" : <Icon>send</Icon>}
+                            >
+                                Send confirm mail
+                            </Button>
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 required
                                 fullWidth
-                                autoComplete="off"
+                                label="Document: CPF/CNPJ/Passport"
+                                type="text"
                                 id="document"
-                                label="Document"
+                                // error={isError("document")}
+                                // helperText={errorMessage(errors.confirmation)}
                                 value={user?.document}
                                 onChange={(event) =>
                                     setUser({
@@ -173,7 +174,7 @@ export function UserModal(props: UserModalProps) {
                                 }
                             />
                         </Grid>
-                        <Grid item xs={12} direction="row">
+                        <Grid item xs={12}>
                             <FormControl
                                 component="fieldset"
                                 error={!type}
@@ -185,7 +186,7 @@ export function UserModal(props: UserModalProps) {
                                 <RadioGroup
                                     row
                                     aria-label="person type"
-                                    name="personType"
+                                    name="type"
                                 >
                                     <FormControlLabel
                                         control={
@@ -212,39 +213,28 @@ export function UserModal(props: UserModalProps) {
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            direction="row"
-                            alignItems="baseline"
-                            justifyContent="center"
-                            spacing={2}
-                        >
-                            <Button
-                                onClick={handleSendConfirmMail}
-                                variant="contained"
-                                color="default"
-                                // size="small"
-                                fullWidth
-                                disabled={isConfirmed || !email}
-                                startIcon={isConfirmed ? "" : <Icon>send</Icon>}
-                            >
-                                Send confirm mail
-                            </Button>{" "}
-                            <Button
-                                onClick={handleEdit}
-                                variant="contained"
-                                color="primary"
-                                disabled={!type || !email}
-                                // size="small"
-                                fullWidth
-                            >
-                                Save{canValidate ? " and validate" : ""}
-                            </Button>
-                        </Grid>
                     </Grid>
+                    <FormControl fullWidth>
+                        <FormHelperText
+                            id="helper-text"
+                            margin="dense"
+                            filled={true}
+                            // error={hasErrors}
+                            // color={
+                            //     !hasErrors && getConfirmation() ? "primary" : ""
+                            // }
+                        >
+                            {/* {getSubmitErrorMessage() || getConfirmation()} */}
+                        </FormHelperText>
+                        <SubmitButton
+                            label={canValidate ? "Save and validate" : "Save"}
+                            isFullWidth={true}
+                            className={classes.submit}
+                            isDisabled={!type || !email}
+                        />
+                    </FormControl>
                 </form>
-            </Container>
+            </div>
         </Modal>
     );
 }

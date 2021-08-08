@@ -17,7 +17,7 @@ import LinkWrapper from "../../components/LinkWrapper";
 import { useEffect } from "react";
 import { api } from "../../services/api";
 import { UserModal } from "../../components/UserModal";
-import { withAuth } from "../../utils/withAuth";
+import { withAuth, withAuth2 } from "../../utils/withAuth";
 import { AuthContext, User } from "../../context/AuthContext";
 
 const StyledTableCell = withStyles((theme: Theme) =>
@@ -88,7 +88,7 @@ export default function Users({
 
     const [isUserModalOpen, setUserModalOpen] = useState(false);
 
-    const { toPublic, signOut } = useContext(AuthContext);
+    const { toPublic, user } = useContext(AuthContext);
 
     function handleCloseUserModal() {
         setUserModalOpen(false);
@@ -96,26 +96,37 @@ export default function Users({
 
     const classes = useStyles();
 
-    useEffect(() => {
-        try {
-            withAuth(
-                {},
-                toPublic,
-                api.get(`users?start=${pageStart}&offset=${pageSize}`),
-                signOut
-            )
-                .then((response) => {
-                    const { data } = response;
-                    setRows(data);
+    useEffect(() => {}, []);
 
-                    console.log(data);
-                })
-                .catch((err) => {
-                    throw err;
-                });
-        } catch (err) {
-            console.error(err);
-        }
+    useEffect(() => {
+        api.get(`users?start=${pageStart}&offset=${pageSize}`)
+            .then((response) => {
+                const { data } = response;
+                setRows(data);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+
+        // try {
+        //     withAuth(
+        //         {},
+        //         toPublic,
+        //         api.get(`users?start=${pageStart}&offset=${pageSize}`),
+        //         signOut
+        //     )
+        //         .then((response) => {
+        //             const { data } = response;
+        //             setRows(data);
+
+        //             console.log(data);
+        //         })
+        //         .catch((err) => {
+        //             throw err;
+        //         });
+        // } catch (err) {
+        //     console.error(err);
+        // }
     }, []);
 
     return (

@@ -29,8 +29,9 @@ import LinkWrapper from "../components/LinkWrapper";
 import { SubmitButton } from "../components/SubmitButton";
 import { AuthContext } from "../context/AuthContext";
 import { api } from "../services/api";
+import { isAuthValid } from "../utils/auth";
 import { isUuid } from "../utils/uuid";
-import { withGuest } from "../utils/withGuest";
+import { withGuest, withGuest2 } from "../utils/withGuest";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -76,10 +77,6 @@ export default function SignIn(props: any) {
     const isError = (field?: FieldError) => !!field || hasErrors;
 
     const classes = useStyles();
-
-    useEffect(() => {
-        withGuest(toPrivate);
-    }, []);
 
     const handleSignIn: SubmitHandler<IFormData> = async (values) => {
         try {

@@ -1,9 +1,10 @@
 import { AuthError } from "../errors/AuthError";
-import { getExistingPermissions } from "./getUserPermissions";
+import { getPermissions } from "./getUserPermissions";
 import { validateUserPermissions } from "./validateUserPermissions";
 
 interface IUserPermissions {
-    isValid?: boolean;
+    id: string;
+    isValidated?: boolean;
     isConfirmed?: boolean;
 
     isAdmin?: boolean;
@@ -17,14 +18,34 @@ export interface IAuthPermissions {
     roles?: string[];
 }
 
+export function withAuth2(
+    options: IAuthPermissions,
+    toUnauthorized: () => void
+) {
+    const { user, permissions, roles } = options;
+    const userPermissions = user?.id
+        ? user
+        : getPermissions<IUserPermissions>();
+
+    if (
+        !validateUserPermissions({
+            user: { ...userPermissions },
+            permissions,
+            roles,
+        })
+    ) {
+        toUnauthorized();
+    }
+}
+
 export async function withAuth(
     options: IAuthPermissions,
-    toUnauthorized: () => Promise<void>,
+    toUnauthorized: () => void,
     fn?: Promise<any>,
-    signOut?: () => Promise<void>
+    signOut?: () => void
 ): Promise<any> {
     const { permissions, roles } = options;
-    const user = options.user || getExistingPermissions<IUserPermissions>();
+    const user = options.user || getPermissions<IUserPermissions>();
 
     if (!user || !validateUserPermissions({ permissions, roles, user })) {
         toUnauthorized();
@@ -35,7 +56,7 @@ export async function withAuth(
             return await fn;
         } catch (error) {
             if (error instanceof AuthError) {
-                await signOut();
+                signOut();
             } else {
                 return await Promise.reject(error);
             }

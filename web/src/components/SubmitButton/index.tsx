@@ -8,6 +8,7 @@ interface SubmitButtonProps {
     isFullWidth?: boolean;
     isInvalid?: boolean;
     isSubmitted?: boolean;
+    isDisabled?: boolean;
     error?: string;
     warning?: string;
     className?: string;
@@ -20,6 +21,7 @@ export function SubmitButton({
     isFullWidth = true,
     isInvalid = false,
     isSubmitted = false,
+    isDisabled = false,
     error,
     warning,
     className,
@@ -29,7 +31,7 @@ export function SubmitButton({
             type="submit"
             variant="contained"
             color="primary"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isDisabled}
             fullWidth={isFullWidth}
             className={
                 className ||

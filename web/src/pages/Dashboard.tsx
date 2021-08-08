@@ -13,14 +13,14 @@ export function Dashboard() {
     });
 
     useEffect(() => {
-        withAuth(
-            { user, roles: ["administrator"] },
-            toPublic,
-            api.get("users"),
-            signOut
-        )
-            .then((response) => console.log("dash => ", response))
-            .catch((error) => console.log("dash error => ", error));
+        // withAuth(
+        //     { user, roles: ["administrator"] },
+        //     toPublic,
+        //     api.get("users"),
+        //     signOut
+        // )
+        //     .then((response) => console.log("dash => ", response))
+        //     .catch((error) => console.log("dash error => ", error));
     }, []);
 
     return (

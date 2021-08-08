@@ -1,5 +1,5 @@
 import { permissionsFromToken } from "./tokens";
 
-export const getExistingPermissions = <P>(): P | undefined => {
+export const getPermissions = <P>(): P | undefined => {
     return permissionsFromToken<P>();
 };

@@ -13,7 +13,7 @@ const hasAny = ({ mainList, checkList }: ComparedLists) => {
 
 interface IUserPemissions {
     isConfirmed?: boolean;
-    isValid?: boolean;
+    isValidated?: boolean;
 
     isAdmin?: boolean;
     roles?: string[];
@@ -31,11 +31,11 @@ export function validateUserPermissions({
     permissions,
     roles,
 }: IAuthPermissions) {
-    if (user.isAdmin) {
+    if (user?.isAdmin) {
         return true;
     }
 
-    if (!user?.isValid || !user?.isConfirmed) {
+    if (!user?.isValidated || !user?.isConfirmed) {
         return false;
     }
 
