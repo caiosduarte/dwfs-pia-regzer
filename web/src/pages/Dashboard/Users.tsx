@@ -90,43 +90,35 @@ export default function Users({
 
     const { toPublic, user } = useContext(AuthContext);
 
-    function handleCloseUserModal() {
-        setUserModalOpen(false);
-    }
-
     const classes = useStyles();
 
-    useEffect(() => {}, []);
+    async function getUsers(): Promise<void> {
+        try {
+            const { data } = await api.get(
+                `users?start=${pageStart}&offset=${pageSize}`
+            );
+            setRows(data);
+        } catch (err) {
+            console.error(err);
+        }
+
+        // api.get(`users?start=${pageStart}&offset=${pageSize}`)
+        //     .then((response) => {
+        //         const { data } = response;
+        //         setRows(data);
+        //     })
+        //     .catch((err) => {
+        //         console.error(err);
+        //     });
+    }
+
+    async function handleCloseUserModal() {
+        setUserModalOpen(false);
+        await getUsers();
+    }
 
     useEffect(() => {
-        api.get(`users?start=${pageStart}&offset=${pageSize}`)
-            .then((response) => {
-                const { data } = response;
-                setRows(data);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-
-        // try {
-        //     withAuth(
-        //         {},
-        //         toPublic,
-        //         api.get(`users?start=${pageStart}&offset=${pageSize}`),
-        //         signOut
-        //     )
-        //         .then((response) => {
-        //             const { data } = response;
-        //             setRows(data);
-
-        //             console.log(data);
-        //         })
-        //         .catch((err) => {
-        //             throw err;
-        //         });
-        // } catch (err) {
-        //     console.error(err);
-        // }
+        getUsers();
     }, []);
 
     return (
@@ -191,7 +183,11 @@ export default function Users({
 
             <UserModal
                 isOpen={isUserModalOpen}
-                onRequestClose={() => setUserModalOpen(false)}
+                onRequestClose={(updatedUser: User) => {
+                    setUserToUpdate(updatedUser);
+                    console.log("updatedUser ", updatedUser);
+                    setUserModalOpen(false);
+                }}
                 {...userToUpdate}
             />
         </React.Fragment>

@@ -51,6 +51,7 @@ import { UserModal } from "../../components/UserModal";
 import Users from "./Users";
 import { withAuth, withAuth2 } from "../../utils/withAuth";
 import { api } from "../../services/api";
+import { Stats, statSync } from "fs";
 
 // para acessibilidade
 //Modal.setAppElement("#root");
@@ -139,6 +140,14 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
     const { user, signOut } = useContext(AuthContext);
 
+    const [stats, setStats] = useState({ new: 0, toValidate: 0, toConfirm: 0 });
+
+    const statistics = {
+        total: () => stats.toValidate + stats.toConfirm,
+        message: () =>
+            `Users: ${stats.new} new, ${stats.toValidate} to validate and ${stats.toConfirm} will confirm`,
+    };
+
     const validRoles = ["administrator"];
 
     const userIsAdmin = useCan({ roles: validRoles });
@@ -161,6 +170,17 @@ export default function Dashboard() {
 
     useEffect(() => {
         withAuth2({ user, roles: ["administrator"] }, signOut);
+    }, []);
+
+    useEffect(() => {
+        api.get("/statistics")
+            .then((response) => {
+                const stats = response.data;
+                setStats(stats);
+            })
+            .catch((err) => {
+                console.error("Stats error: ", err);
+            });
     }, []);
 
     return (
@@ -197,7 +217,7 @@ export default function Dashboard() {
 
                     <Can roles={validRoles}>
                         <Tooltip
-                            title="Notifications"
+                            title={statistics.message()}
                             aria-label="notifications"
                             interactive
                         >
@@ -205,7 +225,11 @@ export default function Dashboard() {
                                 aria-label="notifications"
                                 color="inherit"
                             >
-                                <Badge badgeContent={4} color="secondary">
+                                <Badge
+                                    badgeContent={statistics.total()}
+                                    max={999}
+                                    color="secondary"
+                                >
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>

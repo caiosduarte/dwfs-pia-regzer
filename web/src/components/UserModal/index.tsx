@@ -61,7 +61,7 @@ type UserInput = Partial<User>;
 
 type UserModalProps = {
     isOpen: boolean;
-    onRequestClose: () => void;
+    onRequestClose: (updatedUser: User) => void;
 } & UserInput;
 
 export function UserModal(props: UserModalProps) {
@@ -87,16 +87,22 @@ export function UserModal(props: UserModalProps) {
         alert("send mail to ...");
     }
 
-    async function handleEdit(event: FormEvent) {
-        event.preventDefault();
-
-        try {
-            const response = await api.post("people", { ...user });
-            setUser({ ...response.data });
-            onRequestClose();
-        } catch (err) {
-            console.error(err.message);
-        }
+    function handleEdit() {
+        // event.preventDefault();
+        // console.log(user);
+        // try {
+        //     const response = await api.post("people", { ...user });
+        //     // console.log(user);
+        // } catch (err) {
+        //     console.error(err.message);
+        // }
+        api.post("people", { ...user })
+            .then((response) => {
+                console.log("Data ", response.data);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
 
     function handleRadio(event: any) {
@@ -110,7 +116,8 @@ export function UserModal(props: UserModalProps) {
         <Modal
             isOpen={isOpen}
             onAfterOpen={handleOpen}
-            onRequestClose={onRequestClose}
+            shouldCloseOnEsc={true}
+            // onRequestClose={onRequestClose(user)}
             overlayClassName="react-modal-overlay"
             className="react-modal-content"
         >

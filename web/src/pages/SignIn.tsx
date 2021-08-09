@@ -187,7 +187,6 @@ export default function SignIn(props: any) {
                             {...register("ids", {
                                 required:
                                     "O endereço de email é um campo obrigatório.",
-                                shouldUnregister: false,
                             })}
                         />
                         {isSignIn && !isConfirmation && (
