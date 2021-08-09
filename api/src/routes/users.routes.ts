@@ -5,7 +5,7 @@ import { UserMapper } from "../mappers/PersonMap";
 import { createUserController } from "../modules/users/controllers";
 import IUserResponseDTO from "../modules/users/dtos/IUserResponseDTO";
 import UserMap from "../mappers";
-import IUser from "../modules/users/models/IUser";
+import User from "../entities/User";
 import ConfirmUserService from "../modules/users/services/ConfirmUserService";
 import SendConfirmMailService from "../modules/users/services/SendConfirmMailService";
 import UpdateUserService from "../modules/users/services/UpdateUserService";
@@ -21,6 +21,8 @@ import PeopleRepository from "../repositories/PeopleRepository";
 import TokensRepository from "../repositories/TokensRepository";
 import UsersRepository from "../repositories/UsersRepository";
 import mailProvider from "../utils/mailProvider";
+import { getConnection } from "typeorm";
+import { isFirstDayOfMonth } from "date-fns";
 
 const usersRouter = Router();
 

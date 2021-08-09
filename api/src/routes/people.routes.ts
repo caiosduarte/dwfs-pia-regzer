@@ -111,4 +111,20 @@ peopleRoutes.post(
     }
 );
 
+peopleRoutes.post(
+    "/:id/document",
+    uploadDocuments.array("files"),
+    async (request, response) => {
+        const storageProvider = diskStorage();
+
+        const service = new CreateDocumentService(
+            DocumentsRepository.getInstance(),
+            storageProvider
+        );
+        const controller = new CreateDocumentController(service);
+
+        return await controller.handle(request, response);
+    }
+);
+
 export default peopleRoutes;

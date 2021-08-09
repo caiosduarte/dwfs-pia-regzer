@@ -22,7 +22,6 @@ interface IUser {
     validatedAt?: Date;
 
     tokens?: IToken[];
-
     person?: IPerson;
 }
 
