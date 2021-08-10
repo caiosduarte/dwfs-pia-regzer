@@ -16,10 +16,10 @@ interface IUser {
     permissions?: string[];
 
     isConfirmed?: boolean;
-    confirmedAt?: Date;
+    confirmedAt?: Date | null;
 
     isValid?: boolean;
-    validatedAt?: Date;
+    validatedAt?: Date | null;
 
     tokens?: IToken[];
     person?: IPerson;

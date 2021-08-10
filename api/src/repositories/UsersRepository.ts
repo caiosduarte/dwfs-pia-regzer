@@ -13,8 +13,7 @@ export default class UsersRepository implements IUsersRepository {
 
     private repository: Repository<User>;
 
-    readonly skip = 0;
-    readonly take = 10;
+    readonly limit = 25;
 
     private constructor() {
         this.repository = getRepository(User);
@@ -60,15 +59,21 @@ export default class UsersRepository implements IUsersRepository {
         cellphone,
     }: IUserQueryParams): Promise<User | undefined> {
         return await this.repository.findOne({
+            join: {
+                alias: "user",
+                innerJoinAndSelect: {
+                    tokens: "user.tokens",
+                },
+            },
             where: [{ id }, { email }, { document }, { cellphone }],
-            relations: ["tokens"],
+            // relations: ["tokens"],
             cache: true,
         });
     }
 
     async find({
-        start = this.skip,
-        offset = this.take,
+        start,
+        offset = this.limit,
     }: ISearchParams): Promise<User[] | undefined> {
         const queryBuilder = this.repository
             .createQueryBuilder("user")
@@ -80,8 +85,12 @@ export default class UsersRepository implements IUsersRepository {
             })
             .cache(true);
 
-        if (isNaN(start) || isNaN(offset)) {
-            queryBuilder.skip(this.skip).take(this.take);
+        if (
+            isNaN(Number(start)) ||
+            isNaN(Number(offset)) ||
+            offset > this.limit
+        ) {
+            queryBuilder.limit(this.limit);
         } else {
             queryBuilder.skip(start).take(offset);
         }

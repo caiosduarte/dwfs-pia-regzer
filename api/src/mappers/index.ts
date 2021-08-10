@@ -17,6 +17,9 @@ export default class UserMap {
 
         isConfirmed,
         isValid,
+
+        confirmedAt,
+        validatedAt,
     }: IUser): IUserResponseDTO {
         return {
             id,
@@ -32,6 +35,9 @@ export default class UserMap {
 
             isConfirmed,
             isValid,
+
+            confirmedAt,
+            validatedAt,
         };
     }
 }

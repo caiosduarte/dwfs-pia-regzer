@@ -67,8 +67,14 @@ export default class TokensRepository implements ITokensRepository {
         userId: string
     ): Promise<Token | undefined> {
         return await this.repository.findOne({
+            join: {
+                alias: "token",
+                innerJoinAndSelect: {
+                    users: "token.user",
+                },
+            },
             where: { token: encoded, userId },
-            relations: ["user"],
+            // relations: ["user"],
         });
     }
 }

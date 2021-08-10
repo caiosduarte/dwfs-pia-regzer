@@ -12,4 +12,7 @@ export default interface IUserResponseDTO {
 
     isConfirmed?: boolean;
     isValid?: boolean;
+
+    confirmedAt?: Date | null;
+    validatedAt?: Date | null;
 }

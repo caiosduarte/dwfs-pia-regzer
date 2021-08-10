@@ -15,9 +15,9 @@ statisticsRouter.get("/", ensureAuthenticated, async (request, response) => {
 
     if (!isDate(startDateQuery) || !isDate(startDateQuery)) {
         const today = new Date();
-        finalDate = today.toISOString();
+        finalDate = today.toISOString().substring(0, 10);
         today.setDate(today.getDate() - 30);
-        startDate = today.toISOString();
+        startDate = today.toISOString().substring(0, 10);
     }
 
     const queryBuilder = getConnection().createQueryBuilder();
@@ -40,10 +40,10 @@ statisticsRouter.get("/", ensureAuthenticated, async (request, response) => {
                 .andWhere("userConfirm.confirmedAt IS NULL");
         }, "toConfirm")
         .from(User, "user")
-        .where("user.createdAt between :startDate and :finalDate", {
-            startDate,
-            finalDate,
-        })
+        // .where("user.createdAt between :startDate and :finalDate", {
+        //     startDate,
+        //     finalDate,
+        // })
         .getRawOne();
 
     return response.json(stats);

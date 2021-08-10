@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UserMap from "../../../mappers";
+import { UserMapper } from "../../../mappers/PersonMap";
 import CreateUserService from "../services/CreateUserService";
 import SendConfirmMailService from "../services/SendConfirmMailService";
 
@@ -20,7 +21,7 @@ export default class CreateUserController {
             password,
         });
 
-        if (!user.confirmedAt) {
+        if (user.validatedAt && !user.isConfirmed) {
             await this.sendConfirmService.execute(email);
         }
 
