@@ -6,8 +6,8 @@ import { cookieProvider } from "../providers";
 
 interface IIds {
     email?: string;
-    document?: string;
-    cellphone?: string;
+    document?: string | null;
+    cellphone?: string | null;
 }
 
 interface ISignInCredentials extends IIds {
@@ -27,8 +27,8 @@ export class User implements IIds {
     type?: string;
 
     email?: string;
-    document?: string;
-    cellphone?: string;
+    document?: string | null;
+    cellphone?: string | null;
 
     isAdmin?: boolean;
     roles?: string[];
@@ -52,8 +52,9 @@ interface IAuthContextData {
     signUp: (data: ISignUpData) => Promise<void>;
     signOut: () => void;
     checkIn: (ids: IIds) => Promise<void>;
-    isAuthenticated: boolean;
+    isValidated: boolean;
     isConfirmed: boolean;
+    isAuthenticated: boolean;
     toPrivate: () => void;
     toPublic: () => void;
     user?: User;
@@ -72,15 +73,15 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     const history = useHistory();
     const authChannel = useRef<BroadcastChannel>(new BroadcastChannel("auth"));
 
-    let isAuthenticated = !!user;
-
-    let isValid = !!user?.validatedAt;
+    let isValidated = user?.validatedAt ? true : false;
 
     let isConfirmed = !!user?.validatedAt;
 
+    let isAuthenticated = !!user && isValidated && isConfirmed;
+
     const canSignIn = (guestUser?: User) => {
         return !guestUser
-            ? !isNewUser && isValid && isConfirmed
+            ? !isNewUser && isValidated && isConfirmed
             : isNewUser && guestUser.isValidated && guestUser.isConfirmed;
     };
 
@@ -197,26 +198,14 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         }
     }
 
-    async function signUp({
-        name,
-        email,
-        document,
-        cellphone,
-        password,
-    }: ISignUpData) {
-        const { data } = await api.post("users", {
-            name,
-            email,
-            password,
-            document,
-            cellphone,
-        });
+    async function signUp(values: ISignUpData) {
+        const response = await api.post("users", { ...values });
 
-        const { user } = data;
+        const user = response.data;
 
-        if (canSignIn(user)) {
-            // await signIn(user as ISignInCredentials);
-        }
+        console.log("User sign-up ", user);
+
+        setUser(user);
     }
 
     return (
@@ -226,12 +215,14 @@ export function AuthProvider({ children }: IAuthProviderProps) {
                 signUp,
                 signOut,
                 checkIn,
-                isAuthenticated,
+
                 toPrivate,
                 toPublic,
                 user,
                 isNewUser,
+                isValidated,
                 isConfirmed,
+                isAuthenticated,
             }}
         >
             {children}

@@ -131,7 +131,7 @@ export default function Confirm(props: any) {
 
             setConfirmMessage(`Registration confirmed by ${email}.`);
             setMessageComponent(
-                <LinkWrapper to="/sign-in " id={getValues("ids")}>
+                <LinkWrapper to="/sign-in" id={getValues("ids")}>
                     Sign in
                 </LinkWrapper>
             );

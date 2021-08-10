@@ -88,8 +88,6 @@ export default function Users({
 
     const [isUserModalOpen, setUserModalOpen] = useState(false);
 
-    const { toPublic, user } = useContext(AuthContext);
-
     const classes = useStyles();
 
     async function getUsers(): Promise<void> {
@@ -136,7 +134,7 @@ export default function Users({
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row, key) => (
+                    {rows.map((row, index) => (
                         <TableRow key={row.id} color="default">
                             <TableCell>
                                 {onEdit && !row.isAdmin ? (
@@ -183,9 +181,11 @@ export default function Users({
 
             <UserModal
                 isOpen={isUserModalOpen}
-                onRequestClose={(updatedUser: User) => {
+                onUpdate={(updatedUser: User) => {
                     setUserToUpdate(updatedUser);
-                    console.log("updatedUser ", updatedUser);
+                    setUserModalOpen(false);
+                }}
+                onRequestClose={() => {
                     setUserModalOpen(false);
                 }}
                 {...userToUpdate}

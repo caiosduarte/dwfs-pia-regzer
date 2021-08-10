@@ -61,19 +61,20 @@ type UserInput = Partial<User>;
 
 type UserModalProps = {
     isOpen: boolean;
-    onRequestClose: (updatedUser: User) => void;
+    onUpdate: (updatedUser: User) => void;
+    onRequestClose: () => void;
 } & UserInput;
 
 export function UserModal(props: UserModalProps) {
-    const { isOpen, onRequestClose } = props;
+    const { isOpen, onRequestClose, onUpdate } = props;
     const [user, setUser] = useState<Exclude<UserInput, UserModalProps>>();
 
     const email = user?.email;
     const isConfirmed = !!user?.confirmedAt;
-    const type = user?.type;
+    const isValidated = !!user?.validatedAt;
+    const type: string | undefined = user?.type;
 
-    const canValidate =
-        !!email && !!user?.document && !!type && !user.validatedAt;
+    const canValidate = !!email && !!user?.document && !!type && !isValidated;
 
     const classes = useStyles();
 
@@ -82,23 +83,31 @@ export function UserModal(props: UserModalProps) {
         setUser({ id, type, email, document, confirmedAt, validatedAt });
     }
 
-    async function handleSendConfirmMail(event: FormEvent) {
-        event.preventDefault();
-        alert("send mail to ...");
+    function sendConfirmEmail() {
+        if (!user?.confirmedAt && user?.email) {
+            api.post(`users/confirm`, {
+                email: user.email,
+            }).catch((err) => {
+                console.error(err);
+            });
+        }
     }
 
-    function handleEdit() {
-        // event.preventDefault();
-        // console.log(user);
-        // try {
-        //     const response = await api.post("people", { ...user });
-        //     // console.log(user);
-        // } catch (err) {
-        //     console.error(err.message);
-        // }
+    function handleSendConfirmMail(event: FormEvent) {
+        event.preventDefault();
+        sendConfirmEmail();
+    }
+
+    function handleEdit(event: FormEvent) {
+        event.preventDefault();
         api.post("people", { ...user })
             .then((response) => {
-                console.log("Data ", response.data);
+                const user = response.data;
+                setUser(user);
+
+                sendConfirmEmail();
+
+                onUpdate({ ...user });
             })
             .catch((err) => {
                 console.error(err);
@@ -117,7 +126,7 @@ export function UserModal(props: UserModalProps) {
             isOpen={isOpen}
             onAfterOpen={handleOpen}
             shouldCloseOnEsc={true}
-            // onRequestClose={onRequestClose(user)}
+            onRequestClose={onRequestClose}
             overlayClassName="react-modal-overlay"
             className="react-modal-content"
         >
@@ -156,8 +165,8 @@ export function UserModal(props: UserModalProps) {
                                 variant="contained"
                                 color="default"
                                 fullWidth
-                                disabled={isConfirmed || !email}
-                                startIcon={isConfirmed ? "" : <Icon>send</Icon>}
+                                disabled={isConfirmed || !isValidated || !email}
+                                startIcon={<Icon>send</Icon>}
                             >
                                 Send confirm mail
                             </Button>
@@ -199,7 +208,7 @@ export function UserModal(props: UserModalProps) {
                                         control={
                                             <Radio
                                                 value="F"
-                                                checked={user?.type === "F"}
+                                                checked={type === "F"}
                                                 onChange={handleRadio}
                                                 color="primary"
                                             />
@@ -210,7 +219,7 @@ export function UserModal(props: UserModalProps) {
                                         control={
                                             <Radio
                                                 value="J"
-                                                checked={user?.type === "J"}
+                                                checked={type === "J"}
                                                 onChange={handleRadio}
                                                 color="primary"
                                             />
@@ -234,10 +243,16 @@ export function UserModal(props: UserModalProps) {
                             {/* {getSubmitErrorMessage() || getConfirmation()} */}
                         </FormHelperText>
                         <SubmitButton
-                            label={canValidate ? "Save and validate" : "Save"}
+                            label={
+                                canValidate
+                                    ? "Validate and send confirm mail"
+                                    : isValidated
+                                    ? "Save"
+                                    : "Validate"
+                            }
                             isFullWidth={true}
                             className={classes.submit}
-                            isDisabled={!type || !email}
+                            isDisabled={!type || type.length == 0 || !email}
                         />
                     </FormControl>
                 </form>

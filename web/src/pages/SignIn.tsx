@@ -28,10 +28,7 @@ import { Copyright } from "../components/Copyright";
 import LinkWrapper from "../components/LinkWrapper";
 import { SubmitButton } from "../components/SubmitButton";
 import { AuthContext } from "../context/AuthContext";
-import { api } from "../services/api";
-import { isAuthValid } from "../utils/auth";
 import { isUuid } from "../utils/uuid";
-import { withGuest, withGuest2 } from "../utils/withGuest";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -181,12 +178,13 @@ export default function SignIn(props: any) {
                             type="text"
                             id="ids"
                             // defaultValue={props.match.params?.emailCheckin}
-                            value={_id}
+                            defaultValue={_id}
                             error={isError(formState.errors.ids)}
                             helperText={errorMessage(formState.errors.ids)}
                             {...register("ids", {
                                 required:
                                     "O endereço de email é um campo obrigatório.",
+                                shouldUnregister: false,
                             })}
                         />
                         {isSignIn && !isConfirmation && (

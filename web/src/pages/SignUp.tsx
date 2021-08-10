@@ -43,7 +43,7 @@ export function SignUp(props: any) {
     const _email = props.location.state?._email;
     const _cellphone = props.location.state?._cellphone;
 
-    const { signUp, isConfirmed } = useContext(AuthContext);
+    const { signUp, isValidated } = useContext(AuthContext);
     const [submitError, setSubmitError] = useState<string>();
     const [confirmation, setConfirmation] = useState<string>();
     const [messageComponent, setMessageComponent] = useState<JSX.Element>();
@@ -71,13 +71,7 @@ export function SignUp(props: any) {
     const classes = useStyles();
 
     const getConfirmation = () => {
-        return (
-            !!confirmation && (
-                <>
-                    {confirmation} {" " && messageComponent}
-                </>
-            )
-        );
+        return confirmation;
     };
 
     const getSubmitErrorMessage = () => {
@@ -105,14 +99,9 @@ export function SignUp(props: any) {
                 .catch()
                 .finally(() => {
                     setConfirmation(
-                        !isConfirmed
+                        isValidated
                             ? "Check your email for a link to confirm your registration. If it doesn’t appear within a few minutes, check your spam folder."
-                            : "Your registration is confirmed."
-                    );
-                    setMessageComponent(
-                        <LinkWrapper to="/sign-in" id={getValues("email")}>
-                            Sign in.
-                        </LinkWrapper>
+                            : "Your registration will be approved. Please, wait for our email."
                     );
                 });
         } catch (error) {
