@@ -11,8 +11,10 @@ import {
     TableInheritance,
 } from "typeorm";
 import IPerson from "../modules/people/models/IPerson";
+import IUser from "../modules/users/models/IUser";
 
 import { ALL_PERSON_TYPES, enumValues } from "./Enum";
+import PersonDocument from "./PersonDocument";
 import User from "./User";
 
 @Entity()
@@ -37,7 +39,7 @@ export default abstract class Person implements IPerson {
         primary: true,
     })
     @JoinColumn({ name: "person_id", referencedColumnName: "id" })
-    user: User;
+    user?: IUser;
 
     @Column({ enum: ALL_PERSON_TYPES })
     type!: string;
@@ -49,7 +51,7 @@ export default abstract class Person implements IPerson {
     telephone: string;
 
     // @OneToMany((type) => PersonDocument, (doc) => doc.person)
-    // documents: PersonDocument[];
+    documents?: PersonDocument[];
 
     @Column({ name: "validated_at", nullable: true })
     validatedAt?: Date;

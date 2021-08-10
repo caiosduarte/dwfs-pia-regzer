@@ -7,6 +7,8 @@ import {
     ISearchParams,
 } from "../modules/users/repositories/IUsersRepository";
 
+import { validate } from "class-validator";
+
 export default class UsersRepository implements IUsersRepository {
     readonly INSTANCE: IUsersRepository;
     private static INSTANCE: UsersRepository;
@@ -30,7 +32,7 @@ export default class UsersRepository implements IUsersRepository {
     async create(data: ICreateUserDTO): Promise<User> {
         const user = this.repository.create(data);
 
-        return await this.repository.save(user);
+        return this.save(user);
     }
 
     async findById(id: string): Promise<User | undefined> {
@@ -40,6 +42,10 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async save(user: User): Promise<User> {
+        const errors = await validate(user);
+        if (errors.length > 0) {
+            throw new Error(errors.join(", "));
+        }
         return await this.repository.save(user);
     }
 
@@ -48,7 +54,6 @@ export default class UsersRepository implements IUsersRepository {
             .createQueryBuilder("user")
             .innerJoinAndSelect("user.tokens", "token")
             .where("token.token = :token", { token })
-            .cache(true)
             .getOne();
     }
 
@@ -59,14 +64,8 @@ export default class UsersRepository implements IUsersRepository {
         cellphone,
     }: IUserQueryParams): Promise<User | undefined> {
         return await this.repository.findOne({
-            join: {
-                alias: "user",
-                innerJoinAndSelect: {
-                    tokens: "user.tokens",
-                },
-            },
+            relations: ["tokens"],
             where: [{ id }, { email }, { document }, { cellphone }],
-            // relations: ["tokens"],
             cache: true,
         });
     }

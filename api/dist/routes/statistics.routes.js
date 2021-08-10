@@ -39,38 +39,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mappers_1 = __importDefault(require("../../../mappers"));
-var CreateUserController = (function () {
-    function CreateUserController(createUserService, sendConfirmService) {
-        this.createUserService = createUserService;
-        this.sendConfirmService = sendConfirmService;
-    }
-    CreateUserController.prototype.handle = function (request, response) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, name, email, document, cellphone, password, user;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = request.body, name = _a.name, email = _a.email, document = _a.document, cellphone = _a.cellphone, password = _a.password;
-                        return [4, this.createUserService.execute({
-                                name: name,
-                                document: document,
-                                cellphone: cellphone,
-                                email: email,
-                                password: password,
-                            })];
-                    case 1:
-                        user = _b.sent();
-                        if (!(user.validatedAt && !user.isConfirmed)) return [3, 3];
-                        return [4, this.sendConfirmService.execute(email)];
-                    case 2:
-                        _b.sent();
-                        _b.label = 3;
-                    case 3: return [2, response.status(201).json(mappers_1.default.toDTO(user))];
+var express_1 = require("express");
+var ensureAuthenticated_1 = require("../middlewares/ensureAuthenticated");
+var typeorm_1 = require("typeorm");
+var date_fns_1 = require("date-fns");
+var User_1 = __importDefault(require("../entities/User"));
+var statisticsRouter = express_1.Router();
+statisticsRouter.get("/", ensureAuthenticated_1.ensureAuthenticated, function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, startDateQuery, finalDateQuery, startDate, finalDate, today, queryBuilder, stats;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = request.query, startDateQuery = _a.startDate, finalDateQuery = _a.finalDate;
+                startDate = startDateQuery;
+                finalDate = finalDateQuery;
+                if (!date_fns_1.isDate(startDateQuery) || !date_fns_1.isDate(startDateQuery)) {
+                    today = new Date();
+                    finalDate = today.toISOString().substring(0, 10);
+                    today.setDate(today.getDate() - 30);
+                    startDate = today.toISOString().substring(0, 10);
                 }
-            });
-        });
-    };
-    return CreateUserController;
-}());
-exports.default = CreateUserController;
+                queryBuilder = typeorm_1.getConnection().createQueryBuilder();
+                return [4, queryBuilder
+                        .select("COUNT(1) as new")
+                        .addSelect(function (subQuery) {
+                        return subQuery
+                            .select("COUNT(1)")
+                            .from(User_1.default, "userValidate")
+                            .where("user.id = userValidate.id")
+                            .andWhere("userValidate.validatedAt IS NULL");
+                    }, "toValidate")
+                        .addSelect(function (subQuery) {
+                        return subQuery
+                            .select("COUNT(1)")
+                            .from(User_1.default, "userConfirm")
+                            .where("user.id = userConfirm.id")
+                            .andWhere("userConfirm.validatedAt IS NOT NULL")
+                            .andWhere("userConfirm.confirmedAt IS NULL");
+                    }, "toConfirm")
+                        .from(User_1.default, "user")
+                        .getRawOne()];
+            case 1:
+                stats = _b.sent();
+                return [2, response.json(stats)];
+        }
+    });
+}); });
+exports.default = statisticsRouter;

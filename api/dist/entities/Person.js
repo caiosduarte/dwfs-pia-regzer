@@ -32,7 +32,7 @@ var Person = (function () {
             primary: true,
         }),
         typeorm_1.JoinColumn({ name: "person_id", referencedColumnName: "id" }),
-        __metadata("design:type", User_1.default)
+        __metadata("design:type", Object)
     ], Person.prototype, "user", void 0);
     __decorate([
         typeorm_1.Column({ enum: Enum_1.ALL_PERSON_TYPES }),

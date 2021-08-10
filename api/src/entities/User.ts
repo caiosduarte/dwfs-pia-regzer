@@ -29,18 +29,20 @@ class User implements IUser {
     @Column()
     name: string;
 
-    @Column({ nullable: true })
-    document: string;
+    @Column({ nullable: true, unique: true })
+    @Length(4, undefined, { message: "Document invalid.", always: true })
+    document?: string;
 
-    @Column()
+    @Column({ unique: true })
     @IsEmail(
         { allow_display_name: true },
-        { message: "Email address invalid." }
+        { message: "Email address invalid.", always: true }
     )
-    email: string;
+    email?: string;
 
-    @Column({ nullable: true })
-    cellphone: string;
+    @Column({ nullable: true, unique: true })
+    @Length(4, undefined, { message: "Document invalid.", always: true })
+    cellphone?: string;
 
     @Column()
     password: string;
@@ -49,26 +51,26 @@ class User implements IUser {
     isAdmin: boolean;
 
     @OneToMany((type) => Token, (token) => token.user)
-    tokens: Token[];
+    tokens?: Token[];
 
     @OneToOne((type) => Person, (person) => person.user)
-    person: Person;
+    person?: Person;
 
     @Column({ name: "validated_at", nullable: true })
     validatedAt?: Date;
 
-    isValid: boolean;
+    isValid?: boolean;
 
     @Column({ name: "confirmed_at", nullable: true })
     confirmedAt?: Date;
 
-    isConfirmed: boolean;
+    isConfirmed?: boolean;
 
     @CreateDateColumn({ name: "created_at" })
-    createdAt: Date;
+    createdAt?: Date;
 
     @UpdateDateColumn({ name: "updated_at" })
-    updatedAt: Date;
+    updatedAt?: Date;
 
     constructor() {
         if (!this.id) {

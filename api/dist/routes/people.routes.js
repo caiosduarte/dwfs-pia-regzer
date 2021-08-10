@@ -142,4 +142,17 @@ peopleRoutes.post("/:id/document", uploadDocuments.array("files"), function (req
         }
     });
 }); });
+peopleRoutes.post("/:id/document", uploadDocuments.array("files"), function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+    var storageProvider, service, controller;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                storageProvider = diskStorage();
+                service = new CreateDocumentService_1.default(DocumentsRepository_1.default.getInstance(), storageProvider);
+                controller = new CreateDocumentController_1.default(service);
+                return [4, controller.handle(request, response)];
+            case 1: return [2, _a.sent()];
+        }
+    });
+}); });
 exports.default = peopleRoutes;

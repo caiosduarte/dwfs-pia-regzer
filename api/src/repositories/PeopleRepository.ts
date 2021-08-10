@@ -1,5 +1,6 @@
 import { DescribeApplicableIndividualAssessmentsMessage } from "aws-sdk/clients/dms";
 import { PutAssetPropertyValueEntry } from "aws-sdk/clients/iot";
+import { validate } from "class-validator";
 import {
     getCustomRepository,
     getRepository,
@@ -23,7 +24,7 @@ export default class PeopleRepository implements IPeopleRepository {
 
     private constructor(private repository: Repository<People>) {}
 
-    static getInstance<T extends People>(): PeopleRepository {
+    static getInstance(): PeopleRepository {
         if (!this.INSTANCE) {
             this.INSTANCE = new PeopleRepository(getRepository<People>(Person));
         }
@@ -55,11 +56,20 @@ export default class PeopleRepository implements IPeopleRepository {
 
         console.log("Person create ", person);
 
-        return repository.save(person);
+        return await this.save(person, repository);
     }
 
-    async save(person: People): Promise<People> {
-        return await this.getPeopleRepository(person.type).save(person);
+    async save(
+        person: People,
+        repository?: Repository<People | Person>
+    ): Promise<People> {
+        const errors = await validate(person);
+        if (errors.length > 0) {
+            throw new Error(errors.join(", "));
+        }
+        const repo = repository || this.getPeopleRepository(person.type);
+
+        return await repo.save(person);
     }
 
     async findById(id: string): Promise<People | undefined> {

@@ -41,10 +41,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var User_1 = __importDefault(require("../entities/User"));
+var class_validator_1 = require("class-validator");
 var UsersRepository = (function () {
     function UsersRepository() {
-        this.skip = 0;
-        this.take = 10;
+        this.limit = 25;
         this.repository = typeorm_1.getRepository(User_1.default);
         this.INSTANCE = this;
     }
@@ -58,12 +58,8 @@ var UsersRepository = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var user;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        user = this.repository.create(data);
-                        return [4, this.repository.save(user)];
-                    case 1: return [2, _a.sent()];
-                }
+                user = this.repository.create(data);
+                return [2, this.save(user)];
             });
         });
     };
@@ -81,10 +77,17 @@ var UsersRepository = (function () {
     };
     UsersRepository.prototype.save = function (user) {
         return __awaiter(this, void 0, void 0, function () {
+            var errors;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.repository.save(user)];
-                    case 1: return [2, _a.sent()];
+                    case 0: return [4, class_validator_1.validate(user)];
+                    case 1:
+                        errors = _a.sent();
+                        if (errors.length > 0) {
+                            throw new Error(errors.join(", "));
+                        }
+                        return [4, this.repository.save(user)];
+                    case 2: return [2, _a.sent()];
                 }
             });
         });
@@ -97,7 +100,6 @@ var UsersRepository = (function () {
                             .createQueryBuilder("user")
                             .innerJoinAndSelect("user.tokens", "token")
                             .where("token.token = :token", { token: token })
-                            .cache(true)
                             .getOne()];
                     case 1: return [2, _a.sent()];
                 }
@@ -110,8 +112,8 @@ var UsersRepository = (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.repository.findOne({
-                            where: [{ id: id }, { email: email }, { document: document }, { cellphone: cellphone }],
                             relations: ["tokens"],
+                            where: [{ id: id }, { email: email }, { document: document }, { cellphone: cellphone }],
                             cache: true,
                         })];
                     case 1: return [2, _b.sent()];
@@ -120,11 +122,11 @@ var UsersRepository = (function () {
         });
     };
     UsersRepository.prototype.find = function (_a) {
-        var _b = _a.start, start = _b === void 0 ? this.skip : _b, _c = _a.offset, offset = _c === void 0 ? this.take : _c;
+        var start = _a.start, _b = _a.offset, offset = _b === void 0 ? this.limit : _b;
         return __awaiter(this, void 0, void 0, function () {
             var queryBuilder;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         queryBuilder = this.repository
                             .createQueryBuilder("user")
@@ -135,14 +137,16 @@ var UsersRepository = (function () {
                             "user.name": "ASC",
                         })
                             .cache(true);
-                        if (isNaN(start) || isNaN(offset)) {
-                            queryBuilder.skip(this.skip).take(this.take);
+                        if (isNaN(Number(start)) ||
+                            isNaN(Number(offset)) ||
+                            offset > this.limit) {
+                            queryBuilder.limit(this.limit);
                         }
                         else {
                             queryBuilder.skip(start).take(offset);
                         }
                         return [4, queryBuilder.getMany()];
-                    case 1: return [2, _d.sent()];
+                    case 1: return [2, _c.sent()];
                 }
             });
         });

@@ -14,7 +14,7 @@ export default interface IPerson {
 
     documents?: IDocument[];
 
-    validatedAt?: Date;
+    validatedAt?: Date | null;
 
     isValid?: boolean;
 }

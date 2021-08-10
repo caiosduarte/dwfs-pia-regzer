@@ -39,6 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var class_validator_1 = require("class-validator");
 var typeorm_1 = require("typeorm");
 var Company_1 = __importDefault(require("../entities/Company"));
 var Enum_1 = require("../entities/Enum");
@@ -71,23 +72,35 @@ var PeopleRepository = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var repository, person;
             return __generator(this, function (_b) {
-                repository = this.getPeopleRepository(type);
-                person = repository.create({
-                    id: id,
-                    type: type,
-                    user: user,
-                });
-                console.log("Person create ", person);
-                return [2, repository.save(person)];
+                switch (_b.label) {
+                    case 0:
+                        repository = this.getPeopleRepository(type);
+                        person = repository.create({
+                            id: id,
+                            type: type,
+                            user: user,
+                        });
+                        console.log("Person create ", person);
+                        return [4, this.save(person, repository)];
+                    case 1: return [2, _b.sent()];
+                }
             });
         });
     };
-    PeopleRepository.prototype.save = function (person) {
+    PeopleRepository.prototype.save = function (person, repository) {
         return __awaiter(this, void 0, void 0, function () {
+            var errors, repo;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getPeopleRepository(person.type).save(person)];
-                    case 1: return [2, _a.sent()];
+                    case 0: return [4, class_validator_1.validate(person)];
+                    case 1:
+                        errors = _a.sent();
+                        if (errors.length > 0) {
+                            throw new Error(errors.join(", "));
+                        }
+                        repo = repository || this.getPeopleRepository(person.type);
+                        return [4, repo.save(person)];
+                    case 2: return [2, _a.sent()];
                 }
             });
         });

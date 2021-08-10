@@ -34,16 +34,18 @@ var User = (function () {
         __metadata("design:type", String)
     ], User.prototype, "name", void 0);
     __decorate([
-        typeorm_1.Column({ nullable: true }),
+        typeorm_1.Column({ nullable: true, unique: true }),
+        class_validator_1.Length(4, undefined, { message: "Document invalid.", always: true }),
         __metadata("design:type", String)
     ], User.prototype, "document", void 0);
     __decorate([
-        typeorm_1.Column(),
-        class_validator_1.IsEmail({ allow_display_name: true }, { message: "Email address invalid." }),
+        typeorm_1.Column({ unique: true }),
+        class_validator_1.IsEmail({ allow_display_name: true }, { message: "Email address invalid.", always: true }),
         __metadata("design:type", String)
     ], User.prototype, "email", void 0);
     __decorate([
-        typeorm_1.Column({ nullable: true }),
+        typeorm_1.Column({ nullable: true, unique: true }),
+        class_validator_1.Length(4, undefined, { message: "Document invalid.", always: true }),
         __metadata("design:type", String)
     ], User.prototype, "cellphone", void 0);
     __decorate([
