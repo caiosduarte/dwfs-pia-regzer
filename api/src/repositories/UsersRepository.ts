@@ -65,7 +65,7 @@ export default class UsersRepository implements IUsersRepository {
     }: IUserQueryParams): Promise<User | undefined> {
         return await this.repository.findOne({
             relations: ["tokens"],
-            where: [{ id }, { email }, { document }, { cellphone }],
+            where: [{ email }, { cellphone }, { document }, { id }],
             cache: true,
         });
     }
@@ -79,6 +79,7 @@ export default class UsersRepository implements IUsersRepository {
             .leftJoin("user.person", "person")
             .addSelect("person.type")
             .orderBy({
+                "user.validateAt": { order: "DESC", nulls: "NULLS FIRST" },
                 "user.updatedAt": "DESC",
                 "user.name": "ASC",
             })
