@@ -50,22 +50,6 @@ authenticateRoutes.get("/sessions", async (request, response) => {
     const { id, email, cellphone, document } = ids;
 
     const user = await repository.findByIds({ id, email, cellphone, document });
-    
-            //   .then((user) => {
-            //       if (!user) throw new AppError("User not found.", 404);
-            //       const tokens = user?.tokens;
-            //       const isValid = !!tokens?.find((token) => {
-            //           return isRefreshTokenValid(
-            //               { email, cellphone, document },
-            //               token
-            //           );
-            //       });
-
-            //       if (isValid) {
-            //           return user;
-            //       }
-            //       throw new AppError("User unauthorized.", 401);
-            //   });
 
     if (!user) {
         throw new AppError("User not found.", 404);
