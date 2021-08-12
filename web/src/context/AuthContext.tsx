@@ -96,7 +96,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         cookieProvider.deleteAll();
         setUser(undefined);
         setIsNewUser(true);
-        history.push("/sign-in");
+        history.push("/");
     };
 
     const signOut = () => {

@@ -71,16 +71,18 @@ authenticateRoutes.post("/sessions", function (request, response) { return __awa
     });
 }); });
 authenticateRoutes.get("/sessions", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, ids, id_1, repository, id, email, cellphone, document, user;
+    var ids, hasOnlyAuthorizedToken, token, id_1, repository, id, email, cellphone, document, user, noTokenOnlyWrongCredentials;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                token = request_2.getTokenFromRequest(request);
                 ids = request.query;
+                hasOnlyAuthorizedToken = false;
                 if (!request_1.hasAnyId(ids)) {
+                    token = request_2.getTokenFromRequest(request);
                     if (token) {
                         id_1 = token_1.verifyToken(token).sub;
                         ids = __assign(__assign({}, ids), { id: id_1 });
+                        hasOnlyAuthorizedToken = true;
                     }
                     else {
                         throw new AppError_1.default("Wrong ID params.", 403);
@@ -94,7 +96,9 @@ authenticateRoutes.get("/sessions", function (request, response) { return __awai
                 if (!user) {
                     throw new AppError_1.default("User not found.", 404);
                 }
-                if (!token_1.hasRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, user.tokens)) {
+                noTokenOnlyWrongCredentials = !hasOnlyAuthorizedToken &&
+                    !token_1.hasRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, user.tokens);
+                if (noTokenOnlyWrongCredentials) {
                     throw new AppError_1.default("User unauthorized.", 401);
                 }
                 return [2, response.json({ user: mappers_1.default.toDTO(user) })];
