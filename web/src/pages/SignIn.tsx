@@ -61,8 +61,11 @@ export default function SignIn(props: any) {
 
     const hash = props.match.params?.hash;
     const isConfirmation = isUuid(hash);
-    const { signIn, checkIn, isNewUser, toPrivate } = useContext(AuthContext);
+
+    const { signIn, checkIn, isNewUser, isConfirmed, isValidated } = useContext(AuthContext);
+
     const [submitError, setSubmitError] = useState<string>();
+
     const { formState, handleSubmit, register, control, getValues } =
         useForm<IFormData>();
 
@@ -92,37 +95,11 @@ export default function SignIn(props: any) {
             }
         } catch (error) {
             const status = error.response?.status;
-            if (isConfirmation)
-                switch (status) {
-                    case 401:
-                        setSubmitError("Confirmation expired.");
-                        break;
-                    case 403:
-                        setSubmitError("User already confirmed.");
-                        break;
-                    case 500:
-                        setSubmitError("App error. Try later.");
-                        break;
-                    default:
-                        setSubmitError("Error to send data.");
-                }
-            else {
-                switch (status) {
-                    case 401:
-                        setSubmitError("User/password invalid.");
-                        break;
-                    case 403:
-                        setSubmitError("Invalid values of ID or password.");
-                        break;
-                    case 404:
-                        setSubmitError("User/password invalid.");
-                        break;
-                    case 500:
-                        setSubmitError("App error. Try later.");
-                        break;
-                    default:
-                        setSubmitError("Error to send data. Try again.");
-                }
+
+            if(!status || status === 500) {
+                setSubmitError("App error. Try later.");
+            } else {
+                setSubmitError(error.response.data.message);
             }
 
             console.error(

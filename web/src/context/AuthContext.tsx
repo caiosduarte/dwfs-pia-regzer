@@ -181,14 +181,16 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         const email = params.email;
         try {
             api.defaults.headers["Authorization"] = {};
+ 
+            const response = await api.get(`sessions?email=${email}`);
+            const {user} = response.data;
             setIsNewUser(false);
-            setUser(undefined);
-            const { data } = await api.get(`sessions?email=${email}`);
+            setUser(user);
             history.push("/sign-in", { _id: email, _email: email });
         } catch (err) {
             const { status } = err.response;
+            
             if (status === 404) {
-                // 404 - user não existe
                 setIsNewUser(true);
                 setUser(undefined);
                 history.push("/sign-up", { _email: email });
