@@ -113,7 +113,7 @@ var UsersRepository = (function () {
                 switch (_b.label) {
                     case 0: return [4, this.repository.findOne({
                             relations: ["tokens"],
-                            where: [{ id: id }, { email: email }, { document: document }, { cellphone: cellphone }],
+                            where: [{ email: email }, { cellphone: cellphone }, { document: document }, { id: id }],
                             cache: true,
                         })];
                     case 1: return [2, _b.sent()];
@@ -133,7 +133,7 @@ var UsersRepository = (function () {
                             .leftJoin("user.person", "person")
                             .addSelect("person.type")
                             .orderBy({
-                            "user.updatedAt": "DESC",
+                            "user.validatedAt": { order: "DESC", nulls: "NULLS FIRST" },
                             "user.name": "ASC",
                         })
                             .cache(true);

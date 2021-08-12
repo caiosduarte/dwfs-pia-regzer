@@ -174,7 +174,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
         history.push("/dashboard");
 
-        authChannel.current.postMessage("signIn");
+        // authChannel.current.postMessage("signIn");
     }
 
     async function checkIn(params: IIds) {
@@ -189,6 +189,8 @@ export function AuthProvider({ children }: IAuthProviderProps) {
             const { user } = response.data;
 
             setUser(user);
+
+            history.push("/sign-in", { _id: email });
         } catch (err) {
             const status = err.response.status;
 

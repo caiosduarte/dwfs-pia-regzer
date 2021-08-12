@@ -1,4 +1,4 @@
-import { IsDate } from "class-validator";
+import { IsDate, IsNotEmpty, IsOptional } from "class-validator";
 import {
     ChildEntity,
     Column,
@@ -17,10 +17,12 @@ export default class Company extends Person implements ICompany {
     fantasyName: string;
 
     @Column({ name: "open_date", type: "date", default: null })
+    @IsOptional()
     @IsDate()
     openDate: Date;
 
     @Column({ name: "end_date", type: "date", default: null })
+    @IsOptional()
     @IsDate()
     endDate: Date;
 
@@ -32,6 +34,8 @@ export default class Company extends Person implements ICompany {
     // responsibleDocument: CPF;
 
     @Column({ name: "responsible_name", default: null })
+    @IsOptional()
+    @IsNotEmpty()
     responsibleName: string;
 
     constructor() {

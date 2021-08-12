@@ -13,20 +13,23 @@ import Individual from "../entities/Individual";
 
 import Person from "../entities/Person";
 import { ICreatePersonDTO } from "../modules/people/dtos/ICreatePersonDTO";
+import ICompany from "../modules/people/models/ICompany";
+import IIndividual from "../modules/people/models/IIndividual";
+import IPerson from "../modules/people/models/IPerson";
 import IPeopleRepository, {
     ISearchPeople,
 } from "../modules/people/repositories/IPeopleRepository";
 
-type People = Individual | Company;
+type People = IIndividual | ICompany;
 
 export default class PeopleRepository implements IPeopleRepository {
     private static INSTANCE: PeopleRepository;
 
-    private constructor(private repository: Repository<People>) {}
+    private constructor(private repository: Repository<Person>) {}
 
     static getInstance(): PeopleRepository {
         if (!this.INSTANCE) {
-            this.INSTANCE = new PeopleRepository(getRepository<People>(Person));
+            this.INSTANCE = new PeopleRepository(getRepository<Person>(Person));
         }
         return this.INSTANCE;
     }
@@ -72,7 +75,7 @@ export default class PeopleRepository implements IPeopleRepository {
         return await repo.save(person);
     }
 
-    async findById(id: string): Promise<People | undefined> {
+    async findById(id: string): Promise<Person | undefined> {
         return await this.repository.findOne(id);
     }
 

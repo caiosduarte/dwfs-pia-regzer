@@ -1,4 +1,5 @@
 import { NullableBoolean } from "aws-sdk/clients/glue";
+import { IsOptional, ValidateNested } from "class-validator";
 import {
     ChildEntity,
     Column,
@@ -31,6 +32,8 @@ export default abstract class Person implements IPerson {
     @PrimaryColumn({ name: "person_id", update: true })
     id: string;
 
+    @IsOptional()
+    @ValidateNested()
     @OneToOne((type) => User, {
         eager: true,
         cascade: ["update"],
@@ -39,7 +42,7 @@ export default abstract class Person implements IPerson {
         primary: true,
     })
     @JoinColumn({ name: "person_id", referencedColumnName: "id" })
-    user: IUser;
+    user: User;
 
     @Column({ enum: ALL_PERSON_TYPES })
     type!: string;

@@ -79,8 +79,7 @@ export default class UsersRepository implements IUsersRepository {
             .leftJoin("user.person", "person")
             .addSelect("person.type")
             .orderBy({
-                "user.validateAt": { order: "DESC", nulls: "NULLS FIRST" },
-                "user.updatedAt": "DESC",
+                "user.validatedAt": { order: "DESC", nulls: "NULLS FIRST" },
                 "user.name": "ASC",
             })
             .cache(true);

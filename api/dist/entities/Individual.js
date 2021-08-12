@@ -38,6 +38,7 @@ var Individual = (function (_super) {
     }
     __decorate([
         typeorm_1.Column(),
+        class_validator_1.IsOptional(),
         class_validator_1.IsDate(),
         __metadata("design:type", Date)
     ], Individual.prototype, "birthday", void 0);
@@ -51,9 +52,13 @@ var Individual = (function (_super) {
     ], Individual.prototype, "ethnicity", void 0);
     __decorate([
         typeorm_1.Column({ name: "mother_name", nullable: true }),
+        class_validator_1.IsOptional(),
+        class_validator_1.IsNotEmpty(),
         __metadata("design:type", String)
     ], Individual.prototype, "motherName", void 0);
     __decorate([
+        class_validator_1.IsOptional(),
+        class_validator_1.IsNotEmpty(),
         typeorm_1.Column({ name: "father_name", nullable: true }),
         __metadata("design:type", String)
     ], Individual.prototype, "fatherName", void 0);

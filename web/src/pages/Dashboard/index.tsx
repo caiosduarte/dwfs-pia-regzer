@@ -168,9 +168,9 @@ export default function Dashboard() {
         setOpen(false);
     };
 
-    useEffect(() => {
-        withAuth2({ user, roles: ["administrator"] }, signOut);
-    }, []);
+    // useEffect(() => {
+    //     withAuth2({ user, roles: ["administrator"] }, signOut);
+    // }, []);
 
     useEffect(() => {
         api.get("/statistics")

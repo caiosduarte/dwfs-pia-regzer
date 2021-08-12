@@ -42,16 +42,20 @@ var Company = (function (_super) {
     ], Company.prototype, "fantasyName", void 0);
     __decorate([
         typeorm_1.Column({ name: "open_date", type: "date", default: null }),
+        class_validator_1.IsOptional(),
         class_validator_1.IsDate(),
         __metadata("design:type", Date)
     ], Company.prototype, "openDate", void 0);
     __decorate([
         typeorm_1.Column({ name: "end_date", type: "date", default: null }),
+        class_validator_1.IsOptional(),
         class_validator_1.IsDate(),
         __metadata("design:type", Date)
     ], Company.prototype, "endDate", void 0);
     __decorate([
         typeorm_1.Column({ name: "responsible_name", default: null }),
+        class_validator_1.IsOptional(),
+        class_validator_1.IsNotEmpty(),
         __metadata("design:type", String)
     ], Company.prototype, "responsibleName", void 0);
     Company = __decorate([

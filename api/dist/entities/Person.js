@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var class_validator_1 = require("class-validator");
 var typeorm_1 = require("typeorm");
 var Enum_1 = require("./Enum");
 var User_1 = __importDefault(require("./User"));
@@ -24,6 +25,8 @@ var Person = (function () {
         __metadata("design:type", String)
     ], Person.prototype, "id", void 0);
     __decorate([
+        class_validator_1.IsOptional(),
+        class_validator_1.ValidateNested(),
         typeorm_1.OneToOne(function (type) { return User_1.default; }, {
             eager: true,
             cascade: ["update"],
@@ -32,7 +35,7 @@ var Person = (function () {
             primary: true,
         }),
         typeorm_1.JoinColumn({ name: "person_id", referencedColumnName: "id" }),
-        __metadata("design:type", Object)
+        __metadata("design:type", User_1.default)
     ], Person.prototype, "user", void 0);
     __decorate([
         typeorm_1.Column({ enum: Enum_1.ALL_PERSON_TYPES }),

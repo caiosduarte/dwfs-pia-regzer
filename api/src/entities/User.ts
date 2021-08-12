@@ -15,6 +15,9 @@ import {
     IsEmail,
     IsFQDN,
     IsDate,
+    ValidateNested,
+    IsOptional,
+    IsNotEmpty,
 } from "class-validator";
 import { v4 as uuidV4 } from "uuid";
 import IUser from "../modules/users/models/IUser";
@@ -30,20 +33,25 @@ class User implements IUser {
     name: string;
 
     @Column({ nullable: true, unique: true })
+    @IsOptional()
     @Length(4, undefined, { message: "Document invalid.", always: true })
     document?: string;
 
-    @Column({ unique: true })
+    @IsOptional()
     @IsEmail(
         { allow_display_name: true },
         { message: "Email address invalid.", always: true }
     )
+    @Column({ unique: true })
     email?: string;
 
-    @Column({ nullable: true, unique: true })
+    @IsOptional()
     @Length(4, undefined, { message: "Document invalid.", always: true })
+    @Column({ nullable: true, unique: true })
     cellphone?: string;
 
+    @IsOptional()
+    @IsNotEmpty()
     @Column()
     password: string;
 
@@ -53,6 +61,8 @@ class User implements IUser {
     @OneToMany((type) => Token, (token) => token.user)
     tokens?: Token[];
 
+    @IsOptional()
+    @ValidateNested()
     @OneToOne((type) => Person, (person) => person.user)
     person?: Person;
 

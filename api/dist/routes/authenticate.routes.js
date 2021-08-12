@@ -83,7 +83,7 @@ authenticateRoutes.get("/sessions", function (request, response) { return __awai
                         ids = __assign(__assign({}, ids), { id: id_1 });
                     }
                     else {
-                        throw new AppError_1.default("No params.", 403);
+                        throw new AppError_1.default("Wrong ID params.", 403);
                     }
                 }
                 repository = UsersRepository_1.default.getInstance();
