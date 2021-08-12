@@ -3,9 +3,8 @@ import {
     Switch,
     Route,
     useRouteMatch,
+    useHistory,
 } from "react-router-dom";
-
-import Modal from "react-modal";
 
 import {
     AppBar,
@@ -42,16 +41,13 @@ import {
     PainelCheckouts,
     PainelRegistration,
     PainelDashboard,
-    PainelUsers,
 } from "./painels";
 
 import { mainListItems, secondaryListItems } from "./listItem";
 import { AuthContext } from "../../context/AuthContext";
-import { UserModal } from "../../components/UserModal";
 import Users from "./Users";
 import { withAuth, withAuth2 } from "../../utils/withAuth";
 import { api } from "../../services/api";
-import { Stats, statSync } from "fs";
 import { isAuthPresent } from "../../utils/auth";
 
 // para acessibilidade
@@ -146,7 +142,7 @@ export default function Dashboard() {
     const statistics = {
         total: () => stats.toValidate + stats.toConfirm,
         message: () =>
-            `Users: ${stats.new} new, ${stats.toValidate} to validate and ${stats.toConfirm} will confirm`,
+            `Users: ${stats.toValidate} to validate and ${stats.toConfirm} will confirm`,
     };
 
     const validRoles = ["administrator"];
@@ -156,6 +152,8 @@ export default function Dashboard() {
     const { path, url } = useRouteMatch();
 
     const [open, setOpen] = useState(false);
+
+    const history = useHistory();
 
     const classes = useStyles();
 
@@ -170,7 +168,7 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated || isAuthPresent) {
             api.get("/statistics")
                 .then((response) => {
                     const stats = response.data;
@@ -218,13 +216,22 @@ export default function Dashboard() {
 
                     <Can roles={validRoles}>
                         <Tooltip
-                            title={statistics.message()}
+                            title={
+                                statistics.total() === 0
+                                    ? "Notifications"
+                                    : statistics.message()
+                            }
                             aria-label="notifications"
                             interactive
+                            disableTouchListener={statistics.total() === 0}
                         >
                             <IconButton
                                 aria-label="notifications"
                                 color="inherit"
+                                onClick={(event: FormEvent) => {
+                                    event.preventDefault();
+                                    history.push("/dashboard/users");
+                                }}
                             >
                                 <Badge
                                     badgeContent={statistics.total()}

@@ -139,19 +139,13 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         const token = cookieProvider.token;
 
         if (token) {
-            // mantém a parte de permissões e roles o mais atualizadas possível
             api.get("/sessions")
                 .then((response) => {
                     const { user } = response.data;
-                    console.log(response.data);
                     setUser(user);
                     setIsNewUser(false);
                 })
                 .catch((err) => {
-                    console.log(
-                        "AuthContext => Not a refresh token error: ",
-                        err
-                    );
                     signOut();
                 });
         }

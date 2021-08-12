@@ -32,14 +32,16 @@ authenticateRoutes.post("/sessions", async (request, response) => {
 });
 
 authenticateRoutes.get("/sessions", async (request, response) => {
-    const token = getTokenFromRequest(request);
-
     let ids = request.query as IUserIDs;
 
+    let hasOnlyAuthorizedToken: boolean = false;
+
     if (!hasAnyId(ids)) {
+        const token = getTokenFromRequest(request);
         if (token) {
             const { sub: id } = verifyToken(token);
             ids = { ...ids, id };
+            hasOnlyAuthorizedToken = true;
         } else {
             throw new AppError("Wrong ID params.", 403);
         }
@@ -55,7 +57,11 @@ authenticateRoutes.get("/sessions", async (request, response) => {
         throw new AppError("User not found.", 404);
     }
 
-    if (!hasRefreshTokenValid({ email, cellphone, document }, user.tokens)) {
+    const noTokenOnlyWrongCredentials =
+        !hasOnlyAuthorizedToken &&
+        !hasRefreshTokenValid({ email, cellphone, document }, user.tokens);
+
+    if (noTokenOnlyWrongCredentials) {
         throw new AppError("User unauthorized.", 401);
     }
 
