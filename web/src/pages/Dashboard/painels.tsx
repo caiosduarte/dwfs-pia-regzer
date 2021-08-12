@@ -5,6 +5,7 @@ import Deposits from "./Deposit";
 import Users from "./Users";
 import Registration from "./Registration";
 import Checkouts from "./Checkouts";
+import Registrations from "./Checkouts";
 
 type PainelProps = {
     isAdmin: boolean;
@@ -14,19 +15,29 @@ type PainelProps = {
     onRequestEditUser?: () => void;
 };
 
-export function PainelRegistration({ isAdmin, classesContent }: PainelProps) {
+type PainelPersonProps = PainelProps & { personId?: string };
+
+export function PainelRegistration({
+    isAdmin,
+    personId,
+    classesContent,
+}: PainelPersonProps) {
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Paper className={classesContent[0]}>
-                    <Registration />
+                    <Registration personId={personId} />
                 </Paper>
             </Grid>
         </Grid>
     );
 }
 
-export function PainelDashboard({ isAdmin, classesContent }: PainelProps) {
+export function PainelDashboard({
+    isAdmin,
+    personId,
+    classesContent,
+}: PainelPersonProps) {
     return isAdmin ? (
         <Grid container spacing={2}>
             {/* <Grid item xs={12} md={8} lg={9}>
@@ -48,7 +59,11 @@ export function PainelDashboard({ isAdmin, classesContent }: PainelProps) {
             </Grid>
         </Grid>
     ) : (
-        <PainelRegistration isAdmin classesContent={[classesContent[2]]} />
+        <PainelRegistration
+            isAdmin
+            personId={personId}
+            classesContent={[classesContent[2]]}
+        />
     );
 }
 
@@ -77,7 +92,7 @@ export function PainelCheckouts({ isAdmin, classesContent }: PainelProps) {
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Paper className={classesContent[0]}>
-                    <Checkouts title="Checkouts" pageSize={25} />
+                    <Registrations title="Registrations" pageSize={25} />
                 </Paper>
             </Grid>
         </Grid>

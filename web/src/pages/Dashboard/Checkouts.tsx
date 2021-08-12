@@ -40,15 +40,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type UsersProps = {
-    title?: "Recent Checkouts" | "Checkouts";
+    title?: "Recent Registrations" | "Registrations";
     pageStart?: number;
     pageSize?: number;
     checkBoxSelection?: boolean;
     classSeeMore?: string;
 };
 
-export default function Checkouts({
-    title = "Recent Checkouts",
+export default function Registrations({
+    title = "Recent Registrations",
     pageStart = 0,
     pageSize = 5,
     classSeeMore,
@@ -98,7 +98,7 @@ export default function Checkouts({
     }, []);
 
     return (
-        <React.Fragment>
+        <>
             <Title>{title}</Title>
             <Table size="small">
                 <TableHead>
@@ -112,40 +112,14 @@ export default function Checkouts({
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row, key) => (
+                    {rows.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell>
                                 <LinkWrapper to={`/users/${row.id}`}>
                                     {row.name}
                                 </LinkWrapper>
                             </TableCell>
-                            <TableCell>
-                                {row.email}
-                                {/* {row.isConfirmed ? (
-                                    row.email
-                                ) : (
-                                    <Tooltip
-                                        title="Send confirm email"
-                                        aria-label="send confirm email"
-                                        interactive
-                                    >
-                                        <Button
-                                            onClick={(event) => {
-                                                event?.preventDefault();
-                                                alert(
-                                                    `Confirm email send to ${row.email}`
-                                                );
-                                            }}
-                                            variant="contained"
-                                            color="default"
-                                            size="small"
-                                            endIcon={<Icon>send</Icon>}
-                                        >
-                                            {row.email}
-                                        </Button>
-                                    </Tooltip>
-                                )} */}
-                            </TableCell>
+                            <TableCell>{row.email}</TableCell>
                             <TableCell>{row.document}</TableCell>
                             <TableCell>{row.cellphone}</TableCell>
                             <TableCell
@@ -164,13 +138,13 @@ export default function Checkouts({
                 </TableBody>
             </Table>
 
-            {title === "Recent Checkouts" && (
+            {title === "Recent Registrations" && (
                 <div className={classSeeMore || classes.seeMore}>
                     <LinkWrapper to="/dashboard/checkouts">
                         See more users
                     </LinkWrapper>
                 </div>
             )}
-        </React.Fragment>
+        </>
     );
 }

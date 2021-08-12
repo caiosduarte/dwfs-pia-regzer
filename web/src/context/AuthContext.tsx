@@ -68,7 +68,7 @@ interface IAuthProviderProps {
 export const AuthContext = createContext({} as IAuthContextData);
 
 export function AuthProvider({ children }: IAuthProviderProps) {
-    const [user, setUser] = useState<User | undefined>();
+    const [user, setUser] = useState<User>();
     const [isNewUser, setIsNewUser] = useState(true);
     const history = useHistory();
     const authChannel = useRef<BroadcastChannel>(new BroadcastChannel("auth"));

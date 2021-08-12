@@ -99,15 +99,6 @@ export default function Users({
         } catch (err) {
             console.error(err);
         }
-
-        // api.get(`users?start=${pageStart}&offset=${pageSize}`)
-        //     .then((response) => {
-        //         const { data } = response;
-        //         setRows(data);
-        //     })
-        //     .catch((err) => {
-        //         console.error(err);
-        //     });
     }
 
     async function handleCloseUserModal() {
@@ -181,8 +172,9 @@ export default function Users({
 
             <UserModal
                 isOpen={isUserModalOpen}
-                onUpdate={(updatedUser: User) => {
-                    setUserToUpdate(updatedUser);
+                onUpdate={async (updatedUser: User) => {
+                    //setUserToUpdate(updatedUser);
+                    await getUsers();
                     setUserModalOpen(false);
                 }}
                 onRequestClose={() => {

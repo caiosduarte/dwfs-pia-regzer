@@ -61,7 +61,7 @@ type UserInput = Partial<User>;
 
 type UserModalProps = {
     isOpen: boolean;
-    onUpdate: (updatedUser: User) => void;
+    onUpdate: (updatedUser: User) => Promise<void>;
     onRequestClose: () => void;
 } & UserInput;
 
@@ -83,35 +83,38 @@ export function UserModal(props: UserModalProps) {
         setUser({ id, type, email, document, confirmedAt, validatedAt });
     }
 
-    function sendConfirmEmail() {
+    async function sendConfirmEmail() {
         if (!user?.confirmedAt && user?.email) {
-            api.post(`users/confirm`, {
-                email: user.email,
-            }).catch((err) => {
+            try {
+                await api.post(`users/confirm`, {
+                    email: user.email,
+                });
+            } catch (err) {
                 console.error(err);
-            });
+            }
         }
     }
 
-    function handleSendConfirmMail(event: FormEvent) {
+    async function handleSendConfirmMail(event: FormEvent) {
         event.preventDefault();
-        sendConfirmEmail();
+        await sendConfirmEmail();
     }
 
-    function handleEdit(event: FormEvent) {
+    async function handleEdit(event: FormEvent) {
         event.preventDefault();
-        api.post("people", { ...user })
-            .then((response) => {
-                const user = response.data;
-                setUser(user);
+        try {
+            const response = await api.post("people", { ...user });
 
-                sendConfirmEmail();
+            const updatedUser = response.data;
 
-                onUpdate({ ...user });
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+            setUser(updatedUser);
+
+            await sendConfirmEmail();
+
+            await onUpdate({ ...updatedUser });
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     function handleRadio(event: any) {

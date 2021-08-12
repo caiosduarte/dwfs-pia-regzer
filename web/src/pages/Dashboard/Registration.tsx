@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -12,6 +12,8 @@ import Title from "../../components/Title";
 import { Grid } from "@material-ui/core";
 import InfoForm from "./InfoForm";
 import ContactsForm from "./ContactsForm";
+import { useEffect } from "react";
+import { api } from "../../services/api";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -54,7 +56,11 @@ function getStepContent(step: number) {
     }
 }
 
-export default function Registration() {
+type RegistrationProps = {
+    personId?: string;
+};
+
+export default function Registration({ personId }: RegistrationProps) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState(new Set<number>());
@@ -147,6 +153,21 @@ export default function Registration() {
     function isStepComplete(step: number) {
         return completed.has(step);
     }
+
+    const [person, setPerson] = useState();
+
+    useEffect(() => {
+        if (personId) {
+            api.get(`people/${personId}`)
+                .then((response) => {
+                    const person = response.data;
+                    setPerson(person);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+    }, []);
 
     return (
         <React.Fragment>

@@ -300,6 +300,7 @@ export default function Dashboard() {
                         <Route exact path={path}>
                             <PainelDashboard
                                 isAdmin={userIsAdmin}
+                                personId={"111"}
                                 classesContent={[
                                     fixedHeightPaper,
                                     fixedHeightPaper,
@@ -334,6 +335,7 @@ export default function Dashboard() {
                         <Route path="/dashboard/registration">
                             <PainelRegistration
                                 isAdmin={userIsAdmin}
+                                personId={user?.id}
                                 classesContent={[classes.paper]}
                             />
                         </Route>
