@@ -52,6 +52,7 @@ import Users from "./Users";
 import { withAuth, withAuth2 } from "../../utils/withAuth";
 import { api } from "../../services/api";
 import { Stats, statSync } from "fs";
+import { isAuthPresent } from "../../utils/auth";
 
 // para acessibilidade
 //Modal.setAppElement("#root");
@@ -138,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
-    const { user, signOut } = useContext(AuthContext);
+    const { user, isAuthenticated, signOut } = useContext(AuthContext);
 
     const [stats, setStats] = useState({ new: 0, toValidate: 0, toConfirm: 0 });
 
@@ -168,19 +169,19 @@ export default function Dashboard() {
         setOpen(false);
     };
 
-    // useEffect(() => {
-    //     withAuth2({ user, roles: ["administrator"] }, signOut);
-    // }, []);
-
     useEffect(() => {
-        api.get("/statistics")
-            .then((response) => {
-                const stats = response.data;
-                setStats(stats);
-            })
-            .catch((err) => {
-                console.error("Stats error: ", err);
-            });
+        if (isAuthenticated) {
+            api.get("/statistics")
+                .then((response) => {
+                    const stats = response.data;
+                    setStats(stats);
+                })
+                .catch((err) => {
+                    console.error("Stats error: ", err);
+                });
+        } else {
+            signOut();
+        }
     }, []);
 
     return (
