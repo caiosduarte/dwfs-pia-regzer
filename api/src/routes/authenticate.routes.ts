@@ -8,15 +8,15 @@ import {
 import UserMap from "../mappers";
 
 import { hasAnyId, IUserIDs } from "../modules/users/utils/request";
+import { getTokenFromRequest } from "../modules/users/utils/request";
 import {
-    getTokenFromRequest,
-} from "../modules/users/utils/request";
-import { hasRefreshTokenValid, verifyToken } from "../modules/users/utils/token";
+    hasRefreshTokenValid,
+    verifyToken,
+} from "../modules/users/utils/token";
 
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
 import TokensRepository from "../repositories/TokensRepository";
 import UsersRepository from "../repositories/UsersRepository";
-import { IUsersRepository } from "../modules/users/repositories/IUsersRepository";
 
 const authenticateRoutes = Router();
 
@@ -41,11 +41,11 @@ authenticateRoutes.get("/sessions", async (request, response) => {
             const { sub: id } = verifyToken(token);
             ids = { ...ids, id };
         } else {
-            throw new AppError("No params.", 403);
+            throw new AppError("Wrong ID params.", 403);
         }
     }
 
-    const repository  = UsersRepository.getInstance() as IUsersRepository;
+    const repository = UsersRepository.getInstance();
 
     const { id, email, cellphone, document } = ids;
 
@@ -55,7 +55,7 @@ authenticateRoutes.get("/sessions", async (request, response) => {
         throw new AppError("User not found.", 404);
     }
 
-    if(!hasRefreshTokenValid({ email, cellphone, document }, user.tokens)) {
+    if (!hasRefreshTokenValid({ email, cellphone, document }, user.tokens)) {
         throw new AppError("User unauthorized.", 401);
     }
 
