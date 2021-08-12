@@ -56,7 +56,7 @@ var AuthenticateUserController = (function () {
                             })];
                     case 1:
                         _b = _c.sent(), user = _b.user, token = _b.token, refreshToken = _b.refreshToken;
-                        return [2, response.status(200).json({ user: user, token: token, refreshToken: refreshToken })];
+                        return [2, response.status(201).json({ user: user, token: token, refreshToken: refreshToken })];
                 }
             });
         });

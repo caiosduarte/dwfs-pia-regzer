@@ -55,3 +55,8 @@ export const isRefreshTokenValid = (
         hasIdValid(ids, refreshToken.token)
     );
 };
+
+export const hasRefreshTokenValid = (ids: IIDs, tokens: IToken[] | undefined) =>
+    !!tokens?.find((refreshToken) => {
+        return isRefreshTokenValid(ids, refreshToken);
+    });

@@ -6,20 +6,17 @@ import {
     refreshTokenController,
 } from "../modules/users/controllers";
 import UserMap from "../mappers";
-import {
-    createRefreshToken,
-    createToken,
-} from "../modules/users/utils/createJwt";
+
 import { hasAnyId, IUserIDs } from "../modules/users/utils/request";
 import {
     getTokenFromRequest,
-    getUserIdsFromRequest,
 } from "../modules/users/utils/request";
-import { isRefreshTokenValid, verifyToken } from "../modules/users/utils/token";
+import { hasRefreshTokenValid, verifyToken } from "../modules/users/utils/token";
 
 import DayjsProvider from "../providers/DateProvider/implementations/DayjsProvider";
 import TokensRepository from "../repositories/TokensRepository";
 import UsersRepository from "../repositories/UsersRepository";
+import { IUsersRepository } from "../modules/users/repositories/IUsersRepository";
 
 const authenticateRoutes = Router();
 
@@ -48,32 +45,34 @@ authenticateRoutes.get("/sessions", async (request, response) => {
         }
     }
 
-    const repository = UsersRepository.getInstance();
+    const repository  = UsersRepository.getInstance() as IUsersRepository;
 
     const { id, email, cellphone, document } = ids;
 
-    const user = id
-        ? await repository.findById(id)
-        : await repository
-              .findByIds({ email, cellphone, document })
-              .then((user) => {
-                  if (!user) throw new AppError("User not found.", 404);
-                  const tokens = user?.tokens;
-                  const isValid = !!tokens?.find((token) => {
-                      return isRefreshTokenValid(
-                          { email, cellphone, document },
-                          token
-                      );
-                  });
+    const user = await repository.findByIds({ id, email, cellphone, document });
+    
+            //   .then((user) => {
+            //       if (!user) throw new AppError("User not found.", 404);
+            //       const tokens = user?.tokens;
+            //       const isValid = !!tokens?.find((token) => {
+            //           return isRefreshTokenValid(
+            //               { email, cellphone, document },
+            //               token
+            //           );
+            //       });
 
-                  if (isValid) {
-                      return user;
-                  }
-                  throw new AppError("User unauthorized.", 401);
-              });
+            //       if (isValid) {
+            //           return user;
+            //       }
+            //       throw new AppError("User unauthorized.", 401);
+            //   });
 
     if (!user) {
         throw new AppError("User not found.", 404);
+    }
+
+    if(!hasRefreshTokenValid({ email, cellphone, document }, user.tokens)) {
+        throw new AppError("User unauthorized.", 401);
     }
 
     return response.json({ user: UserMap.toDTO(user) });

@@ -5,13 +5,12 @@ import ICreateTokenDTO from "../dtos/ICreateTokenDTO";
 import { ITokenResponseDTO } from "../dtos/ITokenResponseDTO";
 import UserMap from "../../../mappers";
 
-import IToken from "../models/IToken";
-
 import IDateProvider from "../providers/IDateProvider";
 import ITokensRepository from "../repositories/ITokensRepository";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 import { createRefreshToken, createToken } from "../utils/createJwt";
-import { isRefreshTokenValid } from "../utils/token";
+import { hasRefreshTokenValid } from "../utils/token";
+
 
 interface ICredentials {
     email?: string;
@@ -22,10 +21,7 @@ interface ICredentials {
 
 type IIDs = Omit<ICredentials, "password">;
 
-const hasRefreshTokenValid = (ids: IIDs, tokens: IToken[] | undefined) =>
-    !!tokens?.find((refreshToken) => {
-        return isRefreshTokenValid(ids, refreshToken);
-    });
+
 
 class AuthenticateUserService {
     constructor(
@@ -51,6 +47,14 @@ class AuthenticateUserService {
             throw new AppError("Email/password don't match.", 404);
         }
 
+        if(!user.validatedAt) {
+            throw new AppError("User has not validated yet.", 403);
+        }
+
+        if(!user.confirmedAt) {
+            throw new AppError("User have to confirm the registration.", 403);
+        }
+
         if (password) {
             const passwordValid = await compare(password, user.password);
 
@@ -60,7 +64,7 @@ class AuthenticateUserService {
         } else if (
             !hasRefreshTokenValid({ email, cellphone, document }, user.tokens)
         ) {
-            throw new AppError("Last entrance is too long or not found.", 401);
+            throw new AppError("Last session is too long or not found.", 401);
         }
 
         const token = createToken(user);

@@ -44,11 +44,6 @@ var AppError_1 = __importDefault(require("../../../errors/AppError"));
 var mappers_1 = __importDefault(require("../../../mappers"));
 var createJwt_1 = require("../utils/createJwt");
 var token_1 = require("../utils/token");
-var hasRefreshTokenValid = function (ids, tokens) {
-    return !!(tokens === null || tokens === void 0 ? void 0 : tokens.find(function (refreshToken) {
-        return token_1.isRefreshTokenValid(ids, refreshToken);
-    }));
-};
 var AuthenticateUserService = (function () {
     function AuthenticateUserService(usersRepository, tokensRepository, dateProvider) {
         this.usersRepository = usersRepository;
@@ -71,6 +66,12 @@ var AuthenticateUserService = (function () {
                         if (!user) {
                             throw new AppError_1.default("Email/password don't match.", 404);
                         }
+                        if (!user.validatedAt) {
+                            throw new AppError_1.default("User has not validated yet.", 403);
+                        }
+                        if (!user.confirmedAt) {
+                            throw new AppError_1.default("User have to confirm the registration.", 403);
+                        }
                         if (!password) return [3, 3];
                         return [4, bcrypt_1.compare(password, user.password)];
                     case 2:
@@ -80,8 +81,8 @@ var AuthenticateUserService = (function () {
                         }
                         return [3, 4];
                     case 3:
-                        if (!hasRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, user.tokens)) {
-                            throw new AppError_1.default("Last entrance is too long or not found.", 401);
+                        if (!token_1.hasRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, user.tokens)) {
+                            throw new AppError_1.default("Last session is too long or not found.", 401);
                         }
                         _b.label = 4;
                     case 4:

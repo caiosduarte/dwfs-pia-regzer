@@ -71,9 +71,9 @@ authenticateRoutes.post("/sessions", function (request, response) { return __awa
     });
 }); });
 authenticateRoutes.get("/sessions", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, ids, id_1, repository, id, email, cellphone, document, user, _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var token, ids, id_1, repository, id, email, cellphone, document, user;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 token = request_2.getTokenFromRequest(request);
                 ids = request.query;
@@ -88,32 +88,14 @@ authenticateRoutes.get("/sessions", function (request, response) { return __awai
                 }
                 repository = UsersRepository_1.default.getInstance();
                 id = ids.id, email = ids.email, cellphone = ids.cellphone, document = ids.document;
-                if (!id) return [3, 2];
-                return [4, repository.findById(id)];
+                return [4, repository.findByIds({ id: id, email: email, cellphone: cellphone, document: document })];
             case 1:
-                _a = _b.sent();
-                return [3, 4];
-            case 2: return [4, repository
-                    .findByIds({ email: email, cellphone: cellphone, document: document })
-                    .then(function (user) {
-                    if (!user)
-                        throw new AppError_1.default("User not found.", 404);
-                    var tokens = user === null || user === void 0 ? void 0 : user.tokens;
-                    var isValid = !!(tokens === null || tokens === void 0 ? void 0 : tokens.find(function (token) {
-                        return token_1.isRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, token);
-                    }));
-                    if (isValid) {
-                        return user;
-                    }
-                    throw new AppError_1.default("User unauthorized.", 401);
-                })];
-            case 3:
-                _a = _b.sent();
-                _b.label = 4;
-            case 4:
-                user = _a;
+                user = _a.sent();
                 if (!user) {
                     throw new AppError_1.default("User not found.", 404);
+                }
+                if (!token_1.hasRefreshTokenValid({ email: email, cellphone: cellphone, document: document }, user.tokens)) {
+                    throw new AppError_1.default("User unauthorized.", 401);
                 }
                 return [2, response.json({ user: mappers_1.default.toDTO(user) })];
         }

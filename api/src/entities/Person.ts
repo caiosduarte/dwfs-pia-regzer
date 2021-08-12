@@ -39,7 +39,7 @@ export default abstract class Person implements IPerson {
         primary: true,
     })
     @JoinColumn({ name: "person_id", referencedColumnName: "id" })
-    user?: IUser;
+    user: IUser;
 
     @Column({ enum: ALL_PERSON_TYPES })
     type!: string;

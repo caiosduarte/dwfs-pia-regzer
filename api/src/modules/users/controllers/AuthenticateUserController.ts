@@ -15,6 +15,6 @@ export default class AuthenticateUserController {
             remember,
         });
 
-        return response.status(200).json({ user, token, refreshToken });
+        return response.status(201).json({ user, token, refreshToken });
     }
 }

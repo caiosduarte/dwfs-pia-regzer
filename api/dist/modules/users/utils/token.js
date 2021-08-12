@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isRefreshTokenValid = exports.isTokenExpired = exports.verifyRefreshToken = exports.verifyToken = void 0;
+exports.hasRefreshTokenValid = exports.isRefreshTokenValid = exports.isTokenExpired = exports.verifyRefreshToken = exports.verifyToken = void 0;
 var auth_1 = __importDefault(require("../config/auth"));
 var verifyJwt_1 = require("./verifyJwt");
 function verifyToken(token) {
@@ -38,3 +38,9 @@ var isRefreshTokenValid = function (ids, refreshToken) {
         hasIdValid(ids, refreshToken.token));
 };
 exports.isRefreshTokenValid = isRefreshTokenValid;
+var hasRefreshTokenValid = function (ids, tokens) {
+    return !!(tokens === null || tokens === void 0 ? void 0 : tokens.find(function (refreshToken) {
+        return exports.isRefreshTokenValid(ids, refreshToken);
+    }));
+};
+exports.hasRefreshTokenValid = hasRefreshTokenValid;

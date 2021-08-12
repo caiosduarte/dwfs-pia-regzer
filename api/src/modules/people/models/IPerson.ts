@@ -4,7 +4,7 @@ import IDocument from "./IDocument";
 export default interface IPerson {
     id: string;
 
-    user?: IUser;
+    user: IUser;
 
     type: string;
 
