@@ -181,20 +181,24 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         const email = params.email;
         try {
             api.defaults.headers["Authorization"] = {};
- 
-            const response = await api.get(`sessions?email=${email}`);
-            const {user} = response.data;
+
             setIsNewUser(false);
+
+            const response = await api.get(`sessions?email=${email}`);
+
+            const { user } = response.data;
+
             setUser(user);
-            history.push("/sign-in", { _id: email, _email: email });
         } catch (err) {
-            const { status } = err.response;
-            
+            const status = err.response.status;
+
             if (status === 404) {
                 setIsNewUser(true);
+
                 setUser(undefined);
+
                 history.push("/sign-up", { _email: email });
-            } else if (status != 401 && status != 403) {
+            } else if (status !== 401) {
                 throw err;
             }
         }
@@ -204,8 +208,6 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         const response = await api.post("users", { ...values });
 
         const user = response.data;
-
-        console.log("User sign-up ", user);
 
         setUser(user);
     }
