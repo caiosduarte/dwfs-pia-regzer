@@ -40,21 +40,21 @@ var User = (function () {
         __metadata("design:type", String)
     ], User.prototype, "document", void 0);
     __decorate([
+        typeorm_1.Column({ unique: true }),
         class_validator_1.IsOptional(),
         class_validator_1.IsEmail({ allow_display_name: true }, { message: "Email address invalid.", always: true }),
-        typeorm_1.Column({ unique: true }),
         __metadata("design:type", String)
     ], User.prototype, "email", void 0);
     __decorate([
-        class_validator_1.IsOptional(),
-        class_validator_1.Length(4, undefined, { message: "Document invalid.", always: true }),
         typeorm_1.Column({ nullable: true, unique: true }),
+        class_validator_1.IsOptional(),
+        class_validator_1.IsNotEmpty(),
         __metadata("design:type", String)
     ], User.prototype, "cellphone", void 0);
     __decorate([
+        typeorm_1.Column(),
         class_validator_1.IsOptional(),
         class_validator_1.IsNotEmpty(),
-        typeorm_1.Column(),
         __metadata("design:type", String)
     ], User.prototype, "password", void 0);
     __decorate([
@@ -66,9 +66,9 @@ var User = (function () {
         __metadata("design:type", Array)
     ], User.prototype, "tokens", void 0);
     __decorate([
+        typeorm_1.OneToOne(function (type) { return Person_1.default; }, function (person) { return person.user; }),
         class_validator_1.IsOptional(),
         class_validator_1.ValidateNested(),
-        typeorm_1.OneToOne(function (type) { return Person_1.default; }, function (person) { return person.user; }),
         __metadata("design:type", Person_1.default)
     ], User.prototype, "person", void 0);
     __decorate([

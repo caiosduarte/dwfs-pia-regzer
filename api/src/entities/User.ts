@@ -37,22 +37,22 @@ class User implements IUser {
     @Length(4, undefined, { message: "Document invalid.", always: true })
     document?: string;
 
+    @Column({ unique: true })
     @IsOptional()
     @IsEmail(
         { allow_display_name: true },
         { message: "Email address invalid.", always: true }
     )
-    @Column({ unique: true })
     email?: string;
 
-    @IsOptional()
-    @Length(4, undefined, { message: "Document invalid.", always: true })
     @Column({ nullable: true, unique: true })
-    cellphone?: string;
-
     @IsOptional()
     @IsNotEmpty()
+    cellphone?: string;
+
     @Column()
+    @IsOptional()
+    @IsNotEmpty()
     password: string;
 
     @Column({ name: "is_admin", default: false })
@@ -61,9 +61,9 @@ class User implements IUser {
     @OneToMany((type) => Token, (token) => token.user)
     tokens?: Token[];
 
+    @OneToOne((type) => Person, (person) => person.user)
     @IsOptional()
     @ValidateNested()
-    @OneToOne((type) => Person, (person) => person.user)
     person?: Person;
 
     @Column({ name: "validated_at", nullable: true })
