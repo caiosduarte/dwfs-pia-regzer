@@ -5,20 +5,17 @@ import {
     OneToMany,
     OneToOne,
     PrimaryColumn,
-    RelationId,
     UpdateDateColumn,
 } from "typeorm";
 import {
-    Contains,
-    IsInt,
     Length,
     IsEmail,
-    IsFQDN,
-    IsDate,
     ValidateNested,
     IsOptional,
     IsNotEmpty,
 } from "class-validator";
+
+import { Transform } from "class-transformer";
 import { v4 as uuidV4 } from "uuid";
 import IUser from "../modules/users/models/IUser";
 import Token from "./Token";
@@ -33,12 +30,16 @@ class User implements IUser {
     name: string;
 
     @Column({ nullable: true, unique: true })
-    @IsOptional()
-    @Length(4, undefined, { message: "Document invalid.", always: true })
+    @Transform(({ value }) =>
+        !value || /^\s*$/.test(value) ? undefined : value.trim()
+    )
+    @Length(4, undefined, { message: "Document invalid." })
     document?: string;
 
     @Column({ unique: true })
-    @IsOptional()
+    @Transform(({ value }) =>
+        !value || /^\s*$/.test(value) ? undefined : value.trim()
+    )
     @IsEmail(
         { allow_display_name: true },
         { message: "Email address invalid.", always: true }
@@ -46,12 +47,14 @@ class User implements IUser {
     email?: string;
 
     @Column({ nullable: true, unique: true })
+    @Transform(({ value }) =>
+        !value || /^\s*$/.test(value) ? undefined : value.trim()
+    )
     @IsOptional()
-    @IsNotEmpty()
+    @Length(4, undefined, { message: "Cellphone invalid." })
     cellphone?: string;
 
     @Column()
-    @IsOptional()
     @IsNotEmpty()
     password: string;
 

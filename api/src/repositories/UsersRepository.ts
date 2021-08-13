@@ -9,6 +9,8 @@ import {
 
 import { validate } from "class-validator";
 
+import { classToClass } from "class-transformer";
+
 export default class UsersRepository implements IUsersRepository {
     readonly INSTANCE: IUsersRepository;
     private static INSTANCE: UsersRepository;
@@ -42,11 +44,20 @@ export default class UsersRepository implements IUsersRepository {
     }
 
     async save(user: User): Promise<User> {
-        const errors = await validate(user);
+        const transUser = classToClass(user, {
+            ignoreDecorators: false,
+            enableImplicitConversion: true,
+        });
+
+        console.log("Transuser: ", transUser);
+
+        const errors = await validate(transUser);
+
         if (errors.length > 0) {
             throw new Error(errors.join(", "));
         }
-        return await this.repository.save(user);
+
+        return await this.repository.save(transUser);
     }
 
     async findByToken(token: string): Promise<User | undefined> {
