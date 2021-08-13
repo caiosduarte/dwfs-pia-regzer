@@ -209,7 +209,7 @@ export function SignUp(props: any) {
                                 type="text"
                                 id="document"
                                 error={isError("document")}
-                                helperText={errorMessage(errors.confirmation)}
+                                helperText={errorMessage(errors.document)}
                                 {...register("document", {
                                     required:
                                         "Any document is required: CPF or CNPJ or Passport.",
@@ -244,7 +244,7 @@ export function SignUp(props: any) {
                                 error={isError("confirmation")}
                                 helperText={errorMessage(errors.confirmation)}
                                 {...register("confirmation", {
-                                    required: "Confirm password is required.",
+                                    required: "Confirm passwd is required.",
                                 })}
                             />
                         </Grid>
