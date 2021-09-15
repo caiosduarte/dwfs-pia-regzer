@@ -5,6 +5,7 @@ import {
     OneToMany,
     OneToOne,
     PrimaryColumn,
+    TransactionManager,
     UpdateDateColumn,
 } from "typeorm";
 import {
@@ -13,6 +14,7 @@ import {
     ValidateNested,
     IsOptional,
     IsNotEmpty,
+    IsString,
 } from "class-validator";
 
 import { Transform } from "class-transformer";
@@ -27,9 +29,11 @@ class User implements IUser {
     id: string;
 
     @Column()
+    @IsString()
     name: string;
 
     @Column({ nullable: true, unique: true })
+    @IsString()
     @Transform(({ value }) =>
         !value || /^\s*$/.test(value) ? undefined : value.trim()
     )
@@ -38,7 +42,9 @@ class User implements IUser {
 
     @Column({ unique: true })
     @Transform(({ value }) =>
-        !value || /^\s*$/.test(value) ? undefined : value.trim()
+        !value || typeof value !== "string" || /^\s*$/.test(value)
+            ? undefined
+            : value.trim()
     )
     @IsEmail(
         { allow_display_name: true },
@@ -47,8 +53,11 @@ class User implements IUser {
     email?: string;
 
     @Column({ nullable: true, unique: true })
+    @IsString()
     @Transform(({ value }) =>
-        !value || /^\s*$/.test(value) ? undefined : value.trim()
+        !value || typeof value !== "string" || /^\s*$/.test(value)
+            ? undefined
+            : value.trim()
     )
     @IsOptional()
     @Length(4, undefined, { message: "Cellphone invalid." })
