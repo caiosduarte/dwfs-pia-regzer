@@ -17,8 +17,8 @@ jobs:
                 shell: bash
                 working-directory: api
 
-        env:
-            NODE_ENV: production
+        #env:
+        #    NODE_ENV: production
 
         steps:
             - uses: actions/checkout@v2
