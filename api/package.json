@@ -14,7 +14,7 @@
         "typeorm:migrations": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js migration:run",
         "typeorm:cache": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js schema:sync",
         "build-w-tsc": "yarn clean && cross-env NODE_OPTIONS=--max-old-space-size=768 tsc && yarn copy-files",
-        "build": "babel src --extensions \".js,.ts\" --copy-files --out-dir dist",
+        "build": "cross-env NODE_ENV=production && cross-env NODE_OPTIONS=--max-old-space-size=768 && babel src --extensions \".js,.ts\" --copy-files --out-dir dist",
         "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts",
         "typeorm": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js",
         "seed": "ts-node-dev --transpile-only ./src/database/seed/base.ts"
