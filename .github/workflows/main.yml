@@ -17,8 +17,8 @@ jobs:
                 shell: bash
                 working-directory: api
 
-        #env:
-        #    NODE_ENV: production
+        env:
+            NODE_ENV: production
 
         steps:
             - uses: actions/checkout@v2
@@ -65,4 +65,4 @@ jobs:
                       ./node_modules/typeorm/cli.js schema:sync
                       echo $NODE_ENV
                       pm2 --update-env restart regzer_api
-                      echo $NODE_ENV
+                      
